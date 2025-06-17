@@ -1,0 +1,11 @@
+﻿Item_ID,Name,Icon,Item_Type,Rarity,Prefab,Data_ID,Description
+10001,10010001,Demon_Sword,1,2,Demon_Sword,10001,11010001
+10002,10010002,Sword_7,1,1,Sword_7,10002,11010002
+10003,10010003,Wooden_Bow,1,1,Wooden_Bow,10003,11010003
+10004,10010004,Goblin_Bow,1,3,Goblin_Bow,10004,11010004
+10005,10010005,Teeth,1,1,Teeth,10005,11010005
+10006,10010006,Whisper_Blizzard,1,2,Whisper_Blizzard,10006,11010006
+10007,10010007,Karnea_Ash,1,3,Karnea_Ash,10007,11010007
+80001,10080001,Potion_Heal,0,3,Potion_Heal,80001,11080001
+90001,,,,,Wooden_Bow_Enemy,90001,
+90002,,,,,Goblin_Sword_Enemy,90002,

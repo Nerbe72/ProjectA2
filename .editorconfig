@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# UDR0001: Domain Reload Analyzer
+dotnet_diagnostic.UDR0001.severity = silent

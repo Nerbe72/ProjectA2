@@ -1,0 +1,2 @@
+﻿Enemy_ID,Unit_Type,Name,Speed,Health,Damage,Defense,Sight_Offset,Sight_Angle,Sight_Distance,Sight_Height,Distance_Movable,Distance_Attackable,Weapon
+100001,1,10100001,5,200,100,100,0,105,8,0.99,10,1.2,100001

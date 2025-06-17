@@ -1,0 +1,7 @@
+﻿Projectile_ID,Attack_Type,Bullet_Type,Prefab,Speed,Height,Range
+11001,0,0,Normal_Arrow,15,0,20
+11002,1,0,Iron_Arrow,15,0,20
+11003,1,2,Pulse_Magic,20,0,15
+11004,2,3,Magic_Fragment,20,2,35
+11005,2,1,Iced_Orb,22,0,35
+91001,1,1,Iron_Arrow_Curve,30,2.5,30
