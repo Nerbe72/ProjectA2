@@ -5,8 +5,8 @@ using UnityEngine;
 [Serializable]
 public class BannerData
 {
-    public BannerType bannerType;
-    public string bannerName;
+    public BannerType BannerType;
+    public int BannerName;
     /// <summary>
     /// 모든 픽업은 상시 픽업풀을 포함한다
     /// </summary>
@@ -16,26 +16,26 @@ public class BannerData
     public float SR_Percent;
     public float SSR_PickupPercent;
 
-    public Vector2 characterPosition;
-    public string bannerPath;
-    public string backgroundPath;
-    public int singlePrice;
-    public int tenPrice;
+    public Vector2 CharacterPosition;
+    public string BannerPath;
+    public string BackgroundPath;
+    public int SinglePrice;
+    public int TenPrice;
 
     public BannerData()
     {
-        bannerType = BannerType.None;
-        bannerName = "";
+        BannerType = BannerType.None;
+        BannerName = 0;
         SSR_PickupList = new List<int>();
         SR_PickupList = new List<int>();
         SSR_Percent = 1f;
         SR_Percent = 19f;
 
-        characterPosition = new Vector2();
-        bannerPath = "";
-        backgroundPath = "";
-        singlePrice = 1;
-        tenPrice = 10;
+        CharacterPosition = new Vector2();
+        BannerPath = "";
+        BackgroundPath = "";
+        SinglePrice = 1;
+        TenPrice = 10;
     }
 }
 

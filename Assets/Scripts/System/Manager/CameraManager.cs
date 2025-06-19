@@ -159,6 +159,18 @@ public class CameraManager : MonoBehaviour
         }
     }
 
+    public void ShakeCamera(float _shakeTime = 0.2f)
+    {
+        for(int i = 0; i < vCams.Count; i++)
+        {
+            var shakable = vCams[i].GetComponent<CinemachineBasicMultiChannelPerlin>();
+            if (shakable != null)
+            {
+                StartCoroutine(ShakeLerp(shakable, _shakeTime));
+            }
+        }
+    }
+
     private IEnumerator AutoCentering(CinemachineOrbitalFollow _orbitalCamera)
     {
         _orbitalCamera.HorizontalAxis.Recentering.Enabled = true;
@@ -169,6 +181,14 @@ public class CameraManager : MonoBehaviour
         _orbitalCamera.HorizontalAxis.Recentering.Enabled = true;
         _orbitalCamera.VerticalAxis.Recentering.Enabled = true;
 
+        yield break;
+    }
+
+    private IEnumerator ShakeLerp(CinemachineBasicMultiChannelPerlin _shakable, float _shakeTime)
+    {
+        _shakable.enabled = true;
+        yield return new WaitForSeconds(_shakeTime);
+        _shakable.enabled = false;
         yield break;
     }
 }

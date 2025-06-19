@@ -144,7 +144,7 @@ public abstract class Enemy : Character, IHurtable
 
         isHit = true;
         animator.SetBool(AnimationHash.GetHash(ActionType.Hit), true);
-        Singleton.DamageIndicatorManager.CreateIndicator(transform.position + Vector3.up, _type, taken);
+        Singleton.Get<DamageIndicatorManager>().CreateIndicator(transform.position + Vector3.up, _type, taken);
 
         taken = Mathf.Max(1, taken); // 최소 데미지 1
         currentHealth = Math.Clamp(currentHealth - taken, 0, EnemyData.Health);

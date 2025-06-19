@@ -1,7 +1,8 @@
+using Photon.Pun;
 using System;
 using UnityEngine;
 
-public abstract class Character : MonoBehaviour
+public abstract class Character : MonoBehaviourPunCallbacks
 {
     public StatData stats;
 

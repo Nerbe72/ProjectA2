@@ -15,7 +15,6 @@ public class ItemMenu : MonoBehaviour
         GrindButton.onClick.AddListener(ClickGrind);
         rectTransform = GetComponent<RectTransform>();
         
-        // 초기에는 메뉴를 비활성화
         gameObject.SetActive(false);
     }
 
@@ -36,9 +35,6 @@ public class ItemMenu : MonoBehaviour
             
         rectTransform.position = pos;
 
-
-
-        // 버튼 상태 설정
         var item_selected = (ItemType)Singleton.Get<TableDataManager>().Table.Item.Get(_item.ItemID).ItemType;
         switch (item_selected)
         {

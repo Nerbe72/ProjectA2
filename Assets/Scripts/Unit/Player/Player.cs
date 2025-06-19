@@ -1,10 +1,11 @@
+using Photon.Pun;
 using System;
 using System.Collections;
 using System.IO;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public partial class Player : Character, IHurtable
+public partial class Player : Character, IHurtable, IPunObservable
 {
     public int InitializationPriority => 2;
     [HideInInspector] public bool IsInstantiated = false;
@@ -18,14 +19,25 @@ public partial class Player : Character, IHurtable
     public float PlayerRadius = 0.4f;
     public bool IsMovementLocked { get; set; } = false;
 
+    public static PhotonView photonView;
+
     private void Awake()
     {
-        if (Singleton.Player != null)
+        photonView = GetComponent<PhotonView>();
+
+        if (!photonView.IsMine)
         {
-            Destroy(gameObject);
-            return;
+            Destroy(GetComponentInChildren<TargetDetector>().gameObject);
+            return; 
         }
+
         Singleton.Player = this;
+        //if (Singleton.Player != null)
+        //{
+        //    Destroy(gameObject);
+        //    return;
+        //}
+        //Singleton.Player = this;
         DontDestroyOnLoad(gameObject);
 
         Character = this;
@@ -45,37 +57,37 @@ public partial class Player : Character, IHurtable
 
     private void Start()
     {
-        targetManager = Singleton.Get<TargetManager>();
-        cameraManager = Singleton.Get<CameraManager>();
-        inventory = Singleton.Inventory;
-        inventory.OnWeaponEquipped += EquipWeapon;
-        cameraManager.SetCameraTo(CameraType.Main, transform);
+        if (photonView.IsMine)
+        {
+            targetManager = Singleton.Get<TargetManager>();
+            cameraManager = Singleton.Get<CameraManager>();
+            inventory = Singleton.Inventory;
+            inventory.OnWeaponEquipped += EquipWeapon;
+            cameraManager.SetCameraTo(CameraType.Main, transform);
+        }
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            TakeDamage(AttackType.Fixed, 500);
-        }
-
         CheckGround();
-        CheckNormalInputs();
-        CheckUIInput();
-        SetTargeted();
         UpdateAnimationParameters();
 
         if (CurrentState != null)
             CurrentState.Update(this);
 
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            SetFlag(StateFlags.Hit);
-        }
+        if (!photonView.IsMine && PhotonNetwork.IsConnected)
+            return;
+
+        CheckNormalInputs();
+        CheckUIInput();
+        SetTargeted();
     }
 
     private void FixedUpdate()
     {
+        if (!photonView.IsMine && PhotonNetwork.IsConnected)
+            return;
+
         if (CurrentState != null)
             CurrentState.FixedUpdate(this);
     }
@@ -89,6 +101,20 @@ public partial class Player : Character, IHurtable
     private void OnApplicationQuit()
     {
         SavePlayerData();
+    }
+
+    void OnLevelWasLoaded(int level)
+    {
+        CalledOnLevelWasLoaded(level);
+    }
+
+    void CalledOnLevelWasLoaded(int level)
+    {
+        // check if we are outside the Arena and if it's the case, spawn around the center of the arena in a safe zone
+        if (!Physics.Raycast(transform.position, -Vector3.up, 5f))
+        {
+            transform.position = new Vector3(0f, 5f, 0f);
+        }
     }
 
     //bt
@@ -110,7 +136,7 @@ public partial class Player : Character, IHurtable
 
         if (!IsFlagged(StateFlags.Hitting)) SetFlag(StateFlags.Hit);
 
-        Singleton.DamageIndicatorManager.CreateIndicator(transform.position + Vector3.up, _type, actualDamage);
+        Singleton.Get<DamageIndicatorManager>().CreateIndicator(transform.position + Vector3.up, _type, actualDamage);
         
         if (currentHealth <= 0)
         {
@@ -313,5 +339,10 @@ public partial class Player : Character, IHurtable
 
             yield return null;
         }
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        // 다른 필요한 동기화 값 처리
     }
 }

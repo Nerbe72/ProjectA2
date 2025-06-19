@@ -3,9 +3,9 @@ using System;
 public enum Map
 {
     None,
-    World_FrontVillage = 2,
-    Village = 3,
-    Dungeon = 4,
+    World_FrontVillage = 4,
+    Village = 5,
+    Dungeon = 6,
 }
 
 public enum Locale
@@ -77,6 +77,7 @@ public enum ActionType
     Faced,
     Sit,
     Hit,
+    Walk,
     Move,
     Side,
     Jump,

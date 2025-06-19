@@ -13,10 +13,10 @@ public abstract class Boss : Character, IHurtable
     protected Player player;
     public event Action<int, int> OnHealthChanged;
 
-    [SerializeField] private Collider facingTrigger;
+
+    [SerializeField] protected bool isAIActive = false;
 
     protected bool isDead = false;
-    protected bool isAttack = false;
     protected bool isAttacking = false;
     protected bool isDying = false;
 
@@ -32,6 +32,14 @@ public abstract class Boss : Character, IHurtable
     protected virtual void Start()
     {
         player = Singleton.Player;
+    }
+
+    /// <summary>
+    /// 조우 트리거시 호출
+    /// </summary>
+    public virtual void SetFaced()
+    {
+        
     }
 
     public override void TakeDamage(AttackType _type, int _damage)
@@ -51,7 +59,7 @@ public abstract class Boss : Character, IHurtable
                 break;
         }
 
-        Singleton.DamageIndicatorManager.CreateIndicator(transform.position + Vector3.up, _type, taken);
+        Singleton.Get<DamageIndicatorManager>().CreateIndicator(transform.position + Vector3.up, _type, taken);
 
         taken = Mathf.Max(1, taken); // 최소 데미지 1
         currentHealth = Math.Clamp(currentHealth - taken, 0, BossData.Health);
@@ -69,6 +77,9 @@ public abstract class Boss : Character, IHurtable
         isDead = true;
         animator.SetBool(AnimationHash.GetHash(ActionType.Dead), true);
         agent.isStopped = true;
+        isAIActive = false;
+
+        // 맵 개방
 
         // 플레이어에게 재화 지급
         int reward = BossData != null ? (int)Random.Range(BossData.RewardCurrency * 0.8f, BossData.RewardCurrency + 1) : 10;

@@ -18,13 +18,12 @@ public class ShockWaveController : MonoBehaviour
 
     private void Awake()
     {
-        if (Singleton.ShockWaveController != null)
+        if (Singleton.Add(this))
         {
             Destroy(gameObject);
             return;
         }
 
-        Singleton.ShockWaveController = this;
         DontDestroyOnLoad(gameObject);
 
         material = GetComponent<SpriteRenderer>().material;
@@ -41,7 +40,7 @@ public class ShockWaveController : MonoBehaviour
     public void StartShock(Vector3 position)
     {
         Vector2 screenPosition = Camera.main.WorldToViewportPoint(position);
-
+        
         material.SetVector(centerID, screenPosition);
         material.SetFloat(customTimeID, -0.1f);
 

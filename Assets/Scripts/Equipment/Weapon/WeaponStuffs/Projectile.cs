@@ -28,10 +28,7 @@ public abstract class Projectile : MonoBehaviour
         //animator = GetComponent<Animator>();
     }
 
-    protected virtual void Update()
-    {
-
-    }
+    protected virtual void Update() { }
 
     public virtual void InitData(TableProjectile.Info _bulletInfo)
     {
@@ -68,12 +65,13 @@ public abstract class Projectile : MonoBehaviour
     {
         if (other == null) goto DestroyEnd;
 
-        IHurtable hurtable = other.GetComponent<IHurtable>();
+        IHurtable hurtable = other.GetComponentInParent<IHurtable>();
 
         if (hurtable == null || hurtable.Character == null)
             goto DestroyEnd;
 
-        if (hurtable.Character.GetSelfUnitType() == owner.GetSelfUnitType()) return;
+        if (hurtable.Character.GetSelfUnitType() == owner.GetSelfUnitType())
+            return;
 
         hurtable.TakeDamage(attackType, damage);
 
@@ -98,6 +96,7 @@ public abstract class Projectile : MonoBehaviour
         particle.transform.SetParent(null);
         particle.transform.position = other.ClosestPoint(particle.transform.position);
         particle.Play();
+        gameObject.SetActive(false);
         Destroy(gameObject);
     }
 }

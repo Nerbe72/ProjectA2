@@ -1,4 +1,5 @@
 using System.Collections;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -20,31 +21,18 @@ public class SceneLoader : MonoBehaviour
     private IEnumerator CoLoading()
     {
         var nextScene = SceneLoadManager.NextScene == Map.None ? Map.World_FrontVillage : SceneLoadManager.NextScene;
-        while (true)
+
+        if (!GameManager.BeforeLoaded)
         {
             yield return new WaitForEndOfFrame();
-            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync((int)nextScene);
+            UnityEngine.AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(2, LoadSceneMode.Additive);
             asyncOperation.allowSceneActivation = false;
-            float time = 0f;
-
-            while (true)
-            {
-                time += Time.deltaTime;
-                ProgressBar.value = time;
-
-                if (time >= 0.1f)
-                {
-                    break;
-                }
-
-                yield return new WaitForEndOfFrame();
-            }
-
+            float time = 0;
             while (!asyncOperation.isDone)
             {
                 time += Time.deltaTime;
-                ProgressBar.value = time + asyncOperation.progress;
-                Debug.Log("Loading");
+                ProgressBar.value = asyncOperation.progress * 0.3f;
+                Debug.Log("Loading Before");
 
                 if (asyncOperation.progress >= 0.9f)
                 {
@@ -53,25 +41,36 @@ public class SceneLoader : MonoBehaviour
                 yield return new WaitForEndOfFrame();
             }
 
-            ProgressBar.value = 1f;
+            asyncOperation.allowSceneActivation = true;
+        }
 
-            time = 0f;
-            while (true)
+        if (!GameManager.PlayerLoaded)
+        {
+
+        }
+
+        if (!GameManager.AfterLoaded)
+        {
+            yield return new WaitForEndOfFrame();
+            UnityEngine.AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(3, LoadSceneMode.Additive);
+            asyncOperation.allowSceneActivation = false;
+            float time = 0;
+            while (!asyncOperation.isDone)
             {
                 time += Time.deltaTime;
+                ProgressBar.value = 0.3f + asyncOperation.progress * 0.3f;
+                Debug.Log("Loading After");
 
-                if (time >= 0.1f)
+                if (asyncOperation.progress >= 0.9f)
                 {
                     break;
                 }
-
                 yield return new WaitForEndOfFrame();
             }
 
-            Debug.Log("Loading End");
-
             asyncOperation.allowSceneActivation = true;
-            yield break;
         }
+
+        yield break;
     }
 }

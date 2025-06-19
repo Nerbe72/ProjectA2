@@ -59,7 +59,7 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.0.49f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.SourceGenerators.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.0.49f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\6000.0.49f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.UIToolkit.SourceGenerator.dll" />
-    <Analyzer Include="C:\Users\Nerbe72\Desktop\Workstation\SourceTree\ProjectA2\Library\PackageCache\com.unity.project-auditor@94c6e4e98816\RoslynAnalyzers\Domain_Reload_Analyzer.dll" />
+    <Analyzer Include="C:\Users\Nerbe72\Desktop\Workstation\GitHub\ProjectA2\Library\PackageCache\com.unity.project-auditor@94c6e4e98816\RoslynAnalyzers\Domain_Reload_Analyzer.dll" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\System\BehaviourTreeNodes\Sequence.cs" />
@@ -133,6 +133,7 @@
     <Compile Include="Assets\Scripts\UI\Quest\QuestIndicator.cs" />
     <Compile Include="Assets\Scripts\Interact\IInteractable.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\Abilities\ProjectileAbilityLogic.cs" />
+    <Compile Include="Assets\52SpecialEffectPack\Animation&amp;Script\csParticleMove.cs" />
     <Compile Include="Assets\Scripts\Item\DroppedItem\DroppedItem.cs" />
     <Compile Include="Assets\Scripts\System\Manager\QuestManager.cs" />
     <Compile Include="Assets\Scripts\UI\Stat\Level.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\Interfaces\IWeapon.cs" />
     <Compile Include="Assets\Scripts\Item\Iterator\ItemIterator.cs" />
     <Compile Include="Assets\Scripts\Camera\MainCamera.cs" />
+    <Compile Include="Assets\52SpecialEffectPack\Animation&amp;Script\csMouseOrbit.cs" />
     <Compile Include="Assets\Scripts\System\Manager\CameraManager.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\AbilityLogic.cs" />
     <Compile Include="Assets\Scripts\Gacha\Result\GachaResultContent.cs" />
@@ -151,13 +153,16 @@
     <Compile Include="Assets\Scripts\Unit\Character.cs" />
     <Compile Include="Assets\Scripts\System\MainStarter\GameStart.cs" />
     <Compile Include="Assets\Scripts\UI\Settings\SettingUI.cs" />
+    <Compile Include="Assets\Source_Effect\NamuFX\_CommonAssets\Scripts\Viewer.cs" />
     <Compile Include="Assets\Scripts\System\Table\Tables\TableItem.cs" />
     <Compile Include="Assets\Scripts\Unit\NPC\NPCType\NPCTutorial.cs" />
     <Compile Include="Assets\Scripts\System\BehaviourTreeNodes\Inverter.cs" />
     <Compile Include="Assets\Scripts\Unit\Player\Player_Entry.cs" />
     <Compile Include="Assets\Scripts\System\Stuff\Enums.cs" />
+    <Compile Include="Assets\52SpecialEffectPack\EffectEditor\ShurikenEffectEditor\csShurikenEffectChanger.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\BossData.cs" />
     <Compile Include="Assets\Scripts\Unit\AnimationHash.cs" />
+    <Compile Include="Assets\Scripts\Unit\Enemy\Boss\FacingTriggerController.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraColliderExtension.cs" />
     <Compile Include="Assets\Scripts\System\Manager\LayerManager.cs" />
     <Compile Include="Assets\Scripts\System\Interfaces\Gacha\IFlag.cs" />
@@ -179,6 +184,7 @@
     <Compile Include="Assets\Scripts\System\BehaviourTreeNodes\ActionNode.cs" />
     <Compile Include="Assets\Scripts\UI\Loading\Loading.cs" />
     <Compile Include="Assets\Scripts\Item\InventoryWrapper.cs" />
+    <Compile Include="Assets\52SpecialEffectPack\Animation&amp;Script\csAnimationSpin.cs" />
     <Compile Include="Assets\Scripts\System\BehaviourTreeNodes\RandomSelector.cs" />
     <Compile Include="Assets\Scripts\UI\Stat\Status.cs" />
     <Compile Include="Assets\Scripts\Unit\Interfaces\ITalkable.cs" />
@@ -195,6 +201,7 @@
     <Compile Include="Assets\Scripts\Gacha\Minigame\MinigameTimer.cs" />
     <Compile Include="Assets\Scripts\System\Table\CSVReader.cs" />
     <Compile Include="Assets\Scripts\UI\Stat\StatColumn.cs" />
+    <Compile Include="Assets\52SpecialEffectPack\Animation&amp;Script\csDestroyEffect.cs" />
     <Compile Include="Assets\Scripts\Gacha\Banner\GachaBanner.cs" />
     <Compile Include="Assets\Scripts\System\Manager\BootstrapManager.cs" />
     <Compile Include="Assets\Scripts\Gacha\Minigame\MinigameController.cs" />
@@ -216,6 +223,7 @@
     <Compile Include="Assets\Scripts\System\Table\Tables\TableWeaponAbility.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\Projectile.cs" />
     <Compile Include="Assets\Scripts\Interact\InteractableObject.cs" />
+    <Compile Include="Assets\Scripts\Effect\GroundShockwave.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\Boss\DeepDragon\DeepDragon_BehaviourTree.cs" />
     <Compile Include="Assets\Scripts\System\LoadingScene\MapConnection.cs" />
     <Compile Include="Assets\Scripts\Gacha\Result\GachaResultData.cs" />
@@ -234,10 +242,12 @@
     <Compile Include="Assets\Scripts\Interact\Interactable_Objects\Warp.cs" />
     <Compile Include="Assets\Scripts\UI\Settings\Setting.cs" />
     <Compile Include="Assets\Scripts\Item\ItemData.cs" />
+    <Compile Include="Assets\52SpecialEffectPack\EffectEditor\ShurikenEffectEditor\csShurikenEffectEditor.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\EnemyData.cs" />
     <Compile Include="Assets\Scripts\Unit\Player\Player_Input.cs" />
     <Compile Include="Assets\Scripts\UI\Inventory\ItemMenu.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraFilterPack_Blur_Focus.cs" />
+    <Compile Include="Assets\52SpecialEffectPack\Animation&amp;Script\csShowAllEffect.cs" />
     <Compile Include="Assets\Scripts\Unit\Player\Player_Target.cs" />
     <Compile Include="Assets\Scripts\System\Table\Tables\TableNPC.cs" />
     <Compile Include="Assets\Scripts\UI\Quest\QuestList.cs" />

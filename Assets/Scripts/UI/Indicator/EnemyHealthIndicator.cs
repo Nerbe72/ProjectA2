@@ -48,7 +48,7 @@ public class EnemyHealthIndicator : MonoBehaviour
             currentTarget.OnHealthChanged += UpdateHealth;
 
             // 체력 즉시 갱신 (최초 타겟팅 시)
-            var enemy = currentTarget as Enemy;
+            var enemy = currentTarget as Character;
             if (enemy != null && enemy.stats != null) 
             {
                 UpdateHealth(enemy.GetCurrentHealth(), enemy.stats.Health);

@@ -17,7 +17,7 @@ public class BowWeapon : Weapon
         {
             case AttackEvent.Projectile:
                 {
-                    if (ShowShockwave) Singleton.ShockWaveController.StartShock(projectileHandler.transform.position);
+                    if (ShowShockwave) Singleton.Get<ShockWaveController>().StartShock(projectileHandler.transform.position);
                     projectileHandler?.FireProjectile(owner, WeaponID);
                 }
                 break;

@@ -1,35 +1,48 @@
+using NUnit.Framework;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Playables;
 
-[System.Serializable]
-public struct AttackPatternDistance
-{
-    public float MinDistance;
-    public float MaxDistance;
-}
+
 
 public partial class DeepDragon : Boss
 {
-    [SerializeField] private bool isAIActive = false;
+    [System.Serializable]
+    private struct AttackPatternDistance
+    {
+        public float MinDistance;
+        public float MaxDistance;
+    }
+
     private Node root;
 
     [Header("Attack Hitbox")]
     [SerializeField] private MeleeHitbox rightArmHitbox;
     [SerializeField] private MeleeHitbox headHitbox;
     [SerializeField] private MeleeHitbox groundHitbox;
+    [SerializeField] private GroundShockwave groundShock;
+
+    [Header("Hit Collider")]
+    [SerializeField] private Collider bodyCollider;
+    [SerializeField] private Collider headCollider;
+
+    [Header("Animator")]
+    [SerializeField] private PlayableDirector cutscene;
+
+    [Header("Particle")]
+    [SerializeField] private ParticleSystem clawParticle;
+
+    [Header("Wall")]
+    [SerializeField] private GameObject blockingWall; 
 
     [Header("Pattern Range")]
     [SerializeField] private AttackPatternDistance pattern1Melee = new AttackPatternDistance { MinDistance = 0f, MaxDistance = 5f };
-    public AttackPatternDistance Pattern1Melee => pattern1Melee;
 
     [SerializeField] private AttackPatternDistance pattern2MidRange = new AttackPatternDistance { MinDistance = 5.1f, MaxDistance = 15f };
-    public AttackPatternDistance Pattern2MidRange => pattern2MidRange;
 
     [SerializeField] private AttackPatternDistance pattern3LongRange = new AttackPatternDistance { MinDistance = 15.1f, MaxDistance = 30f };
-    public AttackPatternDistance Pattern3LongRange => pattern3LongRange;
 
     [SerializeField] private AttackPatternDistance pattern4Charge = new AttackPatternDistance { MinDistance = 10f, MaxDistance = 25f };
-    public AttackPatternDistance Pattern4Charge => pattern4Charge;
     
     [Header("Fallback Attack")]
     [SerializeField] private float jumpAttackRetreatDistance = 10f;
@@ -61,14 +74,48 @@ public partial class DeepDragon : Boss
         if (isDead) return;
         root.Evaluate();
     }
-    
+
+    public override void SetFaced()
+    {
+        base.SetFaced();
+
+        blockingWall.SetActive(true);
+        PlayCutscene();
+    }
+
     public void StartAI()
     {
         isAIActive = true;
+        cutscene.Stop();
+    }
+
+    public void BlockInput()
+    {
+        UIManager.OffBasicUI();
+        InputManager.IgnoreInput = true;
+        InputManager.IgnoreUIInput = true;
+    }
+
+    public void ReleaseInput()
+    {
+        UIManager.OnBasicUI();
+        InputManager.IgnoreInput = false;
+        InputManager.IgnoreUIInput = false;
+    }
+
+    public override void Dead()
+    {
+        base.Dead();
+
+        blockingWall.SetActive(false);
+    }
+
+    public void PlayCutscene()
+    {
+        cutscene.Play();
     }
 
     // Animation Event
-
     public void OnArmAttack() => rightArmHitbox.Activate();
     public void OnHeadAttack() => headHitbox.Activate();
     public void OnGroundAttack() => groundHitbox.Activate();
@@ -78,11 +125,38 @@ public partial class DeepDragon : Boss
 
     public void CreateShock()
     {
-        StartCoroutine(ShockCoroutine());
+        groundShock.Play();
     }
 
-    private IEnumerator ShockCoroutine()
+    public void SetAttacking()
     {
-        yield break;
+        if (headCollider != null) headCollider.enabled = false;
+        isAttacking = true;
+    }
+
+    public void ReleaseAttacking()
+    {
+        isAttacking = false;
+        if (headCollider != null) headCollider.enabled = true;
+    }
+
+    public void SetBoolAnimationParameter(ActionType _type)
+    {
+        animator.SetBool(AnimationHash.GetHash(_type), true);
+    }
+
+    public void ResetBoolAnimationParameter(ActionType _type)
+    {
+        animator.SetBool(AnimationHash.GetHash(_type), false);
+    }
+
+    public void Shake()
+    {
+        Singleton.Get<CameraManager>().ShakeCamera(0.3f);
+    }
+
+    public void PlayClawSlash()
+    {
+        clawParticle.Play();
     }
 }

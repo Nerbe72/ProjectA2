@@ -6,20 +6,9 @@ public static class Singleton
     // key: typeof(T), value: instance
     private static Dictionary<System.Type, UnityEngine.Object> singletons = new Dictionary<System.Type, UnityEngine.Object>();
 
-    #region Combat
-    public static DamageIndicatorManager DamageIndicatorManager = null;
-    public static EnemyHealthIndicator EnemyHealthIndicator = null;
-    #endregion
-
-    #region Effect
-    public static ShockWaveController ShockWaveController = null;
-    #endregion
-
     #region Player
     public static Player Player = null;
     public static Inventory Inventory = null;
-    //public static PlayerStatusUI PlayerStatusUI = null;
-    //public static LevelUpDialogueWindow LevelUpUI = null;
     #endregion
 
     public static T Get<T>() where T : class

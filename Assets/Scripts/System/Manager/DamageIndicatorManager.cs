@@ -11,13 +11,12 @@ public class DamageIndicatorManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Singleton.DamageIndicatorManager != null)
+        if (Singleton.Add(this))
         {
             Destroy(gameObject);
             return;
         }
 
-        Singleton.DamageIndicatorManager = this;
         DontDestroyOnLoad(gameObject);
 
         indicators = new List<GameObject>();

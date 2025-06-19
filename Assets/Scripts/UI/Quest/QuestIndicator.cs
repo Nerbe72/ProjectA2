@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ public class QuestIndicator : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    private void Start()
+    private async void Start()
     {
         showHash = AnimationHash.GetHash("Show");
         completeHash = AnimationHash.GetHash("Complete");

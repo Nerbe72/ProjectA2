@@ -29,6 +29,8 @@ public class QuestList : MonoBehaviour
         if (localeTable == null)
         {
             localeTable = Singleton.Get<TableDataManager>().Table.Locale;
+
+            if (localeTable == null) Debug.LogError($"Table Error : QuestList");
         }
 
         SetList();
@@ -61,7 +63,6 @@ public class QuestList : MonoBehaviour
 
         var quest_selected = Singleton.Get<QuestManager>().GetQuestInfo(_id);
         var progress_selected = Singleton.Player.QuestStateInstance.GetQuestState(_id);
-        var localeTable = Singleton.Get<TableDataManager>().Table.Locale;
         var nameLocale = localeTable.Get(quest_selected.NameID, GameManager.CurrentLocale);
 
         string stateLocale = GetListHeader(progress_selected.State);

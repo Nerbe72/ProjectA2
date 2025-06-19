@@ -73,7 +73,7 @@ public class GachaUI : WindowBase
 
     private void RequestRoll(BannerData _banner, int _rollCount)
     {
-        uint price = (uint)(_rollCount == 1 ? _banner.singlePrice : _banner.tenPrice);
+        uint price = (uint)(_rollCount == 1 ? _banner.SinglePrice : _banner.TenPrice);
         if (!Singleton.Inventory.IsCurrencyEnough(price))
         {
             Debug.Log("재화가 부족합니다.");

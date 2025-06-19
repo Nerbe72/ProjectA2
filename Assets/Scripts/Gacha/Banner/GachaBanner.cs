@@ -107,7 +107,7 @@ public class GachaBanner : MonoBehaviour
 
         var container = currentContent.GetComponent<BannerContainer>();
         container.Data = _data;
-        currentContent.GetComponent<Image>().sprite = await ResourceLoader.LoadAsync<Sprite>(container.Data.bannerPath, LoadType.GachaBanner);
+        currentContent.GetComponent<Image>().sprite = await ResourceLoader.LoadAsync<Sprite>(container.Data.BannerPath, LoadType.GachaBanner);
         currentContent.GetComponent<Button>().onClick.AddListener(() => { SelectContent(container); });
     }
 
@@ -122,9 +122,10 @@ public class GachaBanner : MonoBehaviour
         one_roll.onClick.RemoveAllListeners();
         ten_roll.onClick.RemoveAllListeners();
 
-        backgroundIMG.sprite = await ResourceLoader.LoadAsync<Sprite>(_container.Data.backgroundPath, LoadType.GachaBackground);
-        bannerText.text = _container.Data.bannerName;
-        weaponImagePosition.position.Set(_container.Data.characterPosition.x, _container.Data.characterPosition.y, 0);
+        backgroundIMG.sprite = await ResourceLoader.LoadAsync<Sprite>(_container.Data.BackgroundPath, LoadType.GachaBackground);
+        var localeTable = Singleton.Get<TableDataManager>().Table.Locale;
+        bannerText.text = localeTable.Get(_container.Data.BannerName, GameManager.CurrentLocale);
+        weaponImagePosition.position.Set(_container.Data.CharacterPosition.x, _container.Data.CharacterPosition.y, 0);
 
         int count = Math.Clamp(_container.Data.SSR_PickupList.Count, 0, 3);
         for (int i = 0; i < count; i++)
@@ -142,8 +143,8 @@ public class GachaBanner : MonoBehaviour
             weaponImages[i].color = UnityEngine.Color.clear;
         }
 
-        one_roll.GetComponentsInChildren<TMP_Text>()[1].text = _container.Data.singlePrice.ToString();
-        ten_roll.GetComponentsInChildren<TMP_Text>()[1].text = _container.Data.tenPrice.ToString();
+        one_roll.GetComponentsInChildren<TMP_Text>()[1].text = _container.Data.SinglePrice.ToString();
+        ten_roll.GetComponentsInChildren<TMP_Text>()[1].text = _container.Data.TenPrice.ToString();
 
         one_roll.onClick.RemoveAllListeners();
         one_roll.onClick.AddListener(() =>

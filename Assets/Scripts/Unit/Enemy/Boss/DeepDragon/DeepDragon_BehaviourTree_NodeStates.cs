@@ -17,10 +17,10 @@ public partial class DeepDragon : Boss
     private bool IsAttacking()
     {
         // 0번 레이어(Base Layer)의 현재 애니메이션 상태 정보를 가져옵니다.
-        return animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack");
+        return isAttacking;
     }
 
-    private bool IsAIDisabled()
+    private bool IsAiDisabled()
     {
         return !isAIActive;
     }
@@ -31,30 +31,18 @@ public partial class DeepDragon : Boss
         return (distanceToPlayer >= pattern.MinDistance && distanceToPlayer <= pattern.MaxDistance);
     }
     
-    private bool IsInPattern1Dist() => IsPlayerInPatternDistance(Pattern1Melee);
-    private bool IsInPattern2Dist() => IsPlayerInPatternDistance(Pattern2MidRange);
-    private bool IsInPattern3Dist() => IsPlayerInPatternDistance(Pattern3LongRange);
-    private bool IsInPattern4Dist() => IsPlayerInPatternDistance(Pattern4Charge);
-
-    private bool ShouldPerformFallbackAttack()
-    {
-        distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-
-        if (distanceToPlayer >= Pattern1Melee.MinDistance && distanceToPlayer <= Pattern1Melee.MaxDistance) return false;
-        if (distanceToPlayer >= Pattern2MidRange.MinDistance && distanceToPlayer <= Pattern2MidRange.MaxDistance) return false;
-        if (distanceToPlayer >= Pattern3LongRange.MinDistance && distanceToPlayer <= Pattern3LongRange.MaxDistance) return false;
-        if (distanceToPlayer >= Pattern4Charge.MinDistance && distanceToPlayer <= Pattern4Charge.MaxDistance) return false;
-        
-        return true;
-    }
+    private bool IsInPattern1Distance() => IsPlayerInPatternDistance(pattern1Melee);
+    private bool IsInPattern2Distance() => IsPlayerInPatternDistance(pattern2MidRange);
+    private bool IsInPattern3Distance() => IsPlayerInPatternDistance(pattern3LongRange);
+    private bool IsInPattern4Distance() => IsPlayerInPatternDistance(pattern4Charge);
     #endregion
 
     #region Actions
     private NodeStates DoDead()
     {
+        Debug.Log("DoDead");
         if (agent.enabled)
         {
-            agent.isStopped = true;
             agent.ResetPath();
             agent.SetDestination(transform.position);
         }
@@ -72,8 +60,8 @@ public partial class DeepDragon : Boss
     /// </summary>
     private NodeStates StopMovement()
     {
-        if (agent.enabled && !agent.isStopped)
-            agent.isStopped = true;
+        Debug.Log("StopMovement");
+        animator.SetBool(AnimationHash.GetHash(ActionType.Walk), false);
         animator.SetFloat(AnimationHash.GetHash(ActionType.Move), 0f);
         animator.SetFloat(AnimationHash.GetHash(ActionType.Side), 0f);
         agent.SetDestination(transform.position);
@@ -82,8 +70,10 @@ public partial class DeepDragon : Boss
 
     private NodeStates DoNothing() 
     {
+        Debug.Log("DoNothing");
         if (agent.enabled)
-            agent.isStopped = true;
+            agent.SetDestination(transform.position);
+        animator.SetBool(AnimationHash.GetHash(ActionType.Walk), false);
         animator.SetFloat(AnimationHash.GetHash(ActionType.Move), 0f);
         animator.SetFloat(AnimationHash.GetHash(ActionType.Side), 0f);
         return NodeStates.SUCCESS;
@@ -91,43 +81,33 @@ public partial class DeepDragon : Boss
     
     private NodeStates DoAttack(int patternIndex)
     {
+        Debug.Log($"DoAttack Pattern{patternIndex}");
+        headHitbox.Configure(AttackType.Physical, BossData.Damage, this);
+        rightArmHitbox.Configure(AttackType.Physical, BossData.Damage, this);
+        groundHitbox.Configure(AttackType.Physical, BossData.Damage, this);
+        groundShock.Configure(AttackType.Physical, BossData.Damage, this);
+
+        // Disable head collider and mark attacking
+        SetAttacking();
+        animator.SetBool(AnimationHash.GetHash(ActionType.Walk), false);
         animator.SetFloat(AnimationHash.GetHash(ActionType.Move), 0f);
         animator.SetFloat(AnimationHash.GetHash(ActionType.Side), 0f);
         Debug.Log($"Executing Attack Pattern {patternIndex}");
         transform.LookAt(player.transform.position);
         animator.SetInteger("Pattern", patternIndex);
         animator.SetTrigger("Attack");
+        agent.SetDestination(transform.position);  // Hold position during attack
         return NodeStates.SUCCESS;
     }
     
-    private NodeStates DoPattern1() => DoAttack(1);
-    private NodeStates DoPattern2() => DoAttack(2);
-    private NodeStates DoPattern3() => DoAttack(3);
-    private NodeStates DoPattern4() => DoAttack(4);
-    private NodeStates DoFallbackJumpAttack() => DoAttack(5);
-
-    private NodeStates DoRetreatForFallback()
-    {
-        agent.updateRotation = false;
-        transform.LookAt(player.transform.position);
-        Vector3 directionAway = (transform.position - player.transform.position).normalized;
-        Vector3 localDirAway = transform.InverseTransformDirection(directionAway);
-        animator.SetFloat(AnimationHash.GetHash(ActionType.Move), localDirAway.z);
-        animator.SetFloat(AnimationHash.GetHash(ActionType.Side), localDirAway.x);
-
-        Vector3 targetPos = transform.position + directionAway * JumpAttackRetreatDistance;
-        agent.speed = RetreatSpeed;
-        agent.SetDestination(targetPos);
-        if (Vector3.Distance(transform.position, targetPos) < 1f)
-        {
-            agent.speed = BossData.Speed;
-            return NodeStates.SUCCESS;
-        }
-        return NodeStates.RUNNING;
-    }
+    private NodeStates DoPattern1() => DoAttack(0);
+    private NodeStates DoPattern2() => DoAttack(1);
+    private NodeStates DoPattern3() => DoAttack(2);
+    private NodeStates DoPattern4() => DoAttack(3);
 
     private NodeStates DoChaseAndReposition()
     {
+        Debug.Log("DoChaseAndReposition");
         if (Time.time > chasePhaseStartTime + ChasePhaseDuration)
             return NodeStates.SUCCESS;
 
@@ -161,6 +141,7 @@ public partial class DeepDragon : Boss
 
     private NodeStates InitChasePhase()
     {
+        Debug.Log("InitChasePhase");
         chasePhaseStartTime = Time.time;
         currentMovementIndex = -1;
         agent.speed = BossData.Speed;

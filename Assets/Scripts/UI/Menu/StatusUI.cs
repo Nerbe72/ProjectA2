@@ -35,7 +35,7 @@ public class StatusUI : MonoBehaviour
 
     private async void Start()
     {
-        while(!Singleton.Player.IsInstantiated)
+        while(Singleton.Player == null || !Singleton.Player.IsInstantiated)
         {
             await Task.Yield();
         }

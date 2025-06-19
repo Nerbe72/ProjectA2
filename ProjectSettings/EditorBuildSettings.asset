@@ -12,7 +12,13 @@ EditorBuildSettings:
     path: Assets/Scenes/Loading.unity
     guid: 269c2e0bbfe764c45a74515398e031e6
   - enabled: 1
-    path: Assets/Scenes/Start.unity
+    path: Assets/Scenes/BeforePlayerLoad.unity
+    guid: 2945272c9fa15014bad0d2c518d50b78
+  - enabled: 1
+    path: Assets/Scenes/AfterPlayerLoad.unity
+    guid: cf438da1fd31cad42b7e4e7967c06931
+  - enabled: 1
+    path: Assets/Scenes/FrontVill.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
     path: Assets/Scenes/Village.unity

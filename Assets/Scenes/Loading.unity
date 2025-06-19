@@ -484,7 +484,7 @@ GameObject:
   - component: {fileID: 493858430}
   - component: {fileID: 493858435}
   m_Layer: 5
-  m_Name: LoadUI
+  m_Name: SceneLoader
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -600,7 +600,7 @@ GameObject:
   - component: {fileID: 1219300142}
   m_Layer: 0
   m_Name: Camera
-  m_TagString: MainCamera
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -656,7 +656,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1219300141}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &1219300144
 Camera:
   m_ObjectHideFlags: 0

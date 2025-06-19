@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d903cd8426396124ba00b292d0021c73, type: 3}
   m_Name: DeepDragon
   m_EditorClassIdentifier: 
-  UnitType: 0
+  UnitType: 1
   Health: 5000
   Damage: 250
   Defense: 120
   ID: 900001
   AttackType: 0
-  Speed: 1
+  Speed: 2
   RewardCurrency: 10000

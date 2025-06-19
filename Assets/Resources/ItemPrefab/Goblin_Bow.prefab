@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WeaponID: 10004
+  ShowShockwave: 1
 --- !u!114 &4830504031055214170
 MonoBehaviour:
   m_ObjectHideFlags: 0
