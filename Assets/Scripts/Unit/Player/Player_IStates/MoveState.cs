@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class MoveState : IPlayerState
 {
     public void Enter(Player _player)

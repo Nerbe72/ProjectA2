@@ -1,10 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using UnityEngine;
-using UnityEngine.SceneManagement;
-
 public static class BootstrapManager
 {
     //public static void Init()

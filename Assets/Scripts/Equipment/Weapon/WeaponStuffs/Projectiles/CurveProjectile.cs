@@ -49,7 +49,7 @@ public class CurveProjectile : Projectile
         Vector3 moveDirection = currentPosition - previousPosition;
         if (moveDirection != Vector3.zero)
             transform.rotation = Quaternion.LookRotation(moveDirection);
-        
+
         if (t >= 1f) Destroy(gameObject);
     }
 }

@@ -30,7 +30,7 @@ public class QuestEditor : EditorWindow
         EditorGUILayout.Space(10);
 
         dataPath = Application.persistentDataPath;
-        
+
         // 전체 좌우 공백을 위한 외부 Horizontal 그룹
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.Space(10); // 왼쪽 공백
@@ -38,14 +38,14 @@ public class QuestEditor : EditorWindow
         EditorGUILayout.BeginVertical(); // 실제 내용을 담을 내부 Vertical 그룹
 
         // 기존의 메인 Horizontal 그룹 (QuestListSide와 QuestEditSide를 나누는)
-        EditorGUILayout.BeginHorizontal(); 
-        
+        EditorGUILayout.BeginHorizontal();
+
         QuestListSide();
-        
+
         EditorGUILayout.Space(10); // 목록과 편집기 사이 공백 (이미 있음)
-        
+
         QuestEditSide();
-        
+
         EditorGUILayout.EndHorizontal(); // 메인 Horizontal 그룹 끝
 
         EditorGUILayout.EndVertical(); // 실제 내용을 담는 내부 Vertical 그룹 끝
@@ -81,28 +81,28 @@ public class QuestEditor : EditorWindow
 
         // 퀘스트 목록 스크롤
         scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, GUILayout.Height(300));
-        
+
         foreach (var questPair in quests)
         {
             QuestInfo quest = questPair.Value;
-            
+
             EditorGUILayout.BeginHorizontal();
-            
+
             // 퀘스트 선택 버튼
             if (GUILayout.Button($"[{quest.QuestID}] Quest {quest.QuestID}", GUILayout.Width(200)))
             {
                 SelectQuest(quest);
             }
-            
+
             // 삭제 버튼
             if (GUILayout.Button("X", GUILayout.Width(30)))
             {
                 DeleteQuest(quest.QuestID);
             }
-            
+
             EditorGUILayout.EndHorizontal();
         }
-        
+
         EditorGUILayout.EndScrollView();
 
         // 새 퀘스트 추가 폼
@@ -117,7 +117,7 @@ public class QuestEditor : EditorWindow
     private void QuestEditSide()
     {
         EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
-        
+
         if (selectedQuest != null)
         {
             GUILayout.Label("Quest Editor", EditorStyles.boldLabel);
@@ -127,7 +127,7 @@ public class QuestEditor : EditorWindow
         {
             GUILayout.Label("퀘스트를 선택하거나 새로 만드세요.", EditorStyles.helpBox);
         }
-        
+
         EditorGUILayout.EndVertical();
     }
 
@@ -138,7 +138,7 @@ public class QuestEditor : EditorWindow
         newQuest.Objectives = new List<ObjectiveInfo>();
         newQuest.Reward = new RewardInfo();
         newQuest.NextQuestIDs = new List<int>();
-        
+
         // 새 퀘스트의 기본 ID 설정
         int newId = GetNextQuestID();
         newQuest.QuestID = newId;
@@ -148,53 +148,53 @@ public class QuestEditor : EditorWindow
     {
         EditorGUILayout.Space(10);
         GUILayout.Label("새 퀘스트 추가", EditorStyles.boldLabel);
-        
+
         EditorGUILayout.BeginVertical(GUI.skin.box);
-        
+
         newQuest.QuestID = EditorGUILayout.IntField("퀘스트 ID", newQuest.QuestID);
         newQuest.NameID = EditorGUILayout.IntField("이름 ID", newQuest.NameID);
         newQuest.DescriptionID = EditorGUILayout.IntField("설명 ID", newQuest.DescriptionID);
-        
+
         EditorGUILayout.BeginHorizontal();
-        
+
         if (GUILayout.Button("추가"))
         {
             AddNewQuest();
         }
-        
+
         if (GUILayout.Button("취소"))
         {
             showAddQuestForm = false;
         }
-        
+
         EditorGUILayout.EndHorizontal();
-        
+
         EditorGUILayout.EndVertical();
     }
 
     private void ShowQuestEditor(QuestInfo _quest)
     {
         questEditScrollPosition = EditorGUILayout.BeginScrollView(questEditScrollPosition, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
-        
+
         // 기본 정보
         GUILayout.Label("기본 정보", EditorStyles.boldLabel);
         _quest.QuestID = EditorGUILayout.IntField("퀘스트 ID", _quest.QuestID);
         _quest.NameID = EditorGUILayout.IntField("이름 ID", _quest.NameID);
         _quest.DescriptionID = EditorGUILayout.IntField("설명 ID", _quest.DescriptionID);
-        
+
         EditorGUILayout.Space(10);
-        
+
         // 연결 정보
         GUILayout.Label("연결 정보", EditorStyles.boldLabel);
         _quest.PrerequisiteQuestID = EditorGUILayout.IntField("선행 퀘스트 ID", _quest.PrerequisiteQuestID);
         _quest.ReceiverNPCID = EditorGUILayout.IntField("NPC ID", _quest.ReceiverNPCID);
-        
+
         // 후속 퀘스트들 (여러개)
         EditorGUILayout.Space(5);
         GUILayout.Label("후속 퀘스트들", EditorStyles.boldLabel);
-        
+
         EditorGUILayout.BeginVertical(GUI.skin.box);
-        
+
         for (int i = 0; i < _quest.NextQuestIDs.Count; i++)
         {
             EditorGUILayout.BeginHorizontal();
@@ -208,7 +208,7 @@ public class QuestEditor : EditorWindow
             }
             EditorGUILayout.EndHorizontal();
         }
-        
+
         EditorGUILayout.BeginHorizontal();
         newNextQuestID = EditorGUILayout.IntField("새 후속 퀘스트 ID", newNextQuestID);
         if (GUILayout.Button("추가", GUILayout.Width(50)))
@@ -219,40 +219,40 @@ public class QuestEditor : EditorWindow
             }
         }
         EditorGUILayout.EndHorizontal();
-        
+
         EditorGUILayout.EndVertical();
-        
+
         EditorGUILayout.Space(10);
-        
+
         // 기타 설정
         GUILayout.Label("기타 설정", EditorStyles.boldLabel);
         _quest.Repeatable = EditorGUILayout.Toggle("반복 가능", _quest.Repeatable);
-        
+
         EditorGUILayout.Space(10);
-        
+
         // 목표 편집 (GUI)
         ShowObjectivesEditor(_quest);
-        
+
         EditorGUILayout.Space(10);
-        
+
         // 보상 편집 (GUI)
         ShowRewardsEditor(_quest);
-        
+
         EditorGUILayout.Space(10);
-        
+
         // 적용 버튼
         if (GUILayout.Button("변경사항 적용"))
         {
             ApplyQuestChanges(_quest);
         }
-        
+
         EditorGUILayout.EndScrollView();
     }
 
     private void ShowObjectivesEditor(QuestInfo _quest)
     {
         GUILayout.Label("퀘스트 목표", EditorStyles.boldLabel);
-        
+
         if (_quest.Objectives == null)
         {
             _quest.Objectives = new List<ObjectiveInfo>();
@@ -317,7 +317,7 @@ public class QuestEditor : EditorWindow
     private void ShowRewardsEditor(QuestInfo _quest)
     {
         GUILayout.Label("퀘스트 보상", EditorStyles.boldLabel);
-        
+
         if (_quest.Reward == null)
         {
             _quest.Reward = new RewardInfo();
@@ -375,12 +375,12 @@ public class QuestEditor : EditorWindow
         if (EditorUtility.DisplayDialog("퀘스트 삭제", $"퀘스트 {_questID}를 정말 삭제하시겠습니까?", "삭제", "취소"))
         {
             quests.Remove(_questID);
-            
+
             if (selectedQuest != null && selectedQuest.QuestID == _questID)
             {
                 selectedQuest = null;
             }
-            
+
             Debug.Log($"퀘스트 {_questID} 삭제됨");
         }
     }
@@ -445,7 +445,7 @@ public class QuestEditor : EditorWindow
             {
                 QuestDataContainer dataContainer = new QuestDataContainer();
                 dataContainer.questList = new List<QuestInfo>(quests.Values);
-                
+
                 string json = JsonUtility.ToJson(dataContainer, true);
                 File.WriteAllText(path, json);
                 Debug.Log($"퀘스트를 JSON 파일로 성공적으로 저장했습니다: {path}");

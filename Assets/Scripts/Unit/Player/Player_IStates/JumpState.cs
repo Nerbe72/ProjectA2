@@ -4,19 +4,19 @@ public class JumpState : IPlayerState
 {
     private bool isLanding = false;
     private bool jumpStarted = false;
-    
+
     public void Enter(Player _player)
     {
         jumpStarted = false;
         isLanding = false;
-        
+
         // 이미 공중에 있는 경우 점프 처리 건너뛰기
         if (!_player.IsFlagged(StateFlags.Grounded))
         {
             jumpStarted = true;
             return;
         }
-        
+
         // 점프 애니메이션 설정 및 점프 상태 유지
         _player.SetJumpAnimation();
         _player.SetFlag(StateFlags.Jump, true);
@@ -69,7 +69,7 @@ public class JumpState : IPlayerState
     {
         // 착지 애니메이션 재생 시간 기다림
         yield return new WaitForSeconds(0.3f);
-        
+
         _player.ResetLandingAnimation();
 
         // 착지 후 이동 또는 대기 상태로 전환
@@ -108,4 +108,4 @@ public class JumpState : IPlayerState
         _player.ResetLandingAnimation();
         _player.SetFlag(StateFlags.Jumping, false);
     }
-} 
+}

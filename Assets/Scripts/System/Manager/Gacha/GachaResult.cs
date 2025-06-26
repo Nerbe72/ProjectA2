@@ -88,7 +88,7 @@ public class GachaResult : MonoBehaviour
         List<(TableItem.Info Info, RandomWeaponData Data)> items = new List<(TableItem.Info Info, RandomWeaponData Data)>();
         List<Color> colors = new List<Color>();
 
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             var item_selected = Singleton.Get<TableDataManager>().Table.Item.Get(_data.Items[i].ID);
             items.Add((item_selected, _data.Items[i].Data));

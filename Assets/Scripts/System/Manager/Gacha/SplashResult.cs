@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -110,7 +109,7 @@ public class SplashResult : MonoBehaviour, IFlag
         }
 
         shine.color = targetColor;
-        
+
         yield break;
     }
 

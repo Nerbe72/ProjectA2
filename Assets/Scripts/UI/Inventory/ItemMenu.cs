@@ -14,7 +14,7 @@ public class ItemMenu : MonoBehaviour
         UseButton.onClick.AddListener(ClickUse);
         GrindButton.onClick.AddListener(ClickGrind);
         rectTransform = GetComponent<RectTransform>();
-        
+
         gameObject.SetActive(false);
     }
 
@@ -26,13 +26,13 @@ public class ItemMenu : MonoBehaviour
         Vector2 pos = _position;
         Vector2 size = rectTransform.sizeDelta;
         Vector2 screenSize = new Vector2(Screen.width, Screen.height);
-        
+
         // 오른쪽 끝이나 위쪽 끝에 너무 가까우면 위치 조정
         if (pos.x + size.x > screenSize.x)
             pos.x = screenSize.x - size.x;
         if (pos.y + size.y > screenSize.y)
             pos.y = screenSize.y - size.y;
-            
+
         rectTransform.position = pos;
 
         var item_selected = (ItemType)Singleton.Get<TableDataManager>().Table.Item.Get(_item.ItemID).ItemType;
@@ -54,7 +54,7 @@ public class ItemMenu : MonoBehaviour
     private void ClickUse()
     {
         if (currentItem == null) return;
-        
+
         int index = Singleton.Inventory.GetItemIndex(currentItem);
         if (index != -1)
         {
@@ -66,7 +66,7 @@ public class ItemMenu : MonoBehaviour
     private void ClickGrind()
     {
         if (currentItem == null) return;
-        
+
         int index = Singleton.Inventory.GetItemIndex(currentItem);
         if (index != -1)
         {

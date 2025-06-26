@@ -1,11 +1,7 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Experimental.AI;
-using UnityEngine.Scripting;
 
 public class MinigameController : MonoBehaviour
 {
@@ -54,7 +50,7 @@ public class MinigameController : MonoBehaviour
 
         bool hasLoadedGame = false;
         int count = minigameLoaded.Count;
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             var notInstantiated = Singleton.Get<MinigameManager>().GetRandomMinigame();
             if (minigameLoaded[i].Type == notInstantiated.GetComponent<Minigame>().Type)

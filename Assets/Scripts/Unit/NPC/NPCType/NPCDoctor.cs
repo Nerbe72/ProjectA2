@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class NPCDoctor : NPC
 {
     public override void DoAction()

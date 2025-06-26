@@ -23,6 +23,12 @@ public partial class Player : Character
 
     public void CheckGround()
     {
+        if (IsLoadingScene)
+        {
+            SetFlag(StateFlags.Grounded, true);
+            return;
+        }
+
         Vector3 origin = transform.position + (Vector3.up * 0.05f);
         Debug.DrawRay(origin, Vector3.down, Color.red, 0.1f);
         if (Physics.Raycast(origin, Vector3.down, 0.1f, Singleton.Get<LayerManager>().GetLayerMask(LayerType.Ground)))
@@ -41,7 +47,7 @@ public partial class Player : Character
             }
 
             yVelocity = Mathf.Clamp(yVelocity + (GRAVITY * GravityMultiply), FallMin, JumpForce);
-            
+
             if (yVelocity < 0)
                 SetFlag(StateFlags.Falling);
             else
@@ -50,7 +56,7 @@ public partial class Player : Character
         else
         {
             SetFlag(StateFlags.Falling, false);
-            
+
             if (IsFlagged(StateFlags.Jump))
             {
                 yVelocity = JumpForce;
@@ -156,7 +162,7 @@ public partial class Player : Character
 
         Quaternion targetRotation = Quaternion.LookRotation(dodgeDirection);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 5f * RotationSpeed * Time.deltaTime);
-        
+
         // 회피 애니메이션은 DodgeState에서 설정
         SetFlag(StateFlags.Dodging);
     }

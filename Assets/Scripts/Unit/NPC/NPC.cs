@@ -88,7 +88,7 @@ public class NPC : Character, IInteractable
         // npcid를 통한 상태 확인 후
         var npc_selected = Singleton.Get<TableDataManager>().Table.NPC;
         var condition_result = Singleton.Get<TableDataManager>().Table.NPCDialogueCondition.GetConditionResult(NPCID, inventory, player);
-        
+
         if (condition_result == 0)
             condition_result = npc_selected.Get(NPCID).DefaultDialogueID;
 
@@ -111,7 +111,7 @@ public class NPC : Character, IInteractable
 
     public virtual void EndAction()
     {
-        
+
     }
 
     /// <summary>
@@ -154,7 +154,7 @@ public class NPC : Character, IInteractable
 
         var table = Singleton.Get<TableDataManager>().Table.NPC.Get(NPCID);
 
-        Singleton.Get<InteractIndicator>().SetShowIndicator(true, table.InteractID);
+        Singleton.Get<InteractIndicatorUI>().SetShowIndicator(true, table.InteractID);
         Singleton.Get<InteractManager>().SetInteract(this);
     }
 
@@ -166,7 +166,7 @@ public class NPC : Character, IInteractable
 
         if (player == null) return;
 
-        Singleton.Get<InteractIndicator>().SetShowIndicator(false);
+        Singleton.Get<InteractIndicatorUI>().SetShowIndicator(false);
         Singleton.Get<InteractManager>().UnSetInteract(this);
     }
-} 
+}

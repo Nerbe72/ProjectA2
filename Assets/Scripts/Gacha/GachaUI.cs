@@ -102,22 +102,22 @@ public class GachaUI : WindowBase
     {
         resultData.MinigameSuccess = _success;
 
-        DoCalculateResult();
+        CalculateResult();
     }
 
-    //추후 서버측으로 전환
-    private async void DoCalculateResult()
+    //추후 서버측으로 전환 고려
+    private async void CalculateResult()
     {
         Singleton.Get<GachaManager>().StartGacha(ref resultData);
 
-        while(resultData.Items.Count == 0)
+        while (resultData.Items.Count == 0)
         {
             await Task.Yield();
         }
 
         //결과가 도출되면 인벤토리 저장 후 result 실행
         //무기 인스턴스 로드 포함
-        for(int i = 0; i < resultData.Items.Count; i++)
+        for (int i = 0; i < resultData.Items.Count; i++)
         {
             WeaponItemInstance weaponInstance = new WeaponItemInstance();
             var item_selected = Singleton.Get<TableDataManager>().Table.Item.Get(resultData.Items[i].ID);

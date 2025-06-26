@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public abstract class AbilityLogic : IAbility
 {
     public int AbilityId { get; set; }

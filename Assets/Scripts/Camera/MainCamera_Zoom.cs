@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public partial class MainCamera : MonoBehaviour
@@ -41,7 +40,7 @@ public partial class MainCamera : MonoBehaviour
 
         float dt, delta;
 
-        if(ZoomInfo.StartDelay > 0)
+        if (ZoomInfo.StartDelay > 0)
         {
             yield return new WaitForSeconds(ZoomInfo.StartDelay);
         }
@@ -49,18 +48,18 @@ public partial class MainCamera : MonoBehaviour
         Transform trCon = transform.parent.parent;
         bool MoveCamera = false;
 
-        if(ZoomInfo.DeltaDir != Vector3.zero)
+        if (ZoomInfo.DeltaDir != Vector3.zero)
         {
             MoveCamera = true;
             IsFallowMe = false;
         }
 
-        while(true)
+        while (true)
         {
             dt = Time.deltaTime;
             delta = dt * ZoomInfo.FadeIn_Velocity;
 
-            if(CameraFilterPack_Blur_Focus.ChangeEyes > 3.0f)
+            if (CameraFilterPack_Blur_Focus.ChangeEyes > 3.0f)
             {
                 CameraFilterPack_Blur_Focus.ChangeEyes -= (17f * dt) / ZoomInfo.FadeIn_Time;
 
@@ -68,9 +67,9 @@ public partial class MainCamera : MonoBehaviour
                     CameraFilterPack_Blur_Focus.ChangeEyes = 3.0f;
             }
 
-            if(MoveCamera)
+            if (MoveCamera)
             {
-                if((ZoomInfo.FadeIn_Time -= dt) > 0f)
+                if ((ZoomInfo.FadeIn_Time -= dt) > 0f)
                 {
                     trCon.position += ZoomInfo.DeltaDir * dt * ZoomInfo.FadeIn_MoveSpeed;
                 }
@@ -82,9 +81,9 @@ public partial class MainCamera : MonoBehaviour
                 }
             }
 
-            if(ZoomInfo.IsZoom)
+            if (ZoomInfo.IsZoom)
             {
-                if((ZoomDelta + delta) < ZoomInfo.Dest)
+                if ((ZoomDelta + delta) < ZoomInfo.Dest)
                 {
                     ZoomDelta = ZoomInfo.Dest;
                     break;
@@ -93,7 +92,7 @@ public partial class MainCamera : MonoBehaviour
             }
             else
             {
-                if((ZoomDelta + delta) > ZoomInfo.Dest)
+                if ((ZoomDelta + delta) > ZoomInfo.Dest)
                 {
                     ZoomDelta = ZoomInfo.Dest;
                     break;
@@ -109,19 +108,19 @@ public partial class MainCamera : MonoBehaviour
         if (ZoomInfo.DeltaDir != Vector3.zero)
             MoveCamera = true;
 
-        while(true)
+        while (true)
         {
             dt = Time.deltaTime;
             delta = dt * ZoomInfo.FadeOut_Velocity;
 
-            if(CameraFilterPack_Blur_Focus.ChangeEyes < 3.0f)
+            if (CameraFilterPack_Blur_Focus.ChangeEyes < 3.0f)
             {
                 CameraFilterPack_Blur_Focus.ChangeEyes += (17f * dt) / ZoomInfo.FadeOut_Time;
             }
 
-            if(MoveCamera == true)
+            if (MoveCamera == true)
             {
-                if((ZoomInfo.FadeOut_Time -= dt) > 0f)
+                if ((ZoomInfo.FadeOut_Time -= dt) > 0f)
                 {
                     trCon.position -= ZoomInfo.DeltaDir * dt * ZoomInfo.FadeOut_MoveSpeed;
                 }
@@ -132,9 +131,9 @@ public partial class MainCamera : MonoBehaviour
                 }
             }
 
-            if(ZoomInfo.IsZoom)
+            if (ZoomInfo.IsZoom)
             {
-                if((ZoomDelta + delta) > 0)
+                if ((ZoomDelta + delta) > 0)
                 {
                     ZoomDelta = 0;
                     break;
@@ -143,7 +142,7 @@ public partial class MainCamera : MonoBehaviour
             }
             else
             {
-                if((ZoomDelta + delta) < 0)
+                if ((ZoomDelta + delta) < 0)
                 {
                     ZoomDelta = 0;
                     break;
@@ -171,7 +170,7 @@ public partial class MainCamera : MonoBehaviour
         ZoomInfo.FadeIn_Velocity = ZoomInfo.Dest / ZoomInfo.FadeIn_Time;
         ZoomInfo.FadeOut_Velocity = -ZoomInfo.Dest / ZoomInfo.FadeOut_Time;
 
-        if(DeltaPos != Vector3.zero)
+        if (DeltaPos != Vector3.zero)
         {
             DeltaPos.z = 0;
             float lenth = DeltaPos.magnitude;

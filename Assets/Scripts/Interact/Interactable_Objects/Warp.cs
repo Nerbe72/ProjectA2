@@ -17,7 +17,7 @@ public class Warp : InteractableObject
             if (connection == SceneLoadManager.SelectedConnection)
             {
                 var player = Singleton.Player;
-                
+
                 var playerRigidbody = player.GetComponent<Rigidbody>();
                 playerRigidbody.position = destination.position;
                 playerRigidbody.rotation = destination.rotation;
@@ -30,7 +30,7 @@ public class Warp : InteractableObject
 
     public override void DoAction()
     {
-        Singleton.Get<InteractIndicator>()?.SetShowIndicator(false);
+        Singleton.Get<InteractIndicatorUI>()?.SetShowIndicator(false);
         Singleton.Get<EnemyHealthIndicator>()?.gameObject.SetActive(false);
 
         Singleton.Player.IsMovementLocked = true;

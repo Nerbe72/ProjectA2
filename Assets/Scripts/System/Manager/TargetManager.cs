@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,8 +21,8 @@ public class TargetManager : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        
-        for(int i = 0; i < targets.Count; i++)
+
+        for (int i = 0; i < targets.Count; i++)
         {
             if (onSightTargets.Contains(targets[i]))
                 Gizmos.color = UnityEngine.Color.green;
@@ -104,8 +103,8 @@ public class TargetManager : MonoBehaviour
             Vector3 target1 = onSightTargets[i].transform.position;
             Vector3 target2 = onSightTargets[i + 1].transform.position;
 
-            if (Vector2.Distance(screenCenter, Camera.main.WorldToScreenPoint(target1) )
-                > Vector2.Distance(screenCenter, Camera.main.WorldToScreenPoint(target2) ) )
+            if (Vector2.Distance(screenCenter, Camera.main.WorldToScreenPoint(target1))
+                > Vector2.Distance(screenCenter, Camera.main.WorldToScreenPoint(target2)))
                 bestValue = onSightTargets[i + 1];
         }
 
@@ -152,7 +151,7 @@ public class TargetManager : MonoBehaviour
             //����Ʈ ��ȯ�� x�Ÿ��� �� �� ��ũ�� ���⿡ ����
 
             float tempDistance =
-                Camera.main.WorldToScreenPoint(CurrentTarget.transform.position).x - 
+                Camera.main.WorldToScreenPoint(CurrentTarget.transform.position).x -
                 Camera.main.WorldToScreenPoint(onSightTargets[i].transform.position).x;
 
             if (_searchRight)

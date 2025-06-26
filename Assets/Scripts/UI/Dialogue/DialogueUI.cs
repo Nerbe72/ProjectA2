@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -41,7 +40,7 @@ public class DialogueUI : MonoBehaviour, IWindowStack
         InputManager.IgnoreInput = true;
         InputManager.IgnoreUIInput = true;
         UIManager.OffBasicUI();
-        Singleton.Get<InteractIndicator>().SetShowIndicator(false);
+        Singleton.Get<InteractIndicatorUI>().SetShowIndicator(false);
 
         animator.SetBool(showHash, true);
     }
@@ -53,7 +52,7 @@ public class DialogueUI : MonoBehaviour, IWindowStack
 
         UIManager.OnBasicUI();
 
-        var indicator = Singleton.Get<InteractIndicator>();
+        var indicator = Singleton.Get<InteractIndicatorUI>();
         if (indicator != null)
             indicator.SetShowIndicator(true);
 

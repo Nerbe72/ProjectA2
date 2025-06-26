@@ -1,12 +1,10 @@
-using NUnit.Framework;
 using System.Collections.Generic;
-using UnityEngine;
 
 public partial class Goblin : Enemy
 {
     private bool isChasing = false;
     private bool isReturning = false;
-    
+
     private Node CreateBehaviourTree()
     {
         return new Selector(

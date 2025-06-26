@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using System.Collections.Generic;
 
 public class DamageIndicator : MonoBehaviour
 {
@@ -59,7 +59,7 @@ public class DamageIndicator : MonoBehaviour
     public void Drop()
     {
         currentTime += Time.deltaTime;
-        
+
         if (isRising)
         {
             float progress = currentTime / RiseDuration;

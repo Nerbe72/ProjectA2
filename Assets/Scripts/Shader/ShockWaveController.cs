@@ -1,7 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 
 public class ShockWaveController : MonoBehaviour
 {
@@ -40,7 +38,7 @@ public class ShockWaveController : MonoBehaviour
     public void StartShock(Vector3 position)
     {
         Vector2 screenPosition = Camera.main.WorldToViewportPoint(position);
-        
+
         material.SetVector(centerID, screenPosition);
         material.SetFloat(customTimeID, -0.1f);
 

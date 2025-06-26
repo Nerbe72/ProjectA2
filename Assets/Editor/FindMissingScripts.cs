@@ -1,5 +1,5 @@
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 public class FindMissingReferences : EditorWindow
 {
@@ -168,4 +168,4 @@ public class FindMissingReferences : EditorWindow
             Debug.LogWarning($"{issueCount} issue(s) found. Please reassign or remove problematic components.");
         Debug.Log("=============== Find Missing 'm_Targets' Finished ===============");
     }
-} 
+}

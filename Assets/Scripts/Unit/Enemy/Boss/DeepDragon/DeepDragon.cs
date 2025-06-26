@@ -1,9 +1,5 @@
-using NUnit.Framework;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Playables;
-
-
 
 public partial class DeepDragon : Boss
 {
@@ -33,7 +29,7 @@ public partial class DeepDragon : Boss
     [SerializeField] private ParticleSystem clawParticle;
 
     [Header("Wall")]
-    [SerializeField] private GameObject blockingWall; 
+    [SerializeField] private GameObject blockingWall;
 
     [Header("Pattern Range")]
     [SerializeField] private AttackPatternDistance pattern1Melee = new AttackPatternDistance { MinDistance = 0f, MaxDistance = 5f };
@@ -43,7 +39,7 @@ public partial class DeepDragon : Boss
     [SerializeField] private AttackPatternDistance pattern3LongRange = new AttackPatternDistance { MinDistance = 15.1f, MaxDistance = 30f };
 
     [SerializeField] private AttackPatternDistance pattern4Charge = new AttackPatternDistance { MinDistance = 10f, MaxDistance = 25f };
-    
+
     [Header("Fallback Attack")]
     [SerializeField] private float jumpAttackRetreatDistance = 10f;
     public float JumpAttackRetreatDistance => jumpAttackRetreatDistance;
@@ -51,24 +47,24 @@ public partial class DeepDragon : Boss
     [Tooltip("Retreat Speed")]
     [SerializeField] private float retreatSpeed = 15f;
     public float RetreatSpeed => retreatSpeed;
-    
+
     [Header("Chase Time")]
     [SerializeField] private float chasePhaseDuration = 5f;
     public float ChasePhaseDuration => chasePhaseDuration;
 
     [SerializeField] private float movementChangeInterval = 1.5f;
     public float MovementChangeInterval => movementChangeInterval;
-    
+
     // Chase & Reposition State
     private float chasePhaseStartTime;
     private int currentMovementIndex;
-    
+
     protected override void Awake()
     {
         base.Awake();
         root = CreateBehaviourTree();
     }
-    
+
     private void Update()
     {
         if (isDead) return;

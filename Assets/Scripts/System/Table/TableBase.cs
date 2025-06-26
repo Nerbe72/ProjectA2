@@ -1,11 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using UnityEditor;
+using UnityEngine;
 
 public class TableBase
 {
@@ -34,7 +29,7 @@ public class TableBase
 
     protected void Save_Binary(string _Name, object _Obj)
     {
-        string strpath = Path.Combine(GetTablePath(), "Resources", "Table", "Table_"+ _Name + ".txt");
+        string strpath = Path.Combine(GetTablePath(), "Resources", "Table", "Table_" + _Name + ".txt");
 
         var b = new BinaryFormatter();
 

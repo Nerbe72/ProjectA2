@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
-[AddComponentMenu ("Camera Filter Pack/Blur/Focus")]
+[AddComponentMenu("Camera Filter Pack/Blur/Focus")]
 public class CameraFilterPack_Blur_Focus : MonoBehaviour
 {
     #region Variables
@@ -32,7 +30,7 @@ public class CameraFilterPack_Blur_Focus : MonoBehaviour
     {
         get
         {
-            if(SCMaterial == null)
+            if (SCMaterial == null)
             {
                 SCMaterial = new Material(SCShader);
                 SCMaterial.hideFlags = HideFlags.HideAndDontSave;
@@ -55,7 +53,7 @@ public class CameraFilterPack_Blur_Focus : MonoBehaviour
 
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
-        if(SCShader != null)
+        if (SCShader != null)
         {
             TimeX += Time.deltaTime;
 
@@ -90,7 +88,7 @@ public class CameraFilterPack_Blur_Focus : MonoBehaviour
 
     private void Update()
     {
-        if(Application.isPlaying)
+        if (Application.isPlaying)
         {
             //if(Shared.BattleMgr.GameOver)
             //{
@@ -104,7 +102,7 @@ public class CameraFilterPack_Blur_Focus : MonoBehaviour
             Eyes = ChangeEyes;
 
 #if UNITY_EDITOR
-            if(Application.isPlaying != true)
+            if (Application.isPlaying != true)
             {
                 SCShader = Shader.Find("CameraFilterPack/Blur_Focus");
             }
@@ -114,7 +112,7 @@ public class CameraFilterPack_Blur_Focus : MonoBehaviour
 
     private void OnDisable()
     {
-        if(SCMaterial)
+        if (SCMaterial)
         {
             DestroyImmediate(SCMaterial);
         }

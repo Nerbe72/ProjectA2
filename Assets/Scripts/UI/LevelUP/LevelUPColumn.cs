@@ -17,7 +17,7 @@ public class LevelUPColumn : MonoBehaviour
 
     private void Awake()
     {
-        increaseButton.onClick.AddListener(() => OnIncreaseButtonClicked?.Invoke(this, true) );
+        increaseButton.onClick.AddListener(() => OnIncreaseButtonClicked?.Invoke(this, true));
         decreaseButton.onClick.AddListener(() => OnDecreaseButtonClicked?.Invoke(this, false));
     }
 }

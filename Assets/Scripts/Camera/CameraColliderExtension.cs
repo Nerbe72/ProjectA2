@@ -1,5 +1,5 @@
-using UnityEngine;
 using Unity.Cinemachine;
+using UnityEngine;
 
 public class CameraColliderExtension : CinemachineExtension
 {
@@ -22,4 +22,4 @@ public class CameraColliderExtension : CinemachineExtension
             state.PositionCorrection += correctedPos - desiredPos;
         }
     }
-} 
+}

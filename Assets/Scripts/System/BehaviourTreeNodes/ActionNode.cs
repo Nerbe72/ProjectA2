@@ -1,9 +1,5 @@
-﻿using System;
-using UnityEngine;
-using System.Collections;
-
-//액션을 설정할 리프 노드이다. 실행할 행동을 대리자delegate로 지정할 수 있다.
-public class ActionNode : Node 
+﻿//액션을 설정할 리프 노드이다. 실행할 행동을 대리자delegate로 지정할 수 있다.
+public class ActionNode : Node
 {
     public delegate NodeStates ActionNodeDelegate();
 
@@ -14,9 +10,9 @@ public class ActionNode : Node
         m_action = action;
     }
 
-    public override NodeStates Evaluate() 
+    public override NodeStates Evaluate()
     {
-        switch (m_action()) 
+        switch (m_action())
         {
             case NodeStates.SUCCESS:
                 m_nodeState = NodeStates.SUCCESS;

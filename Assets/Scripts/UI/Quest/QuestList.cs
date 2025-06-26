@@ -22,7 +22,7 @@ public class QuestList : MonoBehaviour
             player = Singleton.Player;
 
             if (player == null) return;
-            
+
             player.OnQuestStateChanged += SetList;
         }
 

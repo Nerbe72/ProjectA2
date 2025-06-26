@@ -1,19 +1,17 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-public class Selector : Node 
+public class Selector : Node
 {
     protected List<Node> m_nodes = new List<Node>();
 
-    public Selector(List<Node> nodes) 
+    public Selector(List<Node> nodes)
     {
         m_nodes = nodes;
     }
 
-    public override NodeStates Evaluate() 
+    public override NodeStates Evaluate()
     {
-        foreach (Node node in m_nodes) 
+        foreach (Node node in m_nodes)
         {
             switch (node.Evaluate())
             {

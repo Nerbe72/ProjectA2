@@ -1,9 +1,6 @@
-using JetBrains.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
-using UnityEngine;
 
 public partial class Player : Character
 {
@@ -99,7 +96,7 @@ public partial class Player : Character
         int safeIncraeseAmount = _increaseAmount % (301 - CurrentLevels.GetTotal());
 
         CurrentLevels.Data[_type] += _increaseAmount;
-        
+
         OnLevelChanged?.Invoke();
     }
 
@@ -132,9 +129,9 @@ public class Levels
     public Levels(int health, int strength, int dexterity, int intelligent)
     {
         Data = new Dictionary<LevelType, int>();
-        List<int> temp = new List<int>{ health, strength, dexterity, intelligent };
+        List<int> temp = new List<int> { health, strength, dexterity, intelligent };
 
-        for(int i = 1; i < (int)LevelType.Count; i++)
+        for (int i = 1; i < (int)LevelType.Count; i++)
         {
             Data.Add((LevelType)i, temp[i - 1]);
         }

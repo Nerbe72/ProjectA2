@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using Random = UnityEngine.Random;
 
 public class GachaManager : MonoBehaviour
@@ -52,7 +49,7 @@ public class GachaManager : MonoBehaviour
         {
             //todo: 시간추가
             var now = DateTime.Now;
-            string currentTime = 
+            string currentTime =
                 $"{TimeZoneInfo.Local.DisplayName.Split(" ")[0]} {now.Year}-{now.Month}-{now.Day}-{now.Hour}-{now.Minute}-{now.Second}:{i}";
             // 각 뽑기마다 pity 카운터 증가
             totalCount++;
@@ -204,7 +201,7 @@ public class GachaManager : MonoBehaviour
 
             var weapon_selected = Singleton.Get<TableDataManager>().Table.Weapon.Get(_list[idx]);
 
-            int damageResult = (int)Random.Range(weapon_selected.Damage_Min, weapon_selected.Damage_Max  + 1);
+            int damageResult = (int)Random.Range(weapon_selected.Damage_Min, weapon_selected.Damage_Max + 1);
             int defenseResult = (int)Random.Range(weapon_selected.Defense_Min, weapon_selected.Defense_Max + 1);
 
             RandomWeaponData data = new RandomWeaponData(damageResult, defenseResult);
@@ -228,9 +225,9 @@ public class GachaManager : MonoBehaviour
     // /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    public async Task  InitBannerDatas()
+    public async Task InitBannerDatas()
     {
-        while(Singleton.Get<AuthManager>() == null)
+        while (Singleton.Get<AuthManager>() == null)
         {
             await Task.Yield();
         }
@@ -245,7 +242,7 @@ public class GachaManager : MonoBehaviour
     {
         //db로 부터 결과값을 가져옴
         GachaResultWrapper result = await Singleton.Get<AuthManager>().GetDataAsync<GachaResultWrapper>(Request.readgachalog);
-        
+
         if (result.GachaResultList == null || result.GachaResultList.Count == 0)
         {
             totalCount = 0;
@@ -261,7 +258,7 @@ public class GachaManager : MonoBehaviour
             currentSSRCount = latest.SSRCurrentCount;
             pickupForce = latest.PickupForce;
         }
-            
-        Debug.Log($"로드된 최종 결과\ntotal:{totalCount}, sr:{currentSRCount}, ssr:{currentSSRCount}, pickupForce:{pickupForce}");
+
+        Debug.Log($"가챠 기록 {{\r\n  \"banners\": [\r\n    {{\r\n      \"BannerType\": \"Pickup\",\r\n      \"BannerName\": 100000001,\r\n      \"SSR_PickupList\": [10004],\r\n      \"SR_PickupList\": [10001, 10006],\r\n      \"SSR_Percent\": 1,\r\n      \"SR_Percent\": 19,\r\n      \"SSR_PickupPercent\": 50,\r\n      \"CharacterPosition\": {{ \"x\": 0, \"y\": 0 }},\r\n      \"BannerPath\": \"cecilia_banner\",\r\n      \"BackgroundPath\": \"cecilia_bg\",\r\n      \"SinglePrice\": 1200,\r\n      \"TenPrice\": 12000\r\n    }},\r\n    {{\r\n      \"BannerType\": \"None\",\r\n      \"BannerName\": 100000002,\r\n      \"SSR_PickupList\": [],\r\n      \"SR_PickupList\": [],\r\n      \"SSR_Percent\": 1,\r\n      \"SR_Percent\": 19,\r\n      \"SSR_PickupPercent\": 0,\r\n      \"CharacterPosition\": {{ \"x\": 0, \"y\": 0 }},\r\n      \"BannerPath\": \"regular_banner\",\r\n      \"BackgroundPath\": \"regular_bg\",\r\n      \"SinglePrice\": 1200,\r\n      \"TenPrice\": 10600\r\n    }}\r\n  ]\r\n}}{{\r\n  \"banners\": [\r\n    {{\r\n      \"BannerType\": \"Pickup\",\r\n      \"BannerName\": 100000001,\r\n      \"SSR_PickupList\": [10004],\r\n      \"SR_PickupList\": [10001, 10006],\r\n      \"SSR_Percent\": 1,\r\n      \"SR_Percent\": 19,\r\n      \"SSR_PickupPercent\": 50,\r\n      \"CharacterPosition\": {{ \"x\": 0, \"y\": 0 }},\r\n      \"BannerPath\": \"cecilia_banner\",\r\n      \"BackgroundPath\": \"cecilia_bg\",\r\n      \"SinglePrice\": 1200,\r\n      \"TenPrice\": 12000\r\n    }},\r\n    {{\r\n      \"BannerType\": \"None\",\r\n      \"BannerName\": 100000002,\r\n      \"SSR_PickupList\": [],\r\n      \"SR_PickupList\": [],\r\n      \"SSR_Percent\": 1,\r\n      \"SR_Percent\": 19,\r\n      \"SSR_PickupPercent\": 0,\r\n      \"CharacterPosition\": {{ \"x\": 0, \"y\": 0 }},\r\n      \"BannerPath\": \"regular_banner\",\r\n      \"BackgroundPath\": \"regular_bg\",\r\n      \"SinglePrice\": 1200,\r\n      \"TenPrice\": 10600\r\n    }}\r\n  ]\r\n}}{{\r\n  \"banners\": [\r\n    {{\r\n      \"BannerType\": \"Pickup\",\r\n      \"BannerName\": 100000001,\r\n      \"SSR_PickupList\": [10004],\r\n      \"SR_PickupList\": [10001, 10006],\r\n      \"SSR_Percent\": 1,\r\n      \"SR_Percent\": 19,\r\n      \"SSR_PickupPercent\": 50,\r\n      \"CharacterPosition\": {{ \"x\": 0, \"y\": 0 }},\r\n      \"BannerPath\": \"cecilia_banner\",\r\n      \"BackgroundPath\": \"cecilia_bg\",\r\n      \"SinglePrice\": 1200,\r\n      \"TenPrice\": 12000\r\n    }},\r\n    {{\r\n      \"BannerType\": \"None\",\r\n      \"BannerName\": 100000002,\r\n      \"SSR_PickupList\": [],\r\n      \"SR_PickupList\": [],\r\n      \"SSR_Percent\": 1,\r\n      \"SR_Percent\": 19,\r\n      \"SSR_PickupPercent\": 0,\r\n      \"CharacterPosition\": {{ \"x\": 0, \"y\": 0 }},\r\n      \"BannerPath\": \"regular_banner\",\r\n      \"BackgroundPath\": \"regular_bg\",\r\n      \"SinglePrice\": 1200,\r\n      \"TenPrice\": 10600\r\n    }}\r\n  ]\r\n}}로드된 최종 결과\ntotal:{totalCount}, sr:{currentSRCount}, ssr:{currentSSRCount}, pickupForce:{pickupForce}");
     }
 }

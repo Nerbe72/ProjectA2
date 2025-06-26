@@ -1,8 +1,8 @@
 using System;
-using Random = UnityEngine.Random;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
 public abstract class Boss : Character, IHurtable
 {
@@ -39,7 +39,7 @@ public abstract class Boss : Character, IHurtable
     /// </summary>
     public virtual void SetFaced()
     {
-        
+
     }
 
     public override void TakeDamage(AttackType _type, int _damage)

@@ -1,15 +1,13 @@
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SpeedTextingMinigame : Minigame
 {
     public override MinigameType Type { get { return MinigameType.SpeedTexting; } }
-    
+
     [SerializeField] private RectTransform parent;
-    
+
     private GameObject textPrefab;
     private List<TMP_Text> targetText;
 
@@ -26,13 +24,13 @@ public class SpeedTextingMinigame : Minigame
     public override void SetGame()
     {
         int randomLength = Random.Range(5, 8);
-        
+
         targetWord = new Queue<char>();
         targetText = new List<TMP_Text>();
         isGameEnd = false;
         textIndex = 0;
 
-        for(int i = 0; i < randomLength; i++)
+        for (int i = 0; i < randomLength; i++)
         {
             GameObject obj = Instantiate(textPrefab, parent.transform);
             TMP_Text text = obj.GetComponent<TMP_Text>();
@@ -61,7 +59,7 @@ public class SpeedTextingMinigame : Minigame
             if (Input.inputString.Length > 0)
             {
                 char inputChar = char.ToUpper(Input.inputString[0]);
-                
+
                 if (inputChar != targetWord.Dequeue())
                 {
                     isGameEnd = true;

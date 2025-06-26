@@ -22,8 +22,8 @@ public class GroundShockwave : MonoBehaviour
     private List<ParticleSystem> particleList = new List<ParticleSystem>();
 
     private Transform player;
-    [Header("Start Range")] [SerializeField] private TriggerMinMax startMinMax = new TriggerMinMax { min = 2.6f, max = 3.1f };
-    [Header("End Range")] [SerializeField] private TriggerMinMax endMinMax = new TriggerMinMax { min = 8.9f, max = 9.9f };
+    [Header("Start Range")][SerializeField] private TriggerMinMax startMinMax = new TriggerMinMax { min = 2.6f, max = 3.1f };
+    [Header("End Range")][SerializeField] private TriggerMinMax endMinMax = new TriggerMinMax { min = 8.9f, max = 9.9f };
     [Header("Wave Time (seconds)")][SerializeField] private float startTime = 0.1f;
     [SerializeField] private float endTime = 0.53f;
 

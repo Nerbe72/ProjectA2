@@ -1,8 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.XR;
 
 public class RandomSelector : Node
 {
@@ -27,7 +24,7 @@ public class RandomSelector : Node
         if (time >= interval)
         {
             time = 0f;
-            for(int i = 0; i < 100; i++)
+            for (int i = 0; i < 100; i++)
             {
                 int tempSelect = Random.Range(0, count);
                 if (select == tempSelect)

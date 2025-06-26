@@ -1,16 +1,18 @@
+using Photon.Pun;
 using System;
 using System.Collections;
-using TreeEditor;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public abstract class Enemy : Character, IHurtable
+public abstract partial class Enemy : Character, IHurtable
 {
     protected NavMeshAgent agent;
     protected Animator animator;
+
+    protected Player player;
 
     public EnemyData EnemyData => stats as EnemyData;
     public Vector3 SpawnPoint_Enemy;
@@ -27,13 +29,15 @@ public abstract class Enemy : Character, IHurtable
     protected bool isDying = false;
 
     public Character Character { get; set; }
-    protected Player player;
     public event Action<int, int> OnHealthChanged;
+
+    private PhotonView photonView;
 
     protected virtual void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+        photonView = GetComponent<PhotonView>();
 
         Character = this;
         currentHealth = EnemyData.Health;
@@ -65,7 +69,7 @@ public abstract class Enemy : Character, IHurtable
         float offset = EnemyData.SightOffset;
         Vector3 offsetDirection = sightSource.rotation * Quaternion.Euler(0, offset, 0) * Vector3.forward;
         float angleToPlayerFromSightCenter = Vector3.Angle(offsetDirection, directionToPlayer);
-        
+
         if (angleToPlayerFromSightCenter > angle * 0.5f) return false;
 
         if (Physics.Raycast(eyePosition, directionToPlayer, distanceToPlayer * 1.01f, LayerMask.GetMask("Wall"))) return false;
@@ -78,11 +82,11 @@ public abstract class Enemy : Character, IHurtable
         if (SightVisual == false) return;
 
         Handles.color = Color.red;
-        
+
         float angle = EnemyData.SightAngle;
         float offset = EnemyData.SightOffset;
         Transform sightSource = eyeTransform != null ? eyeTransform : transform;
-        
+
         Quaternion rotation = sightSource.rotation * Quaternion.Euler(0, offset, 0);
         Vector3 startDirection = rotation * Quaternion.Euler(0, -angle * 0.5f, 0) * Vector3.forward;
 
@@ -129,7 +133,7 @@ public abstract class Enemy : Character, IHurtable
     public override void TakeDamage(AttackType _type, int _damage)
     {
         if (isDead) return; // 죽은 상태만 체크
-        
+
         int taken = 0;
         switch (_type)
         {
@@ -163,13 +167,11 @@ public abstract class Enemy : Character, IHurtable
         animator.SetBool(AnimationHash.GetHash(ActionType.Dead), true);
         agent.isStopped = true;
 
-        // 플레이어에게 재화 지급
-        int reward = EnemyData != null ? (int)Random.Range(EnemyData.RewardCurrency * 0.8f, EnemyData.RewardCurrency + 1) : 10;
+        int reward = EnemyData != null ? (int)Random.Range(EnemyData.RewardCurrency * 0.85f, EnemyData.RewardCurrency) : 10;
 
         Singleton.Inventory.AddCurrency((uint)reward);
         Singleton.Player.KillCount.AddKillCount(EnemyData.ID);
         Singleton.Get<EnemyManager>().SetDeadFlag(this);
-        // TODO: 사망 처리 (아이템 드롭, 경험치 등)
     }
 
     public virtual void Respawn()
@@ -179,7 +181,7 @@ public abstract class Enemy : Character, IHurtable
         isAttack = false;
         isAttacking = false;
         isDying = false;
-        
+
         // 체력 초기화
         currentHealth = EnemyData.Health;
         OnHealthChanged?.Invoke(currentHealth, EnemyData.Health);

@@ -1,10 +1,9 @@
 using UnityEngine;
-using System.Collections;
 
 public class DodgeState : IPlayerState
 {
     private bool preparingNextDodge = false;
-    
+
     public void Enter(Player _player)
     {
         _player.SetDodgeDirection();
@@ -24,9 +23,9 @@ public class DodgeState : IPlayerState
             }
             return;
         }
-        
+
         // 애니메이션이 끝났을 때 다음 동작 결정
-        
+
         // 회피 키가 눌려있거나 다음 회피가 준비된 경우 - 연속 회피
         if (preparingNextDodge || _player.IsFlagged(StateFlags.Dodge))
         {
@@ -35,7 +34,7 @@ public class DodgeState : IPlayerState
             _player.SetDodgeAnimation();
             return;
         }
-        
+
         // 회피 종료 후 이동 상태로 전환
         if (_player.IsInputMoving())
         {

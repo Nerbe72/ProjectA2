@@ -1,5 +1,3 @@
-using System.ComponentModel;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
@@ -50,7 +48,7 @@ public class QuestIndicator : MonoBehaviour
         string name = locale.Get(quest_selected.NameID, GameManager.CurrentLocale);
 
         QuestName.text = name;
-        
+
         int count = quest_progress.Objectives.Count;
         for (int i = 0; i < count; i++)
         {

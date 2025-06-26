@@ -1,9 +1,5 @@
-using Photon.Pun;
-using System;
 using System.Collections;
-using UnityEditor.PackageManager.UI;
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
 
 public partial class Player : Character
 {
@@ -12,7 +8,7 @@ public partial class Player : Character
 
     private StateFlags isState = StateFlags.None;
 
-    public StateFlags IsState {  get { return isState; } }
+    public StateFlags IsState { get { return isState; } }
 
     public Vector3 MovementInput { get { return movementInput; } }
 

@@ -1,6 +1,3 @@
-
-using UnityEngine;
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -39,7 +36,7 @@ public class TableMgr
 #else
         Locale.Init_Binary("Locale");
         Dialogue.Init_Binary("Dialogue");
-        DialogueLocaleKO.Init_Binary("DialogueLocale");
+        DialogueLocale.Init_Binary("DialogueLocale");
         RequireCurrency.Init_Binary("RequireCurrency");
         Enemy.Init_Binary("Enemy");
         Item.Init_Binary("Item");
@@ -48,7 +45,7 @@ public class TableMgr
         WeaponAbility.Init_Binary("WeaponAbility");
         Projectile.Init_Binary("Projectile");
         NPC.Init_Binary("NPC");
-        NPCQuestDialogue.Init_Binary("NPCDialogueCondition");
+        NPCDialogueCondition.Init_Binary("NPCDialogueCondition");
 #endif
     }
 

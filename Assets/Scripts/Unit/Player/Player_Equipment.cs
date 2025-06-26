@@ -1,6 +1,4 @@
-using NUnit.Framework;
 using System;
-using System.Collections;
 using UnityEngine;
 
 public partial class Player : Character
@@ -61,7 +59,7 @@ public partial class Player : Character
         {
             animator.SetBool(AnimationHash.GetHash((WeaponType)i), i == weapon_selected.WeaponType);
         }
-
+        ApplyEquipWeapon(_instance.ItemID);
         OnWeaponChanged?.Invoke(_instance);
     }
 
@@ -90,7 +88,7 @@ public partial class Player : Character
 
         TableWeapon.Info weapon_selected;
         WeaponItemInstance weapon_instance;
-        
+
         if (_instance != null)
         {
             weapon_selected = Singleton.Get<TableDataManager>().Table.Weapon.Get(_instance.ItemID);

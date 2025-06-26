@@ -1,0 +1,4 @@
+.lobby_textfield {
+    flex-direction: column;
+    width: 60%;
+}

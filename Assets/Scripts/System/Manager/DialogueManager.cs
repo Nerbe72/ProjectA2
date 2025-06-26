@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -145,7 +144,7 @@ public class DialogueManager : MonoBehaviour
                     };
                     break;
             }
-            
+
             return;
         }
 
@@ -182,6 +181,6 @@ public class DialogueManager : MonoBehaviour
         if (main.NextID > 0)
             dialogueUI?.OnNext(() => ShowDialogue(main.NextID));
         else
-            dialogueUI?.OnNext(() => { dialogueUI?.Close(); currentNPC.SetTalking(false); }); 
+            dialogueUI?.OnNext(() => { dialogueUI?.Close(); currentNPC.SetTalking(false); });
     }
 }

@@ -1,5 +1,3 @@
-using UnityEngine;
-
 /// <summary>
 /// 씬이 로드되는 순간 비활성화된 오브젝트의 데이터를 Init해야되는 오브젝트에 부착
 /// </summary>

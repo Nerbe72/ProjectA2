@@ -28,7 +28,7 @@ public class AttackState : IPlayerState
             _player.TransitionTo(new MoveState());
             return;
         }
-        
+
         // 그 외의 경우 대기 상태로 전환
         _player.TransitionTo(new IdleState());
     }

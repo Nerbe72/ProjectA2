@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public interface IAbility
 {
     public int AbilityId { get; set; }

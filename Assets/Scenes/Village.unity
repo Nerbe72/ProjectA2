@@ -1219,7 +1219,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3551811713841693408, guid: 1dd10ba33da3a574d820ac19feba7f82, type: 3}
       propertyPath: nextMap
-      value: 4
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3551811713841693408, guid: 1dd10ba33da3a574d820ac19feba7f82, type: 3}
       propertyPath: connection
@@ -3144,6 +3144,10 @@ PrefabInstance:
     - target: {fileID: 976832361145910715, guid: 1dd10ba33da3a574d820ac19feba7f82, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3551811713841693408, guid: 1dd10ba33da3a574d820ac19feba7f82, type: 3}
+      propertyPath: nextMap
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7879986654881619966, guid: 1dd10ba33da3a574d820ac19feba7f82, type: 3}
       propertyPath: m_Name

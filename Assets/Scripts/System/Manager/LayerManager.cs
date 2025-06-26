@@ -22,7 +22,7 @@ public class LayerManager : MonoBehaviour
         {
             layermasks.Add(_layer, LayerMask.GetMask(_layer.ToString()));
         }
-        
+
         return layermasks[_layer];
     }
 }

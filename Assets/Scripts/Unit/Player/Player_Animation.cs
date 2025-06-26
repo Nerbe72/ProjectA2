@@ -141,7 +141,7 @@ public partial class Player : Character
 
     public void ResetHitting()
     {
-        
+
         SetFlag(StateFlags.Hitting, false);
     }
     #endregion

@@ -1,6 +1,5 @@
-using Unity.Collections;
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class TableDataManager : MonoBehaviour
 {

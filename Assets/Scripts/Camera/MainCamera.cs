@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.Cinemachine;
 using UnityEngine;
 
 public partial class MainCamera : MonoBehaviour
@@ -80,7 +78,7 @@ public partial class MainCamera : MonoBehaviour
             camera.y = OrgPos.y;
     }
 
-    public void Shake( int CameraID )
+    public void Shake(int CameraID)
     {
         shakeInfo.StartDelay = 0f;
         shakeInfo.TotalTime = 3f;
@@ -102,7 +100,7 @@ public partial class MainCamera : MonoBehaviour
 
         shakeInfo.DampingTime = shakeInfo.RemainDist / shakeInfo.Veclocity;
 
-        shakeInfo.Count =4;
+        shakeInfo.Count = 4;
         shakeInfo.UseCount = true;
 
         StopCoroutine("ShakeCoroutine");
@@ -119,12 +117,12 @@ public partial class MainCamera : MonoBehaviour
         if (shakeInfo.StartDelay > 0)
             yield return new WaitForSeconds(shakeInfo.StartDelay);
 
-        while(true)
+        while (true)
         {
             dt = Time.fixedDeltaTime;
             dist = dt * shakeInfo.Veclocity;
 
-            if((shakeInfo.RemainDist -= dist) > 0 )
+            if ((shakeInfo.RemainDist -= dist) > 0)
             {
                 ShakeTr.localPosition += shakeInfo.Dir * dist;
 
@@ -140,9 +138,9 @@ public partial class MainCamera : MonoBehaviour
 
                 CameraLimit(true);
 
-                if(shakeInfo.UseCount)
+                if (shakeInfo.UseCount)
                 {
-                    if((shakeInfo.RemainCountDis -= dist) < 0)
+                    if ((shakeInfo.RemainCountDis -= dist) < 0)
                     {
                         shakeInfo.RemainCountDis = float.MaxValue;
 
@@ -153,7 +151,7 @@ public partial class MainCamera : MonoBehaviour
             }
             else
             {
-                if(shakeInfo.UseDamping)
+                if (shakeInfo.UseDamping)
                 {
                     float distdamping = Mathf.Max(shakeInfo.Damping * shakeInfo.DampingTime,
                         shakeInfo.Damping * dt);

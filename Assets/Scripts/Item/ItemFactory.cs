@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public static class ItemFactory
 {
     public static ItemInstance CreateItemInstance(int _id)
@@ -25,7 +23,8 @@ public static class ItemFactory
         int damage = UnityEngine.Random.Range(weapon_selected.Damage_Min, weapon_selected.Damage_Max);
         int defense = UnityEngine.Random.Range(weapon_selected.Defense_Min, weapon_selected.Defense_Max);
 
-        return new WeaponItemInstance {
+        return new WeaponItemInstance
+        {
             ItemID = weapon_selected.ID,
             Damage = damage,
             Defense = defense

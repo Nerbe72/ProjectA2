@@ -30,7 +30,6 @@ public class AuthManager : MonoBehaviour
     {
         UnityWebRequest request = new UnityWebRequest(_url, _getpost);
 
-        // ��ū�� ���� ��� Authorization ����� �߰�
         if (!string.IsNullOrEmpty(token))
         {
             request.SetRequestHeader("Authorization", "Bearer " + token);
@@ -48,7 +47,7 @@ public class AuthManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ���� ������ �ε�
+    /// Get Posted(No Auth) Data
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="_type"></param>
@@ -64,13 +63,13 @@ public class AuthManager : MonoBehaviour
 
         if (request.result == UnityWebRequest.Result.ConnectionError)
         {
-            Debug.LogError("���� ���� ����: " + request.error);
+            Debug.LogError("서버 연결 실패: " + request.error);
             return default;
         }
 
         if (request.result != UnityWebRequest.Result.Success)
         {
-            Debug.LogError("���� ������ ��û ����: " + request.error);
+            Debug.LogError("데이터 요청 실패: " + request.error);
             return default;
         }
 
@@ -103,35 +102,36 @@ public class AuthManager : MonoBehaviour
         if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
         {
             Debug.LogError("서버 요청 오류: " + request.error);
-        } else
+        }
+        else
         {
             Debug.Log($"<color=green>{_type.ToString()} 데이터 저장 성공</color>");
         }
     }
 
     /// <summary>
-    /// ���� ������ ���� �ε�
+    /// Get User Authed Data
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="_fileName"></param>
     /// <returns></returns>
-    public async Task<T> GetUserDataAsync<T>(string _fileName) where T : new ()
+    public async Task<T> GetUserDataAsync<T>(string _fileName) where T : new()
     {
         UnityWebRequest request = await SendAuthorizedRequest(URL + _fileName, "POST");
 
         if (request.result == UnityWebRequest.Result.ConnectionError)
         {
-            Debug.LogError("���� ���� ����: " + request.error);
+            Debug.LogError("서버 연결 실패: " + request.error);
             return default;
         }
 
         if (request.result != UnityWebRequest.Result.Success)
         {
-            Debug.LogError("���� ������ ��û ����: " + request.error);
+            Debug.LogError("데이터 요청 실패: " + request.error);
 
             if (request.responseCode == 404)
             {
-                Debug.LogWarning("���� �����͸� ã�� �� ���� ���� �ۼ��մϴ�.");
+                Debug.LogWarning("데이터가 존재하지 않습니다. 데이터를 재작성합니다.");
                 T newData = new T();
 
                 await SetUserDataAsync<T>(_fileName, newData);

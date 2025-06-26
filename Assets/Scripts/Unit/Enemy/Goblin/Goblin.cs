@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public partial class Goblin : Enemy
 {
     private Node rootNode;

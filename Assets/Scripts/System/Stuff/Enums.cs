@@ -2,7 +2,7 @@ using System;
 
 public enum Map
 {
-    None,
+    None = -1,
     World_FrontVillage = 4,
     Village = 5,
     Dungeon = 6,
@@ -101,6 +101,7 @@ public enum Request
     readgachalog,
     banners,
     weapons,
+    quests,
 }
 
 public enum LoadType
@@ -251,9 +252,9 @@ public enum ObjectiveType
 public enum QuestState
 {
     Available = 10000037,
-    Accepted  = 10000038,
+    Accepted = 10000038,
     Completed = 10000039,
-    Achieved  = 10000041
+    Achieved = 10000041
 }
 
 public enum EffectColor

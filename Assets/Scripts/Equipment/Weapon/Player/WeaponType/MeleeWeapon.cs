@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent (typeof(MeleeColliderHandler))]
+[RequireComponent(typeof(MeleeColliderHandler))]
 public class MeleeWeapon : Weapon
 {
     private MeleeColliderHandler colliderHandler;

@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Threading.Tasks;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,7 +24,7 @@ public class GachaBanner : MonoBehaviour
     [SerializeField] private TMP_Text one_roll_price;
     [SerializeField] private TMP_Text ten_roll_price;
 
-    [SerializeField] private Button back; 
+    [SerializeField] private Button back;
 
     private Animator bannerAnimator;
 

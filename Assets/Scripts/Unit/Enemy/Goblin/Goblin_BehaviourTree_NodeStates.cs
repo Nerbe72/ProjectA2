@@ -1,5 +1,5 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 public partial class Goblin : Enemy
 {
@@ -96,7 +96,7 @@ public partial class Goblin : Enemy
 
         return NodeStates.SUCCESS;
     }
-    
+
     private NodeStates DoIdle()
     {
         agent.stoppingDistance = 0;
@@ -107,11 +107,11 @@ public partial class Goblin : Enemy
             isReturning = false;
             isAttacking = false;
             agent.isStopped = false;
-            
+
             // 애니메이션 초기화
             animator.SetBool(AnimationHash.GetHash(ActionType.Move), false);
             animator.SetBool(AnimationHash.GetHash(ActionType.Attack), false);
-            
+
             // 회전 처리
             if (CheckPlayerInSight())
             {

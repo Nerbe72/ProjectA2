@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class SettingUI : WindowBase
 {
     public int InitializationPriority => 7;

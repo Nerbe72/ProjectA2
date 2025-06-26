@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class PlayerStatusUI : WindowBase
 {
     private Level level;

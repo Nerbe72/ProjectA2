@@ -1,10 +1,7 @@
-using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.IO;
+using UnityEngine.UI;
 
 public class ItemFrame : MonoBehaviour, IPointerClickHandler
 {

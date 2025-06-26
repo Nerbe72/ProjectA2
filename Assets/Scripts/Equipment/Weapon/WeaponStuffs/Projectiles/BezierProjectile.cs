@@ -32,7 +32,7 @@ public class BezierProjectile : Projectile
         endPoint = target != null ? target.position : startPosition + direction * maxRange;
         Vector3 verticalRandom = Vector3.up * Random.Range(-0.5f, curveHeight);
         float randomValue = Random.Range(-1.5f, 1.5f);
-        Vector3 horizontalRandom = owner.transform.right * (randomValue < 0f ? randomValue -0.5f : randomValue + 0.5f);
+        Vector3 horizontalRandom = owner.transform.right * (randomValue < 0f ? randomValue - 0.5f : randomValue + 0.5f);
         controlPoint = startPosition + (endPoint - startPosition) * 0.05f + verticalRandom + horizontalRandom;
         time = 0f;
     }

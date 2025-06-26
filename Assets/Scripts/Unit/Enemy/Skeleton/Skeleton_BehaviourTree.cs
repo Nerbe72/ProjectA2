@@ -1,6 +1,4 @@
-using NUnit.Framework;
 using System.Collections.Generic;
-using UnityEngine;
 
 public partial class Skeleton : Enemy
 {
@@ -121,4 +119,4 @@ public partial class Skeleton : Enemy
             }
         );
     }
-} 
+}

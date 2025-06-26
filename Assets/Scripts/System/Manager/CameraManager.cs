@@ -1,11 +1,8 @@
-using Unity.Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Data;
 
 public class CameraManager : MonoBehaviour
 {
@@ -128,7 +125,7 @@ public class CameraManager : MonoBehaviour
         {
             if (vCams[i] == null) continue;
 
-            if(_follow != null)
+            if (_follow != null)
             {
                 vCams[i].transform.position = _follow.transform.position;
                 vCams[i].transform.rotation = _follow.transform.rotation;
@@ -161,7 +158,7 @@ public class CameraManager : MonoBehaviour
 
     public void ShakeCamera(float _shakeTime = 0.2f)
     {
-        for(int i = 0; i < vCams.Count; i++)
+        for (int i = 0; i < vCams.Count; i++)
         {
             var shakable = vCams[i].GetComponent<CinemachineBasicMultiChannelPerlin>();
             if (shakable != null)

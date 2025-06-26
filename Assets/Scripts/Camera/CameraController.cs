@@ -22,7 +22,6 @@ public class CameraController : MonoBehaviour
         cameraManager.SetCameraCenter(CameraType.Target, player.transform);
     }
 
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Set()
     {
         if (player == null)

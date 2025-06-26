@@ -12,7 +12,7 @@ public class FacingTriggerController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other == null) return;
-        
+
         var player = other.GetComponent<Player>();
 
         if (player == null) return;

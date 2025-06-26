@@ -30,7 +30,7 @@ public partial class DeepDragon : Boss
         distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
         return (distanceToPlayer >= pattern.MinDistance && distanceToPlayer <= pattern.MaxDistance);
     }
-    
+
     private bool IsInPattern1Distance() => IsPlayerInPatternDistance(pattern1Melee);
     private bool IsInPattern2Distance() => IsPlayerInPatternDistance(pattern2MidRange);
     private bool IsInPattern3Distance() => IsPlayerInPatternDistance(pattern3LongRange);
@@ -68,7 +68,7 @@ public partial class DeepDragon : Boss
         return NodeStates.SUCCESS;
     }
 
-    private NodeStates DoNothing() 
+    private NodeStates DoNothing()
     {
         Debug.Log("DoNothing");
         if (agent.enabled)
@@ -78,7 +78,7 @@ public partial class DeepDragon : Boss
         animator.SetFloat(AnimationHash.GetHash(ActionType.Side), 0f);
         return NodeStates.SUCCESS;
     }
-    
+
     private NodeStates DoAttack(int patternIndex)
     {
         Debug.Log($"DoAttack Pattern{patternIndex}");
@@ -99,7 +99,7 @@ public partial class DeepDragon : Boss
         agent.SetDestination(transform.position);  // Hold position during attack
         return NodeStates.SUCCESS;
     }
-    
+
     private NodeStates DoPattern1() => DoAttack(0);
     private NodeStates DoPattern2() => DoAttack(1);
     private NodeStates DoPattern3() => DoAttack(2);
@@ -151,4 +151,4 @@ public partial class DeepDragon : Boss
         return NodeStates.SUCCESS;
     }
     #endregion
-} 
+}

@@ -1,4 +1,70 @@
-﻿[*.cs]
+[*.cs]
 
 # UDR0001: Domain Reload Analyzer
 dotnet_diagnostic.UDR0001.severity = silent
+
+############################################
+# Naming Styles
+############################################
+
+# lowerCamelCase (no prefix)
+dotnet_naming_style.lower_camel_case.capitalization = camel_case
+
+# lowerCamelCase with underscore prefix (for parameters)
+dotnet_naming_style.lower_camel_with_prefix.capitalization = camel_case
+dotnet_naming_style.lower_camel_with_prefix.required_prefix = _
+
+# PascalCase (public fields / properties)
+dotnet_naming_style.pascal_case.capitalization = pascal_case
+
+############################################
+# Symbol Groups
+############################################
+
+# Methods (all access levels)
+DOTNET_NAMING_SYMBOLS.methods_any.applicable_kinds = method
+DOTNET_NAMING_SYMBOLS.methods_any.applicable_accessibilities = *
+DOTNET_NAMING_SYMBOLS.methods_any.required_modifiers = 
+
+# Private / internal fields
+DOTNET_NAMING_SYMBOLS.private_fields.applicable_kinds = field
+DOTNET_NAMING_SYMBOLS.private_fields.applicable_accessibilities = private, internal
+DOTNET_NAMING_SYMBOLS.private_fields.required_modifiers = 
+
+# Method parameters
+DOTNET_NAMING_SYMBOLS.method_parameters.applicable_kinds = parameter
+DOTNET_NAMING_SYMBOLS.method_parameters.applicable_accessibilities = *
+
+# Public fields (Inspector exposure)
+DOTNET_NAMING_SYMBOLS.public_fields.applicable_kinds = field
+DOTNET_NAMING_SYMBOLS.public_fields.applicable_accessibilities = public
+DOTNET_NAMING_SYMBOLS.public_fields.required_modifiers = 
+
+############################################
+# Naming Rules
+############################################
+
+dotnet_naming_rule.methods_should_be_pascal.severity = suggestion
+dotnet_naming_rule.methods_should_be_pascal.symbols = methods_any
+dotnet_naming_rule.methods_should_be_pascal.style = pascal_case
+
+
+
+dotnet_naming_rule.private_fields_should_be_lower_camel.severity = suggestion
+dotnet_naming_rule.private_fields_should_be_lower_camel.symbols = private_fields
+dotnet_naming_rule.private_fields_should_be_lower_camel.style = lower_camel_case
+
+dotnet_naming_rule.parameters_should_be_prefixed_lower_camel.severity = suggestion
+dotnet_naming_rule.parameters_should_be_prefixed_lower_camel.symbols = method_parameters
+dotnet_naming_rule.parameters_should_be_prefixed_lower_camel.style = lower_camel_with_prefix
+
+dotnet_naming_rule.public_fields_should_be_pascal.severity = suggestion
+dotnet_naming_rule.public_fields_should_be_pascal.symbols = public_fields
+dotnet_naming_rule.public_fields_should_be_pascal.style = pascal_case
+
+############################################
+# Formatting Rules
+############################################
+
+# 한 줄 if/for 등을 개행하여 바디를 다음 줄에 배치 (C# 12 미리보기 플래그)
+csharp_style_allow_embedded_statements_on_same_line_experimental = false:suggestion

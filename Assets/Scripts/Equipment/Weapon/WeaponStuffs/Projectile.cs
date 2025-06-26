@@ -44,14 +44,14 @@ public abstract class Projectile : MonoBehaviour
         direction = _spawn.forward;
         target = _target?.transform;
         owner = _owner;
-        
+
         if (owner is Enemy)
         {
             var playerTransform = Singleton.Player.transform;
             direction = (playerTransform.position - startPosition).normalized;
             target = playerTransform;
         }
-        
+
         IsAbilityAttack = _abilityID != 0;
         var calculated = IsAbilityAttack ? _owner.CalculateAttack(_abilityID) : _owner.CalculateAttack();
 
@@ -82,7 +82,7 @@ public abstract class Projectile : MonoBehaviour
 
             if (weapon_selected.Abilities == null) goto DestroyEnd;
 
-            for(int i = 0; i < weapon_selected.Abilities.Length; i++)
+            for (int i = 0; i < weapon_selected.Abilities.Length; i++)
             {
                 if (weapon_selected.Abilities[i] == 0) continue;
 

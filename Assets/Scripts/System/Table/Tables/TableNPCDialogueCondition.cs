@@ -1,6 +1,5 @@
-using System.Collections.Generic;
 using System;
-using UnityEngine;
+using System.Collections.Generic;
 
 public class TableNPCDialogueCondition : TableBase
 {
@@ -14,6 +13,7 @@ public class TableNPCDialogueCondition : TableBase
         public int DialogueID;
     }
 
+    [Serializable]
     public class ConditionEntry
     {
         public List<Info> Conditions = new List<Info>();
@@ -22,7 +22,7 @@ public class TableNPCDialogueCondition : TableBase
         /// 
         /// </summary>
         /// <param name="_conditionType"></param>
-        /// <returns>Á¶°Ç¿¡ ¸Â´Â ÄÁµğ¼Ç ¸®½ºÆ®(priority ¿À¸§Â÷¼ø Á¤·Ä)</returns>
+        /// <returns>ì¡°ê±´ì— ë§ëŠ” ì»¨ë””ì…˜ ë¦¬ìŠ¤íŠ¸(priority ì˜¤ë¦„ì°¨ìˆœ ì •ë ¬)</returns>
         public List<Info> Get(ConditionType _conditionType)
         {
             List<Info> result = new List<Info>();
@@ -60,7 +60,7 @@ public class TableNPCDialogueCondition : TableBase
 
         for (int i = 0; i < info.Conditions.Count; i++)
         {
-            //¿ì¼±¼øÀ§ ¼øÀ¸·Î ¸¸Á·ÇÏ´Â ÄÁµğ¼ÇÀ» Ã£À½
+            //ìš°ì„ ìˆœìœ„ ìˆœìœ¼ë¡œ ë§Œì¡±í•˜ëŠ” ì»¨ë””ì…˜ì„ ì°¾ìŒ
             if (CheckCondition(info.Conditions[i], _inventory, _player))
             {
                 return info.Conditions[i].DialogueID;
@@ -93,7 +93,7 @@ public class TableNPCDialogueCondition : TableBase
                 }
             case ConditionType.Item:
                 {
-                    // ConditionValue ¿¹½Ã: "30001"
+                    // ConditionValue ì˜ˆì‹œ: "30001"
                     if (int.TryParse(_info.ConditionValue, out int itemId))
                         return _inventory.HasItem(itemId);
                     return false;

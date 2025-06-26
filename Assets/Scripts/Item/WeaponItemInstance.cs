@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -10,11 +9,6 @@ public class WeaponItemInstance : ItemInstance
     public int Defense;
 
     [NonSerialized] public GameObject InstancedPrefab;
-
-    public override void OnUse()
-    {
-
-    }
 
     public async Task LoadPrefabAsync()
     {

@@ -1,6 +1,3 @@
-using Photon.Pun;
-using UnityEngine;
-
 public partial class Player : Character
 {
     private TargetManager targetManager;

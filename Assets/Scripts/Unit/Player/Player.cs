@@ -3,9 +3,9 @@ using System;
 using System.Collections;
 using System.IO;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using WebSocketSharp;
 
-public partial class Player : Character, IHurtable, IPunObservable
+public partial class Player : Character, IHurtable
 {
     public int InitializationPriority => 2;
     [HideInInspector] public bool IsInstantiated = false;
@@ -18,26 +18,37 @@ public partial class Player : Character, IHurtable, IPunObservable
     public Character Character { get; set; }
     public float PlayerRadius = 0.4f;
     public bool IsMovementLocked { get; set; } = false;
+    public bool IsLoadingScene { get; set; } = false;
 
-    public static PhotonView photonView;
+    private PhotonView photonView;
 
     private void Awake()
     {
         photonView = GetComponent<PhotonView>();
-
-        if (!photonView.IsMine)
+        
+        if (photonView.IsMine)
         {
+            // 이미 로컬 플레이어가 존재하면 중복 생성 방지
+            if (Singleton.Player != null)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            Singleton.Player = this;
+            
+
+            InitInput();
+            TransitionTo(new IdleState());
+
+            IsInstantiated = false;
+        }
+        else
+        {
+            // 원격 플레이어의 불필요한 컴포넌트 제거
             Destroy(GetComponentInChildren<TargetDetector>().gameObject);
-            return; 
         }
 
-        Singleton.Player = this;
-        //if (Singleton.Player != null)
-        //{
-        //    Destroy(gameObject);
-        //    return;
-        //}
-        //Singleton.Player = this;
         DontDestroyOnLoad(gameObject);
 
         Character = this;
@@ -46,13 +57,6 @@ public partial class Player : Character, IHurtable, IPunObservable
         collider = GetComponent<CapsuleCollider>();
         animator = GetComponent<Animator>();
         PlayerRadius = GetComponent<CapsuleCollider>().radius;
-
-        rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-
-        InitInput();
-        TransitionTo(new IdleState());
-
-        IsInstantiated = false;
     }
 
     private void Start()
@@ -69,14 +73,15 @@ public partial class Player : Character, IHurtable, IPunObservable
 
     private void Update()
     {
+        if (!photonView.IsMine && PhotonNetwork.IsConnected)
+            return;
+
         CheckGround();
         UpdateAnimationParameters();
 
         if (CurrentState != null)
             CurrentState.Update(this);
 
-        if (!photonView.IsMine && PhotonNetwork.IsConnected)
-            return;
 
         CheckNormalInputs();
         CheckUIInput();
@@ -86,7 +91,10 @@ public partial class Player : Character, IHurtable, IPunObservable
     private void FixedUpdate()
     {
         if (!photonView.IsMine && PhotonNetwork.IsConnected)
-            return;
+        {
+            rigidbody.position = Vector3.MoveTowards(rigidbody.position, networkPosition, Time.fixedDeltaTime);
+            rigidbody.rotation = Quaternion.RotateTowards(rigidbody.rotation, networkRotation, Time.fixedDeltaTime);
+        }
 
         if (CurrentState != null)
             CurrentState.FixedUpdate(this);
@@ -111,10 +119,10 @@ public partial class Player : Character, IHurtable, IPunObservable
     void CalledOnLevelWasLoaded(int level)
     {
         // check if we are outside the Arena and if it's the case, spawn around the center of the arena in a safe zone
-        if (!Physics.Raycast(transform.position, -Vector3.up, 5f))
-        {
-            transform.position = new Vector3(0f, 5f, 0f);
-        }
+        //if (!Physics.Raycast(transform.position, -Vector3.up, 5f))
+        //{
+        //    transform.position = new Vector3(0f, 5f, 0f);
+        //}
     }
 
     //bt
@@ -137,7 +145,7 @@ public partial class Player : Character, IHurtable, IPunObservable
         if (!IsFlagged(StateFlags.Hitting)) SetFlag(StateFlags.Hit);
 
         Singleton.Get<DamageIndicatorManager>().CreateIndicator(transform.position + Vector3.up, _type, actualDamage);
-        
+
         if (currentHealth <= 0)
         {
             Dead();
@@ -234,76 +242,38 @@ public partial class Player : Character, IHurtable, IPunObservable
 
     public void SavePlayerData()
     {
+        Vector3 savingPosition = transform.position;
         string savePath = Path.Combine(Application.persistentDataPath, "player_save.json");
-        var saveData = PlayerSaveData.FromPlayer(this);
+        var saveData = PlayerSaveData.FromPlayer(Singleton.Player, savingPosition);
         string json = JsonUtility.ToJson(saveData, true);
         File.WriteAllText(savePath, json);
     }
 
-    public void LoadPlayerData()
+    public void SetPlayerDataFromLoaded(PlayerSaveData _data)
     {
-        string savePath = Path.Combine(Application.persistentDataPath, "player_save.json");
-        
-        //파일이 없을경우 초기값으로 저장
-        if (!File.Exists(savePath))
-        {
-            var defaultSaveData = new PlayerSaveData();
-            string defaultJson = JsonUtility.ToJson(defaultSaveData, true);
-            File.WriteAllText(savePath, defaultJson);
-        }
-
-        string json = File.ReadAllText(savePath);
-        var loadedData = JsonUtility.FromJson<PlayerSaveData>(json);
-
-        loadedData.EquippedInventoryID = new Guid(loadedData.EquippedInventoryIDString);
-
         LoadLevelFromDB(
-            loadedData.Level_Health,
-            loadedData.Level_Strength,
-            loadedData.Level_Dexterity,
-            loadedData.Level_Intelligent);
-        SetBaseStat(StatType.Health, loadedData.MaxHealth);
-        SetBaseStat(StatType.Damage, loadedData.Damage);
-        SetBaseStat(StatType.Defense, loadedData.Defense);
-        SetCurrentHealth(loadedData.CurrentHealth);
-        SetWeapon(loadedData.EquippedInventoryID);
+            _data.Level_Health,
+            _data.Level_Strength,
+            _data.Level_Dexterity,
+            _data.Level_Intelligent);
+        SetBaseStat(StatType.Health, _data.MaxHealth);
+        SetBaseStat(StatType.Damage, _data.Damage);
+        SetBaseStat(StatType.Defense, _data.Defense);
+        SetCurrentHealth(_data.CurrentHealth);
+        
+        if (!_data.EquippedInventoryIDString.IsNullOrEmpty())
+        {
+            _data.EquippedInventoryID = new Guid(_data.EquippedInventoryIDString);
+            SetWeapon(_data.EquippedInventoryID);
+        }
 
         currentHealth = CurrentMaxHp;
-
-        //transform.position = loadedData.Position;
-        //transform.rotation = loadedData.Rotation;
-
-        //씬
-        //string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
-        //if (currentScene != loadedData.SceneName)
-        //{
-        //    StartCoroutine(LoadSceneAndSetPosition(loadedData));
-        //}
-        //else
-        //{
-        //    transform.position = loadedData.Position;
-        //    transform.rotation = loadedData.Rotation;
-        //}
-
         IsInstantiated = true;
-    }
-
-    private IEnumerator LoadSceneAndSetPosition(PlayerSaveData saveData)
-    {
-        // 비동기로 씬 로드
-        var asyncOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(saveData.SceneName);
-        while (!asyncOperation.isDone)
-        {
-            yield return null;
-        }
-        
-        // 씬 로드 완료 후 플레이어 위치 설정
-        transform.position = saveData.Position;
-        transform.rotation = saveData.Rotation;
     }
 
     private void SetWeapon(Guid _uniqueID)
     {
+        if (inventory == null) inventory = Singleton.Inventory;
         var weaponInstance = inventory.GetWeaponByInventoryID(_uniqueID);
 
         if (weaponInstance == null) return;
@@ -339,10 +309,5 @@ public partial class Player : Character, IHurtable, IPunObservable
 
             yield return null;
         }
-    }
-
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        // 다른 필요한 동기화 값 처리
     }
 }

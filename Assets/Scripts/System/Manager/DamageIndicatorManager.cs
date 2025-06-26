@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,7 +23,7 @@ public class DamageIndicatorManager : MonoBehaviour
 
     public void CreateIndicator(Vector3 _spawnPosition, AttackType _type, int _damage)
     {
-        for(int i = 0; i < indicators.Count; i++)
+        for (int i = 0; i < indicators.Count; i++)
         {
             if (!indicators[i].activeSelf)
             {

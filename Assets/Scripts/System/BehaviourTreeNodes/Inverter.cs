@@ -1,23 +1,20 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public class Inverter : Node 
+﻿public class Inverter : Node
 {
     private Node m_node;
 
-    public Node node 
+    public Node node
     {
         get { return m_node; }
     }
 
-    public Inverter(Node node) 
+    public Inverter(Node node)
     {
         m_node = node;
     }
 
-    public override NodeStates Evaluate() 
+    public override NodeStates Evaluate()
     {
-        switch (m_node.Evaluate()) 
+        switch (m_node.Evaluate())
         {
             case NodeStates.FAILURE:
                 m_nodeState = NodeStates.SUCCESS;

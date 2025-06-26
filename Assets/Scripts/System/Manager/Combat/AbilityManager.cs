@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor.ShaderGraph.Drawing.Inspector.PropertyDrawers;
 using UnityEngine;
 
 public class AbilityManager : MonoBehaviour
@@ -24,7 +23,7 @@ public class AbilityManager : MonoBehaviour
         if (abilities.ContainsKey(_id)) return abilities[_id];
 
         var ability_selected = Singleton.Get<TableDataManager>().Table.WeaponAbility.Get(_id);
-        
+
         //투사체 생성
         if (ability_selected.ProjectileID != 0)
         {

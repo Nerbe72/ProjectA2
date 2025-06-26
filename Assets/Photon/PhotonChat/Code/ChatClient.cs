@@ -12,13 +12,11 @@ namespace Photon.Chat
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using ExitGames.Client.Photon;
 
-    #if SUPPORTED_UNITY || NETFX_CORE
-    using Hashtable = ExitGames.Client.Photon.Hashtable;
+#if SUPPORTED_UNITY || NETFX_CORE
     using SupportClass = ExitGames.Client.Photon.SupportClass;
-    #endif
+#endif
 
 
     /// <summary>Central class of the Photon Chat API to connect, handle channels and messages.</summary>
@@ -308,13 +306,13 @@ namespace Photon.Chat
             this.PrivateChannels.Clear();
             this.PublicChannelsUnsubscribing.Clear();
 
-            #if UNITY_WEBGL
+#if UNITY_WEBGL
             if (this.TransportProtocol == ConnectionProtocol.Tcp || this.TransportProtocol == ConnectionProtocol.Udp)
             {
                 this.listener.DebugReturn(DebugLevel.WARNING, "WebGL requires WebSockets. Switching TransportProtocol to WebSocketSecure.");
                 this.TransportProtocol = ConnectionProtocol.WebSocketSecure;
             }
-            #endif
+#endif
 
             this.NameServerAddress = this.chatPeer.NameServerAddress;
 
@@ -326,11 +324,11 @@ namespace Photon.Chat
 
             if (this.UseBackgroundWorkerForSending)
             {
-                #if UNITY_SWITCH
+#if UNITY_SWITCH
                 SupportClass.StartBackgroundCalls(this.SendOutgoingInBackground, this.msDeltaForServiceCalls);  // as workaround, we don't name the Thread.
-                #else
+#else
                 SupportClass.StartBackgroundCalls(this.SendOutgoingInBackground, this.msDeltaForServiceCalls, "ChatClient Service Thread");
-                #endif
+#endif
             }
 
             return isConnecting;
@@ -1016,14 +1014,14 @@ namespace Photon.Chat
                 case ChatEventCode.UserUnsubscribed:
                     this.HandleUserUnsubscribedEvent(eventData);
                     break;
-                #if CHAT_EXTENDED
+#if CHAT_EXTENDED
                 case ChatEventCode.PropertiesChanged:
                     this.HandlePropertiesChanged(eventData);
                     break;
                 case ChatEventCode.ErrorInfo:
                     this.HandleErrorInfoEvent(eventData);
                     break;
-                #endif
+#endif
             }
         }
 
@@ -1119,9 +1117,9 @@ namespace Photon.Chat
                         default:
                             // unexpected disconnect, we log warning and stacktrace
                             string stacktrace = string.Empty;
-                            #if DEBUG && !NETFX_CORE
+#if DEBUG && !NETFX_CORE
                             stacktrace = new System.Diagnostics.StackTrace(true).ToString();
-                            #endif
+#endif
                             this.listener.DebugReturn(DebugLevel.WARNING, string.Format("Got a unexpected Disconnect in ChatState: {0}. Server: {1} Trace: {2}", this.State, this.chatPeer.ServerAddress, stacktrace));
                             break;
                     }
@@ -1182,7 +1180,7 @@ namespace Photon.Chat
             }
         }
 
-        #if SDK_V4
+#if SDK_V4
         void IPhotonPeerListener.OnMessage(object msg)
         {
             string channelName = null;
@@ -1211,7 +1209,7 @@ namespace Photon.Chat
 
             this.listener.OnReceiveBroadcastMessage(channelName, messageBytes);
         }
-        #endif
+#endif
 
         #endregion
 
@@ -1326,7 +1324,7 @@ namespace Photon.Chat
                         string[] subscribers = temp as string[];
                         channel.AddSubscribers(subscribers);
                     }
-                    #if CHAT_EXTENDED
+#if CHAT_EXTENDED
                     if (eventData.Parameters.TryGetValue(ChatParameterCode.UserProperties, out temp))
                     {
                         //UnityEngine.Debug.LogFormat("temp = {0}", temp);
@@ -1336,7 +1334,7 @@ namespace Photon.Chat
                             channel.ReadUserProperties(pair.Key, pair.Value as Dictionary<object, object>);
                         }
                     }
-                    #endif
+#endif
                 }
             }
 
@@ -1473,13 +1471,13 @@ namespace Photon.Chat
                 this.listener.DebugReturn(DebugLevel.INFO, "Connecting to frontend " + this.FrontendAddress);
             }
 
-            #if UNITY_WEBGL
+#if UNITY_WEBGL
             if (this.TransportProtocol == ConnectionProtocol.Tcp || this.TransportProtocol == ConnectionProtocol.Udp)
             {
                 this.listener.DebugReturn(DebugLevel.WARNING, "WebGL requires WebSockets. Switching TransportProtocol to WebSocketSecure.");
                 this.TransportProtocol = ConnectionProtocol.WebSocketSecure;
             }
-            #endif
+#endif
 
             if (!this.chatPeer.Connect(this.FrontendAddress, this.ProxyServerAddress, ChatAppName, null))
             {
@@ -1586,14 +1584,14 @@ namespace Photon.Chat
                         this.listener.DebugReturn(DebugLevel.WARNING, string.Format("Channel \"{0}\"'s MaxSubscribers exceeded. count={1} > MaxSubscribers={2}.", channelName, channel.Subscribers.Count, channel.MaxSubscribers));
                     }
                 }
-                #if CHAT_EXTENDED
+#if CHAT_EXTENDED
                 object temp;
                 if (eventData.Parameters.TryGetValue(ChatParameterCode.UserProperties, out temp))
                 {
                     Dictionary<object, object> userProperties = temp as Dictionary<object, object>;
                     channel.ReadUserProperties(userId, userProperties);
                 }
-                #endif
+#endif
             }
             else
             {
@@ -1678,7 +1676,7 @@ namespace Photon.Chat
                 }
                 properties[ChannelWellKnownProperties.MaxSubscribers] = maxSubscribers;
             }
-            #if CHAT_EXTENDED
+#if CHAT_EXTENDED
             if (creationOptions.CustomProperties != null && creationOptions.CustomProperties.Count > 0)
             {
                 foreach (var pair in creationOptions.CustomProperties)
@@ -1686,7 +1684,7 @@ namespace Photon.Chat
                     properties.Add(pair.Key, pair.Value);
                 }
             }
-            #endif
+#endif
             Dictionary<byte, object> opParameters = new Dictionary<byte, object> { { ChatParameterCode.Channels, new[] { channel } } };
             if (messagesFromHistory != 0)
             {
@@ -1704,7 +1702,7 @@ namespace Photon.Chat
             return this.chatPeer.SendOperation(ChatOperationCode.Subscribe, opParameters, SendOptions.SendReliable);
         }
 
-        #if CHAT_EXTENDED
+#if CHAT_EXTENDED
 
         internal bool SetChannelProperties(string channelName, Dictionary<object, object> channelProperties, Dictionary<object, object> expectedProperties = null, bool httpForward = false)
         {
@@ -1855,6 +1853,6 @@ namespace Photon.Chat
             this.listener.OnErrorInfo(channel, msg, data);
         }
 
-        #endif
+#endif
     }
 }

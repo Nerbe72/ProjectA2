@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public partial class Skeleton : Enemy
 {
     private Node rootNode;

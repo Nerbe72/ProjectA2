@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using System.Threading.Tasks;
 
 public class QuestManager : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class QuestManager : MonoBehaviour
 
     public Action<int> OnTargetQuestChanged;
 
-    private void Awake()
+    private async void Awake()
     {
         if (Singleton.Add(this))
         {
@@ -29,7 +30,7 @@ public class QuestManager : MonoBehaviour
         }
 
         DontDestroyOnLoad(gameObject);
-        LoadQuestData();
+        await LoadQuestData();
     }
 
     private void Start()
@@ -39,13 +40,12 @@ public class QuestManager : MonoBehaviour
         CreateTree();
     }
 
-    private void LoadQuestData()
+    private async Task LoadQuestData()
     {
-        dataPath = Path.Combine(Application.persistentDataPath, "quests.json");
+        // 서버에서 퀘스트 데이터 받아오기 (배너와 동일 패턴)
+        QuestDataContainer questWrapper = await Singleton.Get<AuthManager>().GetDataAsync<QuestDataContainer>(Request.quests);
 
-        var text = File.ReadAllText(dataPath);
-        var questWrapper = JsonUtility.FromJson<QuestDataContainer>(text);
-
+        quests.Clear();
         int count = questWrapper.questList.Count;
         for (int i = 0; i < count; i++)
         {
@@ -68,7 +68,7 @@ public class QuestManager : MonoBehaviour
             var info = questList[i];
             var node = questNodeMap[info.QuestID];
 
-            for(int j = 0; j < info.NextQuestIDs.Count; j++)
+            for (int j = 0; j < info.NextQuestIDs.Count; j++)
             {
                 int nextQuestID = info.NextQuestIDs[j];
                 if (questNodeMap.TryGetValue(nextQuestID, out var nextNode))
@@ -95,7 +95,7 @@ public class QuestManager : MonoBehaviour
             AddQuest(rootNodes[i].Info.QuestID, QuestState.Available);
         }
     }
-    
+
     private void LoadPlayerQuestInstance()
     {
 
@@ -118,7 +118,7 @@ public class QuestManager : MonoBehaviour
 
         if (instance == null)
         {
-            
+
             instance = new QuestInstance(_id, _addedState);
 
             int count = quest_selected.Objectives.Count;

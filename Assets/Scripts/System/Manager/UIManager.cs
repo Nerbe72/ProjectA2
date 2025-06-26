@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public static class UIManager
 {
     public static void OffBasicUI()

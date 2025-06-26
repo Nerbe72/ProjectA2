@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class NPCTutorial : NPC
 {
     public override void DoAction()

@@ -1,15 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Threading.Tasks;
 
 public class Inventory : WindowBase
 {
     #region Inventory_Promised
     public int InitializationPriority => 1;
-    public bool IsInitialized;
     #endregion
 
     #region Inventory_Items
@@ -63,7 +62,6 @@ public class Inventory : WindowBase
         framePrefab = Resources.Load<GameObject>(Path.Combine("Prefabs", "UI", "Inventory", "ItemFrame"));
 
         WindowType = WindowType.NormalWindow;
-        IsInitialized = false;
 
         gameObject.SetActive(false);
     }
@@ -72,9 +70,9 @@ public class Inventory : WindowBase
     public void SaveInventoryData()
     {
         string savePath = Path.Combine(Application.persistentDataPath, "inventory_save.json");
-        
+
         var inventory_saving = new InventoryWrapper();
-        
+
         foreach (var item in items)
         {
             if (item is WeaponItemInstance weapon)
@@ -86,9 +84,9 @@ public class Inventory : WindowBase
                 inventory_saving.potions.Add(potion);
             }
         }
-        
+
         inventory_saving.Currency = Currency;
-        
+
         string json = JsonUtility.ToJson(inventory_saving, true);
         File.WriteAllText(savePath, json);
     }
@@ -96,10 +94,10 @@ public class Inventory : WindowBase
     public async Task LoadInventoryData()
     {
         string savePath = Path.Combine(Application.persistentDataPath, "inventory_save.json");
-        
+
         if (!File.Exists(savePath))
         {
-            var defaultSaveData = new InventoryWrapper();  
+            var defaultSaveData = new InventoryWrapper();
             string defaultJson = JsonUtility.ToJson(defaultSaveData, true);
             File.WriteAllText(savePath, defaultJson);
             Debug.Log("<color=yellow>빈 인벤토리 데이터 생성</color>");
@@ -113,6 +111,7 @@ public class Inventory : WindowBase
         {
             foreach (var weapon in inventory_loaded.weapons)
             {
+                weapon.InventoryID = Guid.Parse(weapon.InventoryIDString);
                 AddItem(weapon);
             }
         }
@@ -132,6 +131,7 @@ public class Inventory : WindowBase
 
         Debug.Log("<color=green>재화 로드 완료</color>");
 
+        List<Task> prefabTasks = new List<Task>(); 
         //프리팹 로딩
         int count = items.Count;
         for (int i = 0; i < count; i++)
@@ -139,13 +139,30 @@ public class Inventory : WindowBase
             items[i].InventoryID = new Guid(items[i].InventoryIDString);
             if (items[i] is WeaponItemInstance weapon)
             {
-                await weapon.LoadPrefabAsync();
+                prefabTasks.Add(weapon.LoadPrefabAsync());
             }
         }
 
-        Debug.Log("<color=green>보유중인 무기 인스턴스화(프리팹 로드) 완료</color>");
+        int prefabCount = prefabTasks.Count;
+        while (true)
+        {
+            bool loadRemained = false;
+            for (int i = 0; i < prefabCount; i++)
+            {
+                if (!prefabTasks[i].IsCompleted)
+                {
+                    loadRemained = true;
+                    break;
+                }
+            }
 
-        IsInitialized = true;
+            if (!loadRemained) break;
+
+            await Task.Yield();
+        }
+        
+
+        Debug.Log("<color=green>보유중인 무기 인스턴스화(프리팹 로드) 완료</color>");
     }
 
     #endregion
@@ -160,7 +177,7 @@ public class Inventory : WindowBase
 
         int count = children.Length;
 
-        for(int i = count - 1; i >= 0; i--)
+        for (int i = count - 1; i >= 0; i--)
         {
             Destroy(children[i].gameObject);
         }
@@ -358,7 +375,7 @@ public class Inventory : WindowBase
     public void ShowItemMenu(ItemInstance _instance, RectTransform _frameTransform)
     {
         if (itemMenu == null) return;
-        
+
         itemMenu.ShowItemMenu(_instance, _frameTransform.position);
     }
 
@@ -454,12 +471,12 @@ public class Inventory : WindowBase
     {
         //todo 이진탐색 고려
         int count = items.Count;
-        for(int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             if (items[i] is WeaponItemInstance weapon && weapon.InventoryID == _inventoryID)
                 return weapon;
         }
-            
+
         return null;
     }
 

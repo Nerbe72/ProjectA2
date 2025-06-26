@@ -1,5 +1,5 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 public partial class Skeleton : Enemy
 {
@@ -162,4 +162,4 @@ public partial class Skeleton : Enemy
         isHit = false;
         hitStunCoroutine = null;
     }
-} 
+}

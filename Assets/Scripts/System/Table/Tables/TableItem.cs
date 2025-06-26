@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using System;
-using UnityEngine;
-using System.IO;
+using System.Collections.Generic;
 
 public class TableItem : TableBase
 {

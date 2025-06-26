@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.SceneManagement;
 using static UnityEngine.Networking.UnityWebRequest;
 
 public class LoginManager : MonoBehaviour
@@ -20,7 +19,7 @@ public class LoginManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public async static Task LoginAsync(string _id, string _password)
+    public async static Task<bool> LoginAsync(string _id, string _password)
     {
         LoginRequestData data = new LoginRequestData { id = _id, password = _password };
         string jsonData = JsonUtility.ToJson(data);
@@ -42,6 +41,7 @@ public class LoginManager : MonoBehaviour
         if (request.result != Result.Success)
         {
             Debug.Log("로그인 요청 오류 " + request.error);
+            return false;
         }
         else
         {
@@ -51,13 +51,14 @@ public class LoginManager : MonoBehaviour
             if (!answerData.success)
             {
                 Debug.Log("로그인 실패");
+                return false;
             }
             else
             {
                 Debug.Log("<color=green>로그인 성공!</color>");
 
                 Singleton.Get<AuthManager>().SetToken(answerData.token);
-                //SceneManager.LoadScene("Lobby");
+                return true;
             }
         }
     }

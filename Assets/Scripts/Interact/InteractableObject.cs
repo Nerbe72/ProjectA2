@@ -1,5 +1,4 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class InteractableObject : MonoBehaviour, IInteractable
@@ -24,7 +23,7 @@ public abstract class InteractableObject : MonoBehaviour, IInteractable
 
         if (player == null) return;
 
-        Singleton.Get<InteractIndicator>().SetShowIndicator(true, 10000043);
+        Singleton.Get<InteractIndicatorUI>().SetShowIndicator(true, 10000043);
         Singleton.Get<InteractManager>().SetInteract(this);
     }
 
@@ -36,7 +35,7 @@ public abstract class InteractableObject : MonoBehaviour, IInteractable
 
         if (player == null) return;
 
-        Singleton.Get<InteractIndicator>().SetShowIndicator(false);
+        Singleton.Get<InteractIndicatorUI>().SetShowIndicator(false);
         Singleton.Get<InteractManager>().UnSetInteract(this);
     }
 

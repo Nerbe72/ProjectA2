@@ -1,16 +1,20 @@
+using Photon.Pun;
 using System.Collections;
-using System.ComponentModel;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SceneLoader : MonoBehaviour
 {
-    [SerializeField] private Slider ProgressBar;
+    [SerializeField] private Slider progressBar;
+    [SerializeField] private TMP_Text progressText;
+
+    private float multiply = 0.33f;
 
     private void Awake()
     {
-        ProgressBar.value = 0;
+        progressBar.value = 0;
     }
 
     void Start()
@@ -20,56 +24,102 @@ public class SceneLoader : MonoBehaviour
 
     private IEnumerator CoLoading()
     {
-        var nextScene = SceneLoadManager.NextScene == Map.None ? Map.World_FrontVillage : SceneLoadManager.NextScene;
+        float currentProgress = 0f;
+        var gameManager = Singleton.Get<GameManager>();
+        var photonManager = Singleton.Get<PhotonManager>();
 
-        if (!GameManager.BeforeLoaded)
+
+        progressText.text = "룸 대기중";
+        yield return new WaitUntil(() => PhotonNetwork.InRoom);
+
+        if (!gameManager.BeforeLoaded)
         {
             yield return new WaitForEndOfFrame();
-            UnityEngine.AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(2, LoadSceneMode.Additive);
+            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(2, LoadSceneMode.Additive);
             asyncOperation.allowSceneActivation = false;
-            float time = 0;
-            while (!asyncOperation.isDone)
+            while (asyncOperation.progress < 0.9f)
             {
-                time += Time.deltaTime;
-                ProgressBar.value = asyncOperation.progress * 0.3f;
-                Debug.Log("Loading Before");
-
-                if (asyncOperation.progress >= 0.9f)
-                {
-                    break;
-                }
-                yield return new WaitForEndOfFrame();
+                progressText.text = "초기 오브젝트 생성중";
+                progressBar.value = asyncOperation.progress * multiply;
+                yield return null;
             }
-
             asyncOperation.allowSceneActivation = true;
+
+            yield return new WaitUntil(() => asyncOperation.isDone);
+            gameManager.BeforeLoaded = true;
+
+            progressText.text = "인벤토리 오브젝트 로드중";
+            yield return new WaitUntil(() => Singleton.Inventory != null);
+            var inventoryTask = gameManager.LoadInventoryData();
+            progressText.text = "인벤토리 데이터 불러오는중";
+            yield return new WaitUntil(() => inventoryTask.IsCompleted);
         }
 
-        if (!GameManager.PlayerLoaded)
+        currentProgress = progressBar.value;
+
+        if (!gameManager.PlayerLoaded)
         {
+            var loadedPlayerData = gameManager.LoadPlayerData();
+            Player player = photonManager.InstantiatePlayer(loadedPlayerData);
 
+            progressText.text = $"플레이어 생성중 {Singleton.Player == null}";
+            Debug.Log("플레이어 데이터 생성중...");
+            yield return new WaitUntil(() => Singleton.Player != null);
+            Singleton.Player.SetPlayerDataFromLoaded(loadedPlayerData);
+            gameManager.PlayerLoaded = true;
         }
 
-        if (!GameManager.AfterLoaded)
+        progressText.text = "플레이어 생성 완료";
+        Debug.Log("플레이어 데이터 로드 완료");
+
+        Singleton.Player.IsLoadingScene = true;
+
+        currentProgress = progressBar.value;
+
+        if (!gameManager.AfterLoaded)
         {
             yield return new WaitForEndOfFrame();
-            UnityEngine.AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(3, LoadSceneMode.Additive);
+            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(3, LoadSceneMode.Additive);
             asyncOperation.allowSceneActivation = false;
-            float time = 0;
-            while (!asyncOperation.isDone)
+            while (asyncOperation.progress < 0.9f)
             {
-                time += Time.deltaTime;
-                ProgressBar.value = 0.3f + asyncOperation.progress * 0.3f;
-                Debug.Log("Loading After");
-
-                if (asyncOperation.progress >= 0.9f)
-                {
-                    break;
-                }
-                yield return new WaitForEndOfFrame();
+                progressText.text = "후반 오브젝트 생성중";
+                Debug.Log("후반 데이터 로드중...");
+                progressBar.value = currentProgress + asyncOperation.progress * multiply;
+                yield return null;
             }
-
             asyncOperation.allowSceneActivation = true;
+            yield return new WaitUntil(() => asyncOperation.isDone);
+            gameManager.AfterLoaded = true;
         }
+
+        Debug.Log("후반 데이터 로드 완료");
+
+        currentProgress = progressBar.value;
+
+        int sceneIndex = (int)SceneLoadManager.NextScene;
+        byte newGroup = (byte)SceneLoadManager.NextScene;
+        Singleton.Get<PhotonManager>().ChangeInterestGroup(newGroup);
+
+        PhotonNetwork.IsMessageQueueRunning = false;
+        AsyncOperation asyncMapOperation = SceneManager.LoadSceneAsync(sceneIndex);
+        asyncMapOperation.allowSceneActivation = false;
+        while (asyncMapOperation.progress < 0.9f)
+        {
+            progressText.text = "맵 로드중";
+            progressBar.value = currentProgress + asyncMapOperation.progress * multiply;
+            yield return null;
+        }
+
+        asyncMapOperation.allowSceneActivation = true;
+
+        Singleton.Player.transform.position = SceneLoadManager.NextPosition;
+        Singleton.Player.transform.rotation = SceneLoadManager.NextRotation;
+        Singleton.Player.IsLoadingScene = false;
+
+        yield return new WaitUntil(() => asyncMapOperation.isDone);
+
+        PhotonNetwork.IsMessageQueueRunning = true;
 
         yield break;
     }

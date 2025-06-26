@@ -1,12 +1,10 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-public class Sequence : Node 
+public class Sequence : Node
 {
     private List<Node> m_nodes = new List<Node>();
 
-    public Sequence(List<Node> nodes) 
+    public Sequence(List<Node> nodes)
     {
         m_nodes = nodes;
     }
@@ -14,15 +12,15 @@ public class Sequence : Node
     public override NodeStates Evaluate()
     {
         bool anyChildRunning = false;
-        
-        foreach(Node node in m_nodes) 
+
+        foreach (Node node in m_nodes)
         {
-            switch (node.Evaluate()) 
+            switch (node.Evaluate())
             {
 
                 case NodeStates.FAILURE:
                     m_nodeState = NodeStates.FAILURE;
-                    return m_nodeState;                    
+                    return m_nodeState;
                 case NodeStates.SUCCESS:
                     continue;
                 case NodeStates.RUNNING:

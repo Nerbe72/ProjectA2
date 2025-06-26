@@ -24,7 +24,7 @@ public abstract class Character : MonoBehaviourPunCallbacks
 
         var weapon_selected = Singleton.Get<TableDataManager>().Table.Weapon.Get(weaponInstance.ItemID);
         int damage = stats.Damage + weaponInstance.Damage;
-        
+
         return ((AttackType)weapon_selected.AttackType, damage);
     }
 
@@ -35,7 +35,7 @@ public abstract class Character : MonoBehaviourPunCallbacks
         var ability_selected = Singleton.Get<TableDataManager>().Table.WeaponAbility.Get(_abilityID);
         if (ability_selected == null) return (0, 0);
 
-        (AttackType type, int damage) result = (0 ,0);
+        (AttackType type, int damage) result = (0, 0);
 
         if (weaponInstance == null)
         {
