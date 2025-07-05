@@ -45,6 +45,11 @@ public class Target : MonoBehaviour
         //플레이어로부터 특정 범위에 들어온 경우 타깃 리스트에 추가됨
         if (other == null) return;
 
+        if (targetManager == null)
+        {
+            return;
+        }
+
         StopAllCoroutines();
         targetManager.AddTarget(this, isInSight);
     }

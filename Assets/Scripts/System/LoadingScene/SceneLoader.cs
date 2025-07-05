@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Threading.Tasks;
 
 public class SceneLoader : MonoBehaviour
 {
@@ -27,7 +28,6 @@ public class SceneLoader : MonoBehaviour
         float currentProgress = 0f;
         var gameManager = Singleton.Get<GameManager>();
         var photonManager = Singleton.Get<PhotonManager>();
-
 
         progressText.text = "룸 대기중";
         yield return new WaitUntil(() => PhotonNetwork.InRoom);
@@ -62,15 +62,21 @@ public class SceneLoader : MonoBehaviour
             var loadedPlayerData = gameManager.LoadPlayerData();
             Player player = photonManager.InstantiatePlayer(loadedPlayerData);
 
-            progressText.text = $"플레이어 생성중 {Singleton.Player == null}";
+            progressText.text = $"플레이어 생성중";
             Debug.Log("플레이어 데이터 생성중...");
+
             yield return new WaitUntil(() => Singleton.Player != null);
+
             Singleton.Player.SetPlayerDataFromLoaded(loadedPlayerData);
             gameManager.PlayerLoaded = true;
         }
 
         progressText.text = "플레이어 생성 완료";
-        Debug.Log("플레이어 데이터 로드 완료");
+        Debug.Log($"{Singleton.Player.photonView.ViewID}  플레이어 데이터 로드 완료");
+
+        int sceneIndex = (int)SceneLoadManager.NextScene;
+        byte newGroup = (byte)SceneLoadManager.NextScene;
+        Singleton.Get<PhotonManager>().ChangeInterestGroup(newGroup); // Subscribe to map interest group for buffered spawn events
 
         Singleton.Player.IsLoadingScene = true;
 
@@ -97,11 +103,6 @@ public class SceneLoader : MonoBehaviour
 
         currentProgress = progressBar.value;
 
-        int sceneIndex = (int)SceneLoadManager.NextScene;
-        byte newGroup = (byte)SceneLoadManager.NextScene;
-        Singleton.Get<PhotonManager>().ChangeInterestGroup(newGroup);
-
-        PhotonNetwork.IsMessageQueueRunning = false;
         AsyncOperation asyncMapOperation = SceneManager.LoadSceneAsync(sceneIndex);
         asyncMapOperation.allowSceneActivation = false;
         while (asyncMapOperation.progress < 0.9f)
@@ -111,15 +112,24 @@ public class SceneLoader : MonoBehaviour
             yield return null;
         }
 
-        asyncMapOperation.allowSceneActivation = true;
-
         Singleton.Player.transform.position = SceneLoadManager.NextPosition;
         Singleton.Player.transform.rotation = SceneLoadManager.NextRotation;
         Singleton.Player.IsLoadingScene = false;
 
-        yield return new WaitUntil(() => asyncMapOperation.isDone);
+        var mapManager = Singleton.Get<MapManager>();
+        if (mapManager != null)
+            mapManager.SetCurrentMap(sceneIndex);
 
-        PhotonNetwork.IsMessageQueueRunning = true;
+        // 씬 로딩 완료 후 메시지 큐 재개
+        if (PhotonNetwork.IsConnected)
+        {
+            yield return null;
+
+            PhotonNetwork.IsMessageQueueRunning = true;
+            Debug.Log($"버퍼 처리");
+        }
+
+        asyncMapOperation.allowSceneActivation = true;
 
         yield break;
     }

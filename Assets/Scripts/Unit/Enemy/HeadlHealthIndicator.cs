@@ -25,9 +25,12 @@ public class HeadlHealthIndicator : MonoBehaviour
         transform.LookAt(main.transform);
     }
 
-    private void UpdateHealth(int current, int max)
+    public void UpdateHealth(int current, int max)
     {
-        gameObject.SetActive(true);
+        gameObject.SetActive(current != max);
+
+        if (!gameObject.activeSelf)
+            return;
 
         StopAllCoroutines();
         StartCoroutine(HealthLerp(current, max));

@@ -31,6 +31,9 @@ public partial class DeepDragon : Boss
     [Header("Wall")]
     [SerializeField] private GameObject blockingWall;
 
+    [Header("EndPortal")]
+    [SerializeField] private GameObject endPortal;
+
     [Header("Pattern Range")]
     [SerializeField] private AttackPatternDistance pattern1Melee = new AttackPatternDistance { MinDistance = 0f, MaxDistance = 5f };
 

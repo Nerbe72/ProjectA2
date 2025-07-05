@@ -1,2 +1,8 @@
-﻿Enemy_ID,Unit_Type,Name,Speed,Health,Damage,Defense,Sight_Offset,Sight_Angle,Sight_Distance,Sight_Height,Distance_Movable,Distance_Attackable,Weapon
-100001,1,10100001,5,200,100,100,0,105,8,0.99,10,1.2,100001
+﻿spawnID,EnemyID,MapID,SpawnPosX,SpawnPosY,SpawnPosZ,SpawnRotY,RespawnTime
+1,100001,4,20.26,0,19.37,-70,5
+2,100001,6,87.04,0.028,98.01,-108.85,10
+3,100001,6,84.52,0.028,79.07,-9.42,10
+4,100001,6,91.62,0.028,84.33,-106.29,10
+5,100002,6,113.4,-2.426,64.46,1.93,10
+6,100002,6,110.65,-2.426,64.08,24.23,10
+7,100002,6,111.65,-2.426,93.05,-166.02,10

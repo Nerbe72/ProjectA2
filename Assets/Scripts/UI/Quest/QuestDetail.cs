@@ -73,7 +73,7 @@ public class QuestDetail : MonoBehaviour
                 {
                     case ObjectiveType.Kill:
                         var enemy_selected = tableMgr.Enemy.Get(objectiveInfo.TargetID);
-                        string enemyName = enemy_selected != null ? localeTable.Get(enemy_selected.Name, currentLocale) : objectiveInfo.TargetID.ToString();
+                        string enemyName = enemy_selected != null ? localeTable.Get(enemy_selected.EnemyID, currentLocale) : objectiveInfo.TargetID.ToString();
                         string killFormat = localeTable.Get(82000001, currentLocale);
                         string[] killDatas = { enemyName, objectiveInfo.Required.ToString() };
                         objectiveDescription = string.Format(killFormat, killDatas);

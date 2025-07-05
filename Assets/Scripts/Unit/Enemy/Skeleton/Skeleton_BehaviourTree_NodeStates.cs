@@ -18,7 +18,7 @@ public partial class Skeleton : Enemy
 
     private bool CheckIsPlayerInAttackDistance()
     {
-        return (Vector3.Distance(transform.position, Singleton.Player.transform.position) <= EnemyData.AttackDistance);
+        return DistanceFromPlayer() <= EnemyData.AttackDistance;
     }
 
     private bool CheckSpawnDistance()
@@ -83,8 +83,10 @@ public partial class Skeleton : Enemy
         Debug.Log($"[Skeleton] DoChase: {gameObject.name}");
         agent.isStopped = false;
         agent.speed = EnemyData.Speed;
-        Vector3 dir = (transform.position - player.transform.position).normalized;
-        Vector3 targetPosition = player.transform.position + dir * (EnemyData.AttackDistance - 1f);
+        if (currentTarget == null) return NodeStates.FAILURE;
+
+        Vector3 dir = (transform.position - currentTarget.transform.position).normalized;
+        Vector3 targetPosition = currentTarget.transform.position + dir * (EnemyData.AttackDistance - 1f);
         agent.SetDestination(targetPosition);
         animator.SetBool(AnimationHash.GetHash(ActionType.Move), true);
         isChasing = true;
@@ -100,9 +102,12 @@ public partial class Skeleton : Enemy
         animator.SetBool(AnimationHash.GetHash(ActionType.Move), false);
         animator.SetBool(AnimationHash.GetHash(ActionType.Attack), true);
         // 플레이어 방향으로 회전
-        Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
-        directionToPlayer.y = 0;
-        transform.rotation = Quaternion.LookRotation(directionToPlayer);
+        if (currentTarget != null)
+        {
+            Vector3 directionToPlayer = (currentTarget.transform.position - transform.position).normalized;
+            directionToPlayer.y = 0;
+            transform.rotation = Quaternion.LookRotation(directionToPlayer);
+        }
         // 원거리 곡사 투사체 발사
         if (projectileHandle != null)
         {
@@ -128,9 +133,9 @@ public partial class Skeleton : Enemy
             agent.isStopped = false;
             animator.SetBool(AnimationHash.GetHash(ActionType.Move), false);
             animator.SetBool(AnimationHash.GetHash(ActionType.Attack), false);
-            if (CheckPlayerInSight())
+            if (CheckPlayerInSight() && currentTarget != null)
             {
-                Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
+                Vector3 directionToPlayer = (currentTarget.transform.position - transform.position).normalized;
                 directionToPlayer.y = 0;
                 Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 20);

@@ -30,14 +30,21 @@ public partial class Player : Character, IPunObservable
     [PunRPC]
     void RPCOnEquipWeapon(int _weaponID)
     {
-        // weaponID ·Î WeaponItemInstance ¸¦ »ı¼º ¶Ç´Â Å×ÀÌºí Á¶È¸
-        var weaponInfo = Singleton.Get<TableDataManager>().Table.Item.Get(_weaponID);
+        var tableManager = Singleton.Get<TableDataManager>().Table;
+
+        if (tableManager == null)
+        {
+            Debug.LogError($"í…Œì´ë¸”ì´ ë¡œë“œë˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤. Player_PhotonSync_RPCOnEquipWeapon");
+            return;
+        }
+
+        var weaponInfo = tableManager.Item.Get(_weaponID);
         var prefab = ResourceLoader.Load<GameObject>(weaponInfo.Prefab, LoadType.ItemPrefab);
         var instance = new WeaponItemInstance();
         instance.ItemID = _weaponID;
         instance.InstancedPrefab = prefab;
-
-        EquipWeapon(instance);   // ±âÁ¸ Player.EquipWeapon È£Ãâ
+        Debug.Log($"RPC ë¬´ê¸° ì¥ì°©, {photonView.ViewID} {_weaponID}");
+        EquipWeapon(instance, false);
     }
 
     public void ApplyEquipWeapon(int _weaponID)

@@ -5,7 +5,7 @@ public partial class Goblin : Enemy
     private bool isChasing = false;
     private bool isReturning = false;
 
-    private Node CreateBehaviourTree()
+    protected override Node CreateBehaviourTree()
     {
         return new Selector(
             new List<Node>

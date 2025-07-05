@@ -12,4 +12,9 @@ public class Dummy : Enemy, IHurtable
     {
         Debug.Log(_damage);
     }
+
+    protected override Node CreateBehaviourTree()
+    {
+        throw new System.NotImplementedException();
+    }
 }

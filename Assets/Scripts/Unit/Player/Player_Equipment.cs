@@ -14,7 +14,13 @@ public partial class Player : Character
     //    }
     //}
 
-    public void EquipWeapon(WeaponItemInstance _instance)
+    public void EquipWeapon(WeaponItemInstance _instance, bool _broadcast = true)
+    {
+        EquipWeaponInternal(_instance, _broadcast);
+    }
+
+    // Original logic moved here to allow overload wrapper
+    private void EquipWeaponInternal(WeaponItemInstance _instance, bool _broadcast)
     {
         if (_instance == null || _instance.InstancedPrefab == null) return;
 
@@ -59,8 +65,15 @@ public partial class Player : Character
         {
             animator.SetBool(AnimationHash.GetHash((WeaponType)i), i == weapon_selected.WeaponType);
         }
-        ApplyEquipWeapon(_instance.ItemID);
+        if (_broadcast && photonView != null && photonView.IsMine)
+            ApplyEquipWeapon(_instance.ItemID);
         OnWeaponChanged?.Invoke(_instance);
+    }
+
+    // Legacy overload for delegates (broadcast=true by default)
+    public void EquipWeapon(WeaponItemInstance _instance)
+    {
+        EquipWeaponInternal(_instance, true);
     }
 
     /// <summary>

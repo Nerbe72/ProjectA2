@@ -32,6 +32,7 @@ public class MeleeWeapon : Weapon
 
         if (owner == null) return;
 
+        Debug.Log($"MeleeWeapon OnTriggerEnter to: {hurtable.Character.name}");
         if (hurtable.Character.GetSelfUnitType() == owner.GetSelfUnitType()) return;
 
         var calculated = owner.CalculateAttack();

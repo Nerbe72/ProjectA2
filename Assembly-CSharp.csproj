@@ -89,11 +89,13 @@
     <Compile Include="Assets\Scripts\Unit\Player\Target\TargetDetector.cs" />
     <Compile Include="Assets\Scripts\Unit\Interfaces\IAttackable.cs" />
     <Compile Include="Assets\Scripts\Photon\PhotonManager_MapChanger.cs" />
+    <Compile Include="Assets\Scripts\Equipment\Weapon\Player\WeaponType\RangedWeapon.cs" />
     <Compile Include="Assets\Scripts\System\Manager\UIManager.cs" />
     <Compile Include="Assets\Scripts\UI\Quest\QuestDetail.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\HeadlHealthIndicator.cs" />
     <Compile Include="Assets\Scripts\UI\Indicator\DamageIndicator.cs" />
     <Compile Include="Assets\Scripts\System\GameTime.cs" />
+    <Compile Include="Assets\Scripts\System\Manager\MapManager.cs" />
     <Compile Include="Assets\Scripts\Unit\NPC\NPC.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\AttackHandlers\MeleeColliderHandler.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\Interfaces\IAttackStrategy.cs" />
@@ -196,7 +198,6 @@
     <Compile Include="Assets\Source_Effect\52SpecialEffectPack\Animation&amp;Script\csMouseOrbit.cs" />
     <Compile Include="Assets\Scripts\Unit\LevelData.cs" />
     <Compile Include="Assets\Scripts\UI\LevelUP\LevelUP.cs" />
-    <Compile Include="Assets\Scripts\Equipment\Weapon\Player\WeaponType\BowWeapon.cs" />
     <Compile Include="Assets\Scripts\System\Manager\EnemyManager.cs" />
     <Compile Include="Assets\Scripts\System\Manager\TargetManager.cs" />
     <Compile Include="Assets\Source_Effect\52SpecialEffectPack\EffectEditor\ShurikenEffectEditor\csShurikenEffectEditor.cs" />
@@ -349,7 +350,6 @@
     <None Include="Assets\Photon\PhotonUnityNetworking\link.xml" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile.shader" />
     <None Include="Assets\Source_Characters\NPC_Quest1\Lowpoly_Characters\Sources\Modular_NPC\Shaders\PT_Modular_NPC_Shader_PBR.shader" />
-    <None Include="Assets\Resources\Table\Table_DialogueLocaleKO.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Sprite.shader" />
   </ItemGroup>
   <ItemGroup>

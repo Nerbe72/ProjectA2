@@ -19,7 +19,8 @@ public class TableBase
 
         b.AssemblyFormat = System.Runtime.Serialization.Formatters.FormatterAssemblyStyle.Simple;
 
-        TextAsset asset = Resources.Load("Table_" + _Name) as TextAsset;
+        string path = Path.Combine("Table", "Table_" + _Name);
+        TextAsset asset = Resources.Load(path) as TextAsset;
         Stream stream = new MemoryStream(asset.bytes);
 
         _Obj = (T)b.Deserialize(stream);

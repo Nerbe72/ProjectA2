@@ -43,6 +43,23 @@ MonoBehaviour:
   - RPC_StartGameSession
   - RPC_TogglePauseGame
   - RPCOnEquipWeapon
+  - GiveReward
+  - SyncDamage
+  - SyncRespawn
+  - InitializeEnemyData
+  - RequestInitialization
+  - RequestDamage
+  - SyncDead
+  - ShowDamageEffect
+  - ConfirmDamage
+  - ReceiveControlRequest
+  - SetController
+  - SyncStateFromController
+  - ProcessDamageOnMaster
+  - SyncHit
+  - DamageOnMaster
+  - TakeDamageOnMaster
+  - SyncReward
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -68,7 +68,6 @@ public partial class Goblin : Enemy
         agent.SetDestination(SpawnPoint_Enemy);
         animator.SetBool(AnimationHash.GetHash(ActionType.Move), true);
         isReturning = true;
-        Debug.Log("Return");
         return NodeStates.SUCCESS;
     }
 
@@ -77,8 +76,10 @@ public partial class Goblin : Enemy
         agent.isStopped = false;
         agent.speed = EnemyData.Speed;
 
-        Vector3 dir = (transform.position - player.transform.position).normalized;
-        Vector3 targetPosition = player.transform.position + dir * (EnemyData.AttackDistance - 0.05f);
+        if (currentTarget == null) return NodeStates.FAILURE;
+
+        Vector3 dir = (transform.position - currentTarget.transform.position).normalized;
+        Vector3 targetPosition = currentTarget.transform.position + dir * (EnemyData.AttackDistance - 0.05f);
         agent.SetDestination(targetPosition);
         animator.SetBool(AnimationHash.GetHash(ActionType.Move), true);
         isChasing = true;
@@ -106,16 +107,15 @@ public partial class Goblin : Enemy
             isChasing = false;
             isReturning = false;
             isAttacking = false;
-            agent.isStopped = false;
 
             // 애니메이션 초기화
             animator.SetBool(AnimationHash.GetHash(ActionType.Move), false);
             animator.SetBool(AnimationHash.GetHash(ActionType.Attack), false);
 
             // 회전 처리
-            if (CheckPlayerInSight())
+            if (CheckPlayerInSight() && currentTarget != null)
             {
-                Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
+                Vector3 directionToPlayer = (currentTarget.transform.position - transform.position).normalized;
                 directionToPlayer.y = 0;
                 Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 20);

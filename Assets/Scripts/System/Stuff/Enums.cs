@@ -23,6 +23,14 @@ public enum UnitType
     Object,
 }
 
+public enum EnemyType
+{
+    None,
+    Goblin,
+    Skeleton,
+
+}
+
 public enum WindowType
 {
     SettingWindow,

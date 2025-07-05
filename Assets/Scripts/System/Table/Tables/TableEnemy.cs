@@ -6,20 +6,14 @@ public class TableEnemy : TableBase
     [Serializable]
     public class Info
     {
-        public int ID;
-        public int Type;
-        public int Name;
-        public float Speed;
-        public string Weapon;
-        public int Health;
-        public int Damage;
-        public int Defense;
-        public float Sight_Offset;
-        public float Sight_Angle;
-        public float Sight_Distance;
-        public float Sight_Height;
-        public float Distance_Movable;
-        public float Distance_Attackable;
+        public int SpawnID;
+        public int EnemyID;
+        public int MapID;
+        public float SpawnPositionX;
+        public float SpawnPositionY;
+        public float SpawnPositionZ;
+        public float SpawnRotationY;
+        public float RespawnTime;
     }
 
     public Dictionary<int, Info> Dictionary = new Dictionary<int, Info>();
@@ -53,7 +47,7 @@ public class TableEnemy : TableBase
             if (Read(reader, info, row, _Col) == false)
                 break;
 
-            Dictionary.Add(info.ID, info);
+            Dictionary.Add(info.SpawnID, info);
         }
     }
 
@@ -62,20 +56,14 @@ public class TableEnemy : TableBase
         if (_Reader.reset_row(_Row, _Col) == false)
             return false;
 
-        _Reader.get(_Row, ref _Info.ID);
-        _Reader.get(_Row, ref _Info.Type);
-        _Reader.get(_Row, ref _Info.Name);
-        _Reader.get(_Row, ref _Info.Speed);
-        _Reader.get(_Row, ref _Info.Weapon);
-        _Reader.get(_Row, ref _Info.Health);
-        _Reader.get(_Row, ref _Info.Damage);
-        _Reader.get(_Row, ref _Info.Defense);
-        _Reader.get(_Row, ref _Info.Sight_Offset);
-        _Reader.get(_Row, ref _Info.Sight_Angle);
-        _Reader.get(_Row, ref _Info.Sight_Distance);
-        _Reader.get(_Row, ref _Info.Sight_Height);
-        _Reader.get(_Row, ref _Info.Distance_Movable);
-        _Reader.get(_Row, ref _Info.Distance_Attackable);
+        _Reader.get(_Row, ref _Info.SpawnID);
+        _Reader.get(_Row, ref _Info.EnemyID);
+        _Reader.get(_Row, ref _Info.MapID);
+        _Reader.get(_Row, ref _Info.SpawnPositionX);
+        _Reader.get(_Row, ref _Info.SpawnPositionY);
+        _Reader.get(_Row, ref _Info.SpawnPositionZ);
+        _Reader.get(_Row, ref _Info.SpawnRotationY);
+        _Reader.get(_Row, ref _Info.RespawnTime);
 
         return true;
     }

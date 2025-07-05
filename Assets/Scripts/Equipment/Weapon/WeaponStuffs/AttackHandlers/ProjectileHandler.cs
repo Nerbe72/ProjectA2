@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ProjectileHandler : MonoBehaviour
 {
-    public GameObject projectilePrefab;
+    [HideInInspector] public GameObject projectilePrefab;
     public Transform spawnPoint;
 
     public void FireProjectile(Character _owner, int _weaponID)

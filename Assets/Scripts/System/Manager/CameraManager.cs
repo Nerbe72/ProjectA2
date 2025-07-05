@@ -115,6 +115,12 @@ public class CameraManager : MonoBehaviour
         if (vCams[(int)_followType].gameObject.activeSelf)
             return;
 
+        if (_follow == null)
+            vCams[(int)_followType].GetComponent<CinemachineCamera>().Follow = Singleton.Player.transform;
+        else
+            vCams[(int)_followType].GetComponent<CinemachineCamera>().Follow = _follow;
+
+
         if (vCams[(int)_followType].GetComponent<CinemachineOrbitalFollow>() != null)
         {
             StopAllCoroutines();

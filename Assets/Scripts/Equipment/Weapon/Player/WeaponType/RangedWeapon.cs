@@ -1,0 +1,26 @@
+using UnityEngine;
+
+[RequireComponent(typeof(ProjectileHandler))]
+public class RangedWeapon : Weapon
+{
+    private ProjectileHandler projectileHandler;
+    [SerializeField] private bool ShowShockwave;
+
+    private void Awake()
+    {
+        projectileHandler = GetComponent<ProjectileHandler>();
+    }
+
+    public override void HandlerAnimation(AttackEvent _event)
+    {
+        switch (_event)
+        {
+            case AttackEvent.Projectile:
+                {
+                    if (ShowShockwave) Singleton.Get<ShockWaveController>().StartShock(projectileHandler.transform.position);
+                    projectileHandler?.FireProjectile(owner, WeaponID);
+                }
+                break;
+        }
+    }
+}

@@ -1,6 +1,7 @@
 using Photon.Pun;
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
@@ -12,7 +13,7 @@ public abstract partial class Enemy : Character, IHurtable
     protected NavMeshAgent agent;
     protected Animator animator;
 
-    protected Player player;
+    protected Player currentTarget;
 
     public EnemyData EnemyData => stats as EnemyData;
     public Vector3 SpawnPoint_Enemy;
@@ -22,16 +23,24 @@ public abstract partial class Enemy : Character, IHurtable
 
     [SerializeField] protected Transform eyeTransform;
 
+    protected StateFlags isState = StateFlags.None;
     protected bool isDead = false;
+    protected bool isDying = false; // 사망 판정 후 RPC가 처리되기까지의 레이턴시 동안 AI를 멈추기 위한 플래그
     protected bool isHit = false;
     protected bool isAttack = false;
     protected bool isAttacking = false;
-    protected bool isDying = false;
+    
+    protected int networkEnemyID;
+    protected int networkSpawnID;
+    protected int networkMapID;
 
     public Character Character { get; set; }
     public event Action<int, int> OnHealthChanged;
 
-    private PhotonView photonView;
+    protected new PhotonView photonView;
+
+    protected Node rootNode;
+    protected abstract Node CreateBehaviourTree();
 
     protected virtual void Awake()
     {
@@ -46,33 +55,123 @@ public abstract partial class Enemy : Character, IHurtable
         SpawnRotation_Enemy = transform.rotation;
 
         EquipWeapon();
+
+        // 자식 클래스에서 구현된 행동 트리를 생성하여 rootNode에 할당합니다.
+        rootNode = CreateBehaviourTree();
+
     }
 
-    protected virtual void Start()
+
+    
+    [PunRPC]
+    public void InitializeEnemyData(int _enemyID, int _spawnID, int _mapID)
     {
-        player = Singleton.Player;
+        Debug.Log($"[Enemy] InitializeEnemyData 호출됨: EnemyID={_enemyID}, SpawnID={_spawnID}, MapID={_mapID}");
+
+        if (agent != null)
+        {
+            if (EnemyData != null)
+            {
+                agent.speed = EnemyData.Speed;
+                agent.angularSpeed = 120f;
+                agent.acceleration = EnemyData.Speed * 2.0f;
+                agent.stoppingDistance = EnemyData.AttackDistance * 0.8f;
+            }
+        }
+
+        networkEnemyID = _enemyID;
+        networkSpawnID = _spawnID;
+        networkMapID = _mapID;
+
+        // 스폰 위치 및 회전 설정 (NavMeshAgent와의 충돌 방지)
+        var spawnData = Singleton.Get<TableDataManager>().Table.Enemy.Get(_spawnID);
+        if (spawnData != null)
+        {
+            SpawnPoint_Enemy = new Vector3(spawnData.SpawnPositionX, spawnData.SpawnPositionY, spawnData.SpawnPositionZ);
+            SpawnRotation_Enemy = Quaternion.Euler(0, spawnData.SpawnRotationY, 0);
+
+            // Warp는 NavMesh 위에 있을 때만 사용 가능
+            if (agent.isOnNavMesh)
+            {
+                agent.Warp(SpawnPoint_Enemy);
+            }
+            else
+            {
+                transform.position = SpawnPoint_Enemy;
+            }
+            transform.rotation = SpawnRotation_Enemy;
+        }
+
+
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        // AI 로직은 마스터 클라이언트에서만 실행합니다.
+        if (!PhotonNetwork.IsMasterClient) return;
+        if (isDead || isDying) return;
+
+        UpdateTarget();
+        rootNode?.Evaluate();
+    }
+
+    protected virtual void UpdateTarget()
+    {
+        // 가장 가까운 플레이어를 찾습니다.
+        float closestDistSqr = Mathf.Infinity;
+        Player closestPlayer = null;
+        foreach (var player in FindObjectsByType<Player>(FindObjectsSortMode.None))
+        {
+            float distSqr = (player.transform.position - transform.position).sqrMagnitude;
+            if (distSqr < closestDistSqr)
+            {
+                closestDistSqr = distSqr;
+                closestPlayer = player;
+            }
+        }
+        currentTarget = closestPlayer;
+    }
+
+    private void LateUpdate()
+    {
+        // 마스터 클라이언트가 아니면(즉, 원격 클라이언트이면) 네트워크 데이터를 기반으로 위치를 보간합니다.
+        if (!photonView.IsMine)
+        {
+            transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * 10f);
+            transform.rotation = Quaternion.Slerp(transform.rotation, networkRotation, Time.deltaTime * 10f);
+        }
     }
 
     public bool CheckPlayerInSight()
     {
-        if (player == null) return false;
+        if (currentTarget == null) return false;
+
         Transform sightSource = eyeTransform != null ? eyeTransform : transform;
         Vector3 eyePosition = sightSource.position;
-        Vector3 targetPosition = player.transform.position;
+        Vector3 targetPosition = currentTarget.transform.position;
         Vector3 directionToPlayer = (targetPosition - eyePosition).normalized;
         float distanceToPlayer = Vector3.Distance(eyePosition, targetPosition);
-        if (isHit && distanceToPlayer >= EnemyData.SightDistance) return true;
-        if (distanceToPlayer > EnemyData.SightDistance) return false;
-        if (isAttacking && distanceToPlayer <= EnemyData.SightDistance) return true;
+
+        if (isHit && distanceToPlayer >= EnemyData.SightDistance)
+            return true;
+
+        if (distanceToPlayer > EnemyData.SightDistance)
+            return false;
+
+        if (isAttacking && distanceToPlayer <= EnemyData.SightDistance)
+            return true;
 
         float angle = EnemyData.SightAngle;
         float offset = EnemyData.SightOffset;
         Vector3 offsetDirection = sightSource.rotation * Quaternion.Euler(0, offset, 0) * Vector3.forward;
         float angleToPlayerFromSightCenter = Vector3.Angle(offsetDirection, directionToPlayer);
 
-        if (angleToPlayerFromSightCenter > angle * 0.5f) return false;
+        if (angleToPlayerFromSightCenter > angle * 0.5f)
+            return false;
 
-        if (Physics.Raycast(eyePosition, directionToPlayer, distanceToPlayer * 1.01f, LayerMask.GetMask("Wall"))) return false;
+        if (Physics.Raycast(eyePosition, directionToPlayer, distanceToPlayer * 1.01f, LayerMask.GetMask("Wall")))
+            return false;
+
         return true;
     }
 
@@ -108,7 +207,12 @@ public abstract partial class Enemy : Character, IHurtable
     }
 #endif
 
-    private void EquipWeapon()
+    public void EquipWeapon(bool _broadcast = true)
+    {
+        EquipWeaponInternal(_broadcast);
+    }
+
+    private void EquipWeaponInternal(bool _broadcast)
     {
         var item_selected = Singleton.Get<TableDataManager>().Table.Item.Get(EnemyData.WeaponID);
         var prefab = ResourceLoader.Load<GameObject>(item_selected.Prefab, LoadType.ItemPrefab);
@@ -127,70 +231,58 @@ public abstract partial class Enemy : Character, IHurtable
         {
             weaponPrefab.SetOwner(this);
             weaponPrefab.WeaponID = instance.ItemID;
+            if (_broadcast && photonView != null && photonView.IsMine)
+                ApplyEquipWeapon(instance.ItemID);
         }
     }
 
     public override void TakeDamage(AttackType _type, int _damage)
     {
-        if (isDead) return; // 죽은 상태만 체크
+        if (isDead || isDying) return;
 
-        int taken = 0;
-        switch (_type)
+        if (!PhotonNetwork.IsConnected)
         {
-            default:
-            case AttackType.Physical:
-                taken = Mathf.Max(1, Mathf.FloorToInt(_damage - (EnemyData.Defense * 0.5f)));
-                break;
-            case AttackType.Fixed:
-                taken = _damage;
-                break;
+            Debug.LogError($"서버와의 접속이 끊어졌습니다. {nameof(TakeDamage)} in {name}");
+            return;
         }
 
-        isHit = true;
-        animator.SetBool(AnimationHash.GetHash(ActionType.Hit), true);
-        Singleton.Get<DamageIndicatorManager>().CreateIndicator(transform.position + Vector3.up, _type, taken);
-
-        taken = Mathf.Max(1, taken); // 최소 데미지 1
-        currentHealth = Math.Clamp(currentHealth - taken, 0, EnemyData.Health);
-
-        OnHealthChanged?.Invoke(currentHealth, EnemyData.Health);
-
-        if (currentHealth == 0)
-        {
-            Dead();
-        }
+        photonView.RPC(nameof(TakeDamageOnMaster), RpcTarget.MasterClient, _type, _damage, PhotonNetwork.LocalPlayer.ActorNumber);
     }
 
     public override void Dead()
     {
+        if (isDead) return;
+
         isDead = true;
-        animator.SetBool(AnimationHash.GetHash(ActionType.Dead), true);
-        agent.isStopped = true;
+        animator.SetBool(AnimationHash.GetHash(ActionType.Dead), isDead);
 
-        int reward = EnemyData != null ? (int)Random.Range(EnemyData.RewardCurrency * 0.85f, EnemyData.RewardCurrency) : 10;
-
-        Singleton.Inventory.AddCurrency((uint)reward);
-        Singleton.Player.KillCount.AddKillCount(EnemyData.ID);
-        Singleton.Get<EnemyManager>().SetDeadFlag(this);
+        if (agent != null && agent.isOnNavMesh)
+            agent.isStopped = true;
     }
 
     public virtual void Respawn()
     {
+        gameObject.SetActive(true);
+
         isDead = false;
+        isDying = false;
         isHit = false;
         isAttack = false;
         isAttacking = false;
-        isDying = false;
 
-        // 체력 초기화
         currentHealth = EnemyData.Health;
         OnHealthChanged?.Invoke(currentHealth, EnemyData.Health);
 
-        transform.position = SpawnPoint_Enemy;
-        transform.rotation = SpawnRotation_Enemy;
+        if (agent != null)
+        {
+            agent.enabled = false;
+            transform.position = SpawnPoint_Enemy;
+            transform.rotation = SpawnRotation_Enemy;
+            agent.enabled = true;
 
-        agent.isStopped = false;
-        agent.ResetPath();
+            agent.isStopped = false;
+            agent.ResetPath();
+        }
 
         if (animator != null)
         {
@@ -216,6 +308,21 @@ public abstract partial class Enemy : Character, IHurtable
 
     }
 
+    public override (AttackType type, int damage) CalculateAttack()
+    {
+        if (weaponInstance != null)
+        {
+            var weapon_selected = Singleton.Get<TableDataManager>().Table.Weapon.Get(weaponInstance.ItemID);
+            int damage = weaponInstance.Damage;
+            return ((AttackType)weapon_selected.AttackType, damage);
+        }
+        if (stats is EnemyData enemyData)
+        {
+            return (enemyData.AttackType, stats.Damage);
+        }
+        return (AttackType.Physical, stats.Damage);
+    }
+
     public void SetDying()
     {
         animator.SetBool(AnimationHash.GetHash(ActionType.Dead), false);
@@ -229,7 +336,8 @@ public abstract partial class Enemy : Character, IHurtable
 
     protected float DistanceFromPlayer()
     {
-        return Vector3.Distance(transform.position, Singleton.Player.transform.position);
+        if (currentTarget == null) return Mathf.Infinity;
+        return Vector3.Distance(transform.position, currentTarget.transform.position);
     }
 
     protected bool CheckSpawnDistanceOut(float _dist)

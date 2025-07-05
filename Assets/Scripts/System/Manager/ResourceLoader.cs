@@ -15,7 +15,7 @@ public static class ResourceLoader
         }
 
         string fileName = _name;
-        string path = Path.Combine(_type.ToString(), fileName);
+        string path = Path.Combine("Prefabs", _type.ToString(), fileName);
         var loaded = Resources.Load<T>(path);
 
         if (loaded == null) return null;
@@ -32,7 +32,7 @@ public static class ResourceLoader
         }
 
         string fileName = _name;
-        string path = Path.Combine(_type.ToString(), fileName);
+        string path = Path.Combine("Prefabs", _type.ToString(), fileName);
 
         var loaded = Resources.LoadAsync<T>(path);
 

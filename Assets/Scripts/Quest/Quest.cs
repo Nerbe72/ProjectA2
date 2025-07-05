@@ -81,7 +81,7 @@ public class ObjectiveInfo
         {
             case ObjectiveType.Kill:
                 var enemy_selected = tableMgr.Enemy.Get(TargetID);
-                string enemyName = enemy_selected != null ? localeTable.Get(enemy_selected.Name, GameManager.CurrentLocale) : TargetID.ToString();
+                string enemyName = enemy_selected != null ? localeTable.Get(enemy_selected.EnemyID, GameManager.CurrentLocale) : TargetID.ToString();
                 string killFormat = localeTable.Get(82000001, GameManager.CurrentLocale);
                 string[] killDatas = { enemyName, Required.ToString() };
                 objectiveDescription = string.Format(killFormat, killDatas);
