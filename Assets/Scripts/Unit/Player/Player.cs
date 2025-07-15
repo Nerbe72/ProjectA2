@@ -57,6 +57,10 @@ public partial class Player : Character, IHurtable
         collider = GetComponent<CapsuleCollider>();
         animator = GetComponent<Animator>();
         PlayerRadius = GetComponent<CapsuleCollider>().radius;
+
+        // 스폰 직후 Grounded 오인 방지용 초기 지면 체크
+        CheckGround();
+        ResetVertical();
     }
 
     private void Start()
@@ -76,14 +80,12 @@ public partial class Player : Character, IHurtable
         if (!photonView.IsMine && PhotonNetwork.IsConnected)
             return;
 
-        CheckGround();
-        UpdateAnimationParameters();
-
-        if (CurrentState != null)
-            CurrentState.Update(this);
-
-
         CheckNormalInputs();
+        UpdateAnimationParameters();
+        if (CurrentState != null)
+
+
+            CurrentState.Update(this);
         CheckUIInput();
         SetTargeted();
     }
@@ -98,6 +100,8 @@ public partial class Player : Character, IHurtable
 
         if (CurrentState != null)
             CurrentState.FixedUpdate(this);
+
+        CheckGround();
     }
 
     private void OnDestroy()
@@ -126,6 +130,13 @@ public partial class Player : Character, IHurtable
     }
 
     //bt
+    public void OnJumpInput()
+    {
+        Debug.Log($"<color=yellow>OnJumpInput called. Current state: {CurrentState}, IsGrounded: {IsFlagged(StateFlags.Grounded)}</color>");
+        CurrentState?.OnJumpInput(this);
+    }
+
+
     public void TransitionTo(IPlayerState _state)
     {
         if (CurrentState != null)
@@ -137,6 +148,9 @@ public partial class Player : Character, IHurtable
 
     public override void TakeDamage(AttackType _type, int _damage)
     {
+        if (IsFlagged(StateFlags.DodgeIgnored))
+            return;
+
         int actualDamage = (int)Mathf.Max(1, _damage - (CurrentStatus(StatType.Defense) * 0.5f));
         currentHealth = Math.Clamp(currentHealth - actualDamage, 0, CurrentMaxHp);
 
@@ -147,9 +161,7 @@ public partial class Player : Character, IHurtable
         Singleton.Get<DamageIndicatorManager>().CreateIndicator(transform.position + Vector3.up, _type, actualDamage);
 
         if (currentHealth <= 0)
-        {
             Dead();
-        }
     }
 
     public override void Dead()
@@ -173,8 +185,7 @@ public partial class Player : Character, IHurtable
 
     private IEnumerator UnlockMovementCoroutine()
     {
-        // 물리 프레임이 한 번 지난 후에 이동 제한을 해제하여 안정성을 확보합니다.
-        yield return new WaitForFixedUpdate();
+        yield return new WaitForSeconds(0.2f);
         IsMovementLocked = false;
     }
 

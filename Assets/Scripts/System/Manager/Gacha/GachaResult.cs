@@ -63,7 +63,7 @@ public class GachaResult : MonoBehaviour
             for (int i = 0; i < count; i++)
             {
                 var item_selected = Singleton.Get<TableDataManager>().Table.Item.Get(_data.Items[i].ID);
-                Color singleColor = RarityColor.Color[(Rare)item_selected.Rarity];
+                Color singleColor = RarityColor.GetColor((Rare)item_selected.Rarity);
 
                 if (bestRarity < item_selected.Rarity)
                     bestRarity = item_selected.Rarity;
@@ -72,7 +72,7 @@ public class GachaResult : MonoBehaviour
             }
         }
 
-        Color targetColor = RarityColor.Color[(Rare)bestRarity];
+        Color targetColor = RarityColor.GetColor((Rare)bestRarity);
 
         gachaSplash.SetColor(targetColor);
         gachaSplash.StartSplash();
@@ -92,7 +92,7 @@ public class GachaResult : MonoBehaviour
         {
             var item_selected = Singleton.Get<TableDataManager>().Table.Item.Get(_data.Items[i].ID);
             items.Add((item_selected, _data.Items[i].Data));
-            colors.Add(RarityColor.Color[(Rare)item_selected.Rarity]);
+            colors.Add(RarityColor.GetColor((Rare)item_selected.Rarity));
         }
 
         gachaSingle.InitData(items, colors);

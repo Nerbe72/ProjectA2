@@ -17,13 +17,8 @@ public partial class Player : Character
                 targetManager.SetTarget(cameraManager.main.transform);
         }
 
-        animator.SetBool(AnimationHash.GetHash(ActionType.Guided), targetManager.CurrentTarget != null);
+        animator.SetBool(AnimationHash.GetHash(ActionType.Guided), targetManager?.CurrentTarget != null && !IsFlagged(StateFlags.Run));
 
-        if (cameraManager.CurrentCamType == CameraType.Main)
-        {
-
-        }
-        cameraManager.SetCamera(targetManager.CurrentTarget == null ? CameraType.Main : CameraType.Target, targetManager.CurrentTarget);
-
+        cameraManager.SetCamera(targetManager?.CurrentTarget == null ? CameraType.Main : CameraType.Target, targetManager.CurrentTarget);
     }
 }

@@ -65,9 +65,6 @@ public class PlayerSaveData
             Defense = _player.BaseStatus(StatType.Defense),
 
             CurrentHealth = _player.BaseStatus(StatType.Health),
-            //Position = player.transform.position,
-            //Rotation = player.transform.rotation,
-            //SceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name,
 
             EquippedInventoryID = (currentWeapon != null && currentWeapon != null)
                 ? currentWeapon.InventoryID

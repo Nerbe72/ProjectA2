@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class AttackState : IPlayerState
 {
+    public void OnJumpInput(Player _player) { /* 공격 중 점프 불가 */ }
+
     public void Enter(Player _player)
     {
         _player.SetAttackAnimation();

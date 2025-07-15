@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class DodgeState : IPlayerState
 {
+    public void OnJumpInput(Player _player) { /* 회피 중 점프 불가 */ }
+
     private bool preparingNextDodge = false;
 
     public void Enter(Player _player)

@@ -12,20 +12,16 @@ public class Warp : InteractableObject
 
     private void Awake()
     {
-        try
+        if (connection == SceneLoadManager.SelectedConnection)
         {
-            if (connection == SceneLoadManager.SelectedConnection)
-            {
-                var player = Singleton.Player;
+            var player = Singleton.Player;
 
-                var playerRigidbody = player.GetComponent<Rigidbody>();
-                playerRigidbody.position = destination.position;
-                playerRigidbody.rotation = destination.rotation;
+            var playerRigidbody = player.GetComponent<Rigidbody>();
+            playerRigidbody.position = destination.position;
+            playerRigidbody.rotation = destination.rotation;
 
-                player.UnlockMovementAfterWarp();
-            }
+            player.UnlockMovementAfterWarp();
         }
-        catch { }
     }
 
     public override void DoAction()

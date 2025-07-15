@@ -141,9 +141,39 @@ public class CameraManager : MonoBehaviour
         }
     }
 
-    public void SetCameraCenter(CameraType _type, Transform _player)
+    public void SetCameraCenter(CameraType _type, Transform _player, Target _target = null)
     {
-        vCams[(int)_type].GetComponent<CinemachineOrbitalFollow>().HorizontalAxis.Center = _player.rotation.eulerAngles.y;
+        var orbitalFollow = vCams[(int)_type].GetComponent<CinemachineOrbitalFollow>();
+        if (orbitalFollow == null) return;
+
+        if (_target != null)
+        {
+            // 타겟이 있을 경우: 플레이어-타겟 라인으로 카메라 중심 설정
+            Vector3 directionToTarget = (_target.transform.position - _player.position);
+            directionToTarget.y = 0; // 수평 방향만 고려
+            float desiredAngle = Quaternion.LookRotation(directionToTarget).eulerAngles.y;
+            orbitalFollow.HorizontalAxis.Center = desiredAngle;
+            orbitalFollow.HorizontalAxis.Value = desiredAngle;
+        }
+        else
+        {
+            orbitalFollow.HorizontalAxis.Center = _player.rotation.eulerAngles.y;
+        }
+    }
+
+    public void UpdateTargeting(CameraType _type, Transform _player, Target _target, bool _isSprinting)
+    {
+        var orbitalFollow = vCams[(int)_type].GetComponent<CinemachineOrbitalFollow>();
+        if (orbitalFollow == null || _target == null) return;
+
+        if (_isSprinting)
+        {
+            Vector3 directionToTarget = (_target.transform.position - _player.position);
+            directionToTarget.y = 0;
+            float desiredAngle = Quaternion.LookRotation(directionToTarget).eulerAngles.y;
+
+            orbitalFollow.HorizontalAxis.Value = Mathf.LerpAngle(orbitalFollow.HorizontalAxis.Value, desiredAngle, Time.deltaTime * 5f);
+        }
     }
 
     public void OffAllCam()
@@ -181,8 +211,8 @@ public class CameraManager : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        _orbitalCamera.HorizontalAxis.Recentering.Enabled = true;
-        _orbitalCamera.VerticalAxis.Recentering.Enabled = true;
+        _orbitalCamera.HorizontalAxis.Recentering.Enabled = false;
+        _orbitalCamera.VerticalAxis.Recentering.Enabled = false;
 
         yield break;
     }

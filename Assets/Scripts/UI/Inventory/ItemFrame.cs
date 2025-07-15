@@ -7,6 +7,7 @@ public class ItemFrame : MonoBehaviour, IPointerClickHandler
 {
     private Toggle self;
     [SerializeField] private Image itemImage;
+    [SerializeField] private Image itemRarityImage;
     [SerializeField] private TMP_Text equippedIndicator;
 
     private ItemInstance instance;
@@ -15,7 +16,6 @@ public class ItemFrame : MonoBehaviour, IPointerClickHandler
     private void Awake()
     {
         self = GetComponent<Toggle>();
-        itemImage = GetComponentsInChildren<Image>(true)[1];
         self.onValueChanged.AddListener(ChangeSelected);
     }
 
@@ -37,6 +37,7 @@ public class ItemFrame : MonoBehaviour, IPointerClickHandler
         var item_selected = Singleton.Get<TableDataManager>().Table.Item.Get(_item.ItemID);
 
         itemImage.sprite = await ResourceLoader.LoadAsync<Sprite>(item_selected.Icon, LoadType.ItemIcon);
+        itemRarityImage.color = RarityColor.GetColor((Rare)item_selected.Rarity);
         instance = _item;
         itemImage.gameObject.SetActive(true);
     }

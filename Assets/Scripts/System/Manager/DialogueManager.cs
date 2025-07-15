@@ -70,17 +70,13 @@ public class DialogueManager : MonoBehaviour
         if (!string.IsNullOrEmpty(main.NPCAction) && currentNPC != null)
             currentNPC.PlayAnimation(main.NPCAction);
 
-        // Player Action
+        // 플레이어 동작 실행
         //if (!string.IsNullOrEmpty(main.PlayerAction))
         //{
         //    var player = Singleton.Player;
         //    if (player != null)
         //    {
-        //        player.PlayAnimation(main.PlayerAction);
-        //        if (main.PlayerAction == "Sit")
-        //        {
-        //            player.SetSit(true);
-        //        }
+        //        player.SetPrayAnimation();
         //    }
         //}
 

@@ -41517,11 +41517,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2675645707462738936, guid: 1dd10ba33da3a574d820ac19feba7f82, type: 3}
       propertyPath: m_text
-      value: aaaaaa
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2675645707462738936, guid: 1dd10ba33da3a574d820ac19feba7f82, type: 3}
       propertyPath: m_fontSize
-      value: 2.45
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3551811713841693408, guid: 1dd10ba33da3a574d820ac19feba7f82, type: 3}
       propertyPath: nextMap
@@ -41537,7 +41537,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4494147914317311431, guid: 1dd10ba33da3a574d820ac19feba7f82, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.771
       objectReference: {fileID: 0}
     - target: {fileID: 4494147914317311431, guid: 1dd10ba33da3a574d820ac19feba7f82, type: 3}
       propertyPath: m_LocalPosition.z
@@ -52410,6 +52410,8 @@ Transform:
   m_LocalScale: {x: 1.4, y: 1.4, z: 1.4}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 760321740}
+  - {fileID: 1221810503}
   - {fileID: 1946475429}
   - {fileID: 344093994}
   - {fileID: 1981972342}
@@ -52420,8 +52422,6 @@ Transform:
   - {fileID: 312562945}
   - {fileID: 1771531235}
   - {fileID: 1311558841}
-  - {fileID: 760321740}
-  - {fileID: 1221810503}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 89.941, z: 0}
 --- !u!1001 &1555588179

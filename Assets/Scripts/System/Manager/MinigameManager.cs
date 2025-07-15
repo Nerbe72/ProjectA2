@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using UnityEditor;
 using UnityEngine;
 
 public class MinigameManager : MonoBehaviour
@@ -24,21 +25,23 @@ public class MinigameManager : MonoBehaviour
 
     private async void LoadMinigames()
     {
-        string name = "minigame.speed_texting";
+        var names = AssetDatabase.GetAllAssetBundleNames();
 
-        //UnityWebRequest webRequest = UnityWebRequestAssetBundle.GetAssetBundle(path);
-        //await webRequest.SendWebRequest();
-        //AssetBundle bundle = DownloadHandlerAssetBundle.GetContent(webRequest);
-        //var loaded = bundle.LoadAllAssets<GameObject>();
+        foreach(var name in names)
+        {
+            var filter = name.Split('.')[0];
 
-        var async = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, name));
+            if (!filter.Equals("minigame")) continue;
 
-        while (!async.isDone) await Task.Yield();
+            var async = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, name));
+            while (!async.isDone) await Task.Yield();
 
-        var bundle = async.assetBundle;
-        var loaded = bundle.LoadAllAssets<GameObject>();
-        gameList = new List<GameObject>(loaded);
-        Debug.Log($"미니게임 {gameList.Count}개 로드됨");
+            var bundle = async.assetBundle;
+            var loaded = bundle.LoadAllAssets<GameObject>();
+            gameList.AddRange(loaded);
+        }
+
+        Debug.Log($"<color=green>미니게임 {gameList.Count}개 로드됨</color>");
     }
 
     public GameObject GetRandomMinigame()

@@ -28,7 +28,6 @@ public enum EnemyType
     None,
     Goblin,
     Skeleton,
-
 }
 
 public enum WindowType
@@ -75,6 +74,7 @@ public enum StateFlags
     Hitting = 1 << 11,
     Jumping = 1 << 13,
     Death = 1 << 14,
+    DodgeIgnored = 1 << 15,
 }
 
 public enum ActionType
@@ -96,6 +96,7 @@ public enum ActionType
     Vertical,
     Grounded,
     Guided,
+    Pray,
 
     //무기관련
     Effect,
@@ -121,6 +122,7 @@ public enum LoadType
     GachaBanner,
     Minigame,
     HitEffect,
+    Icon,
 }
 
 public enum ItemType
@@ -129,20 +131,55 @@ public enum ItemType
     Weapon
 }
 
-public enum SortingType
-{
-    ID,
-    Rarity,
-    Damage,
-    Defense,
-}
-
 public enum WeaponType
 {
     Melee,
     Bow,
     Magic,
     Count
+}
+
+/// <summary>
+/// +110으로 로케일 고정
+/// </summary>
+public enum ItemFilterType
+{
+    All = 0,
+    Weapon = 1,
+    Potion = 2
+}
+
+public enum WeaponFilterType
+{
+    All = 0,
+    Melee = 1,
+    Bow = 2,
+    Magic = 3
+}
+
+/// <summary>
+/// +100으로 로케일 설정
+/// </summary>
+public enum SortMainType
+{
+    Rarity = 0,
+    Damage = 1,
+    Defense = 2,
+}
+
+public enum SortDirectionType
+{
+    Descending = 0,
+    Ascending = 1
+}
+
+public enum AttackEffect
+{
+    MeleeOne,
+    MeleeTwo,
+    MeleeThree,
+    MagicOne,
+    BowOne,
 }
 
 public enum AttackType
@@ -209,21 +246,6 @@ public enum BannerType
     Beginner,
     Pickup,
     Limited,
-}
-
-public enum SortType
-{
-    None,
-    ID,
-    ItemType,
-    Level,
-}
-
-public enum FilterType
-{
-    None,
-    Weapon,
-    Potion
 }
 
 public enum MinigameType

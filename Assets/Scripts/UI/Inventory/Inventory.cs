@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Inventory : WindowBase
+public partial class Inventory : WindowBase
 {
     #region Inventory_Promised
     public int InitializationPriority => 1;
@@ -281,6 +281,7 @@ public class Inventory : WindowBase
     public void AddItem(ItemInstance _item)
     {
         items.Add(_item);
+        ApplyFilterAndSort();
     }
 
     public void AddItemFrame(ItemInstance _item)
@@ -309,6 +310,8 @@ public class Inventory : WindowBase
                 {
                     potion.MaxAmount += 1;
                     potionAdded = true;
+                    
+                    ApplyFilterAndSort();
                     break;
                 }
             }
@@ -317,6 +320,7 @@ public class Inventory : WindowBase
         if (!potionAdded)
         {
             _instance.InventoryID = Guid.NewGuid();
+            // AddItem 내부에서 ApplyFilterAndSort 호출함
             AddItem(_instance);
         }
     }
@@ -377,16 +381,6 @@ public class Inventory : WindowBase
         if (itemMenu == null) return;
 
         itemMenu.ShowItemMenu(_instance, _frameTransform.position);
-    }
-
-    private void SortItems(SortType _sortPriority, bool _ascendent)
-    {
-
-    }
-
-    private void FilterItems(FilterType _filter)
-    {
-
     }
 
     public int GetItemIndex(ItemInstance _item)
@@ -483,6 +477,6 @@ public class Inventory : WindowBase
     protected override void OnEnable()
     {
         base.OnEnable();
-        // 필요시 인벤토리 UI 데이터 갱신 등만 수행
+        ApplyFilterAndSort();
     }
 }

@@ -90,6 +90,16 @@ public partial class Player : Character
     {
         animator.SetBool(AnimationHash.GetHash(ActionType.Sit), false);
     }
+
+    public void SetPrayAnimation()
+    {
+        animator.SetBool(AnimationHash.GetHash(ActionType.Pray), false);
+    }
+
+    public void ResetPrayAnimation()
+    {
+
+    }
     #endregion
 
     // //////////////////////////////////////////////////////////////////////
@@ -126,12 +136,6 @@ public partial class Player : Character
         SetFlag(StateFlags.Dodging, false);
     }
 
-    public void ResetJumping()
-    {
-        SetFlag(StateFlags.Jump, false);
-        ResetJumpAnimation();
-        SetFlag(StateFlags.Jumping, false);
-    }
 
     public void SetHitting()
     {
@@ -143,6 +147,16 @@ public partial class Player : Character
     {
 
         SetFlag(StateFlags.Hitting, false);
+    }
+    
+    public void SetDodgeIgnored()
+    {
+        SetFlag(StateFlags.DodgeIgnored);
+    }
+    
+    public void ResetDodgeIgnored()
+    {
+        SetFlag(StateFlags.DodgeIgnored, false);
     }
     #endregion
 }

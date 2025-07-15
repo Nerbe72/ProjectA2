@@ -53,7 +53,7 @@ public class ItemDescription : MonoBehaviour
         // 아이템 정보 업데이트
         itemIcon.sprite = await ResourceLoader.LoadAsync<Sprite>(item_selected.Icon, LoadType.ItemIcon);
         itemName.text = locale.Get(item_selected.Name, GameManager.CurrentLocale);
-        itemName.color = RarityColor.Color[(Rare)item_selected.Rarity];
+        itemName.color = RarityColor.GetColor((Rare)item_selected.Rarity);
 
         if (item_selected.ItemType == (int)ItemType.Weapon)
         {

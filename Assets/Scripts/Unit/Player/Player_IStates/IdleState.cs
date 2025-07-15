@@ -2,8 +2,14 @@ using UnityEngine;
 
 public class IdleState : IPlayerState
 {
+    public void OnJumpInput(Player _player)
+    {
+        _player.TransitionTo(new JumpState());
+    }
+
     public void Enter(Player _player)
     {
+        _player.yVelocity = 0f;
 
     }
 
@@ -21,11 +27,6 @@ public class IdleState : IPlayerState
             return;
         }
 
-        if (_player.IsFlagged(StateFlags.Jump) && _player.IsFlagged(StateFlags.Grounded))
-        {
-            _player.TransitionTo(new JumpState());
-            return;
-        }
 
         if (_player.IsFlagged(StateFlags.Attack) && _player.IsFlagged(StateFlags.Grounded))
         {

@@ -19,6 +19,7 @@ public class TableWeapon : TableBase
         public int DamageGrowth_STR;
         public int DamageGrowth_DEX;
         public int DamageGrowth_INT;
+        public float CastingTime;
         public int[] Abilities;
         public int ProjectileID;
     }
@@ -78,6 +79,7 @@ public class TableWeapon : TableBase
         _Reader.get(_Row, ref _Info.DamageGrowth_STR);
         _Reader.get(_Row, ref _Info.DamageGrowth_DEX);
         _Reader.get(_Row, ref _Info.DamageGrowth_INT);
+        _Reader.get(_Row, ref _Info.CastingTime);
         _Reader.get(_Row, ref _Info.Abilities, 3);
         _Reader.get(_Row, ref _Info.ProjectileID);
 

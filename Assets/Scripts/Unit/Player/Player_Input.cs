@@ -4,7 +4,6 @@ using UnityEngine;
 public partial class Player : Character
 {
     private Vector3 movementInput;
-    private bool externalInputBlocked;
 
     private StateFlags isState = StateFlags.None;
 
@@ -42,10 +41,10 @@ public partial class Player : Character
             SetFlag(StateFlags.Run, false);
 
         // 점프
-        if (Input.GetKeyDown(KeyCode.Space) && IsFlagged(StateFlags.Grounded) && !IsFlagged(StateFlags.Jumping))
+        // 점프
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            SetFlag(StateFlags.Jump);
-            SetFlag(StateFlags.Jumping);
+            OnJumpInput();
         }
 
         // 공격
@@ -150,7 +149,6 @@ public partial class Player : Character
     {
         movementInput = Vector3.zero;
         SetFlag(StateFlags.Run, false);
-        SetFlag(StateFlags.Jump, false);
         SetFlag(StateFlags.Dodge, false);
         SetFlag(StateFlags.Attack, false);
     }

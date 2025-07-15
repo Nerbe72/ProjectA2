@@ -63,7 +63,7 @@ public class SceneLoader : MonoBehaviour
             Player player = photonManager.InstantiatePlayer(loadedPlayerData);
 
             progressText.text = $"플레이어 생성중";
-            Debug.Log("플레이어 데이터 생성중...");
+            Debug.Log("플레이어 생성중...");
 
             yield return new WaitUntil(() => Singleton.Player != null);
 

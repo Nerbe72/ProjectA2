@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class HitState : IPlayerState
 {
+    public void OnJumpInput(Player _player) { /* 피격 중 점프 불가 */ }
+
     //private float hitStunTime = 0.3f;
     //private float currentHitStunTime = 0f;
 
