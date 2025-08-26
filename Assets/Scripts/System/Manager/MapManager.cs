@@ -1,4 +1,5 @@
 using UnityEngine;
+using GameStuff;
 
 public class MapManager : MonoBehaviour
 {
@@ -14,7 +15,22 @@ public class MapManager : MonoBehaviour
 
         CurrentMapID = _mapId;
         OnMapChanged?.Invoke(CurrentMapID);
-        Debug.Log($"ÇöÀç ¸Ê °ª º¯°æ {CurrentMapID}");
+        
+        // ë§µ ë³€ê²½ ì‹œ BGM ë³€ê²½
+        ChangeMapBGM(_mapId);
+        
+        Debug.Log($"ë§µì´ ë³€ê²½ë˜ì—ˆìŠµë‹ˆë‹¤ {CurrentMapID}");
+    }
+    
+    private void ChangeMapBGM(int _mapId)
+    {
+        var soundManager = Singleton.Get<SoundManager>();
+        if (soundManager != null)
+        {
+            // ë§µ IDë¥¼ Map enumìœ¼ë¡œ ë³€í™˜
+            GameStuff.Map mapType = (GameStuff.Map)_mapId;
+            soundManager.PlayMapBGM(mapType);
+        }
     }
 
     private void Awake()

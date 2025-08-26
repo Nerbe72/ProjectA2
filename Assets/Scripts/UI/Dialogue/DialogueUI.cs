@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+using GameStuff;
+
 public class DialogueUI : MonoBehaviour, IWindowStack
 {
     public WindowType WindowType { get; set; }
@@ -37,17 +39,17 @@ public class DialogueUI : MonoBehaviour, IWindowStack
 
     private void OnEnable()
     {
-        InputManager.IgnoreInput = true;
         InputManager.IgnoreUIInput = true;
         UIManager.OffBasicUI();
         Singleton.Get<InteractIndicatorUI>().SetShowIndicator(false);
+        CursorManager.DialogueOpen();
 
         animator.SetBool(showHash, true);
     }
 
     private void OnDisable()
     {
-        InputManager.IgnoreInput = false;
+        CursorManager.DialogueClose();
         InputManager.IgnoreUIInput = false;
 
         UIManager.OnBasicUI();

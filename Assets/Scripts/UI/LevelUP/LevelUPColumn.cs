@@ -3,6 +3,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+using GameStuff;
+
 public class LevelUPColumn : MonoBehaviour
 {
     public TMP_Text Name;

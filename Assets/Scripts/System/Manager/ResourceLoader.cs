@@ -3,6 +3,8 @@ using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 
+using GameStuff;
+
 public static class ResourceLoader
 {
     private static Dictionary<(string name, LoadType type), Object> objects = new Dictionary<(string name, LoadType type), Object>();

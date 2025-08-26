@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.Playables;
 
+using GameStuff;
+
 public partial class DeepDragon : Boss
 {
     [System.Serializable]
@@ -66,6 +68,9 @@ public partial class DeepDragon : Boss
     {
         base.Awake();
         root = CreateBehaviourTree();
+        
+        if (endPortal != null)
+            endPortal.SetActive(false);
     }
 
     private void Update()
@@ -107,6 +112,8 @@ public partial class DeepDragon : Boss
         base.Dead();
 
         blockingWall.SetActive(false);
+        if (endPortal != null)
+            endPortal.SetActive(true);
     }
 
     public void PlayCutscene()

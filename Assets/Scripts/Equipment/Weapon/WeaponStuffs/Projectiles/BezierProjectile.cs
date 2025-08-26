@@ -1,3 +1,4 @@
+using GameStuff;
 using UnityEngine;
 
 public class BezierProjectile : Projectile
@@ -25,9 +26,9 @@ public class BezierProjectile : Projectile
         }
     }
 
-    public override void SetData(Character _owner, Transform _spawn, Target _target = null, int _abilityID = 0)
+    public override void SetData(Character _owner, Transform _spawn, Target _target = null, AttackType _type = AttackType.Fixed, int _abilityID = 0)
     {
-        base.SetData(_owner, _spawn, _target, _abilityID);
+        base.SetData(_owner, _spawn, _target, _type, _abilityID);
 
         endPoint = target != null ? target.position : startPosition + direction * maxRange;
         Vector3 verticalRandom = Vector3.up * Random.Range(-0.5f, curveHeight);

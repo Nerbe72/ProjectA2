@@ -1,6 +1,8 @@
 using TMPro;
 using UnityEngine;
 
+using GameStuff;
+
 public class QuestDetail : MonoBehaviour
 {
     [SerializeField] private TMP_Text questName;

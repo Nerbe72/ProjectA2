@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+using GameStuff;
+
 public class GachaManager : MonoBehaviour
 {
     public int InitializationPriority => 1;
@@ -115,7 +117,7 @@ public class GachaManager : MonoBehaviour
                 float srRoll = Random.Range(0f, 100f);
                 if (srRoll < _result.Banner.SR_Percent)
                 {
-                    (int ID, RandomWeaponData Data) srResult = GetSRResult(Singleton.Get<TableDataManager>().GetItemIDsByRare(Rare.SR));
+                    (int ID, RandomWeaponData Data) srResult = GetSRResult(Singleton.Get<TableDataManager>().GetItemIDsByRare(Rarity.SR));
                     results.Add(srResult);
                     currentSRCount = 0;
                     logs.Add(new GachaResultContent(srResult.ID, srResult.Data.Damage, srResult.Data.Defense, totalCount, currentSRCount, currentSSRCount, pickupForce, currentTime));
@@ -170,7 +172,7 @@ public class GachaManager : MonoBehaviour
             {
                 // 픽업이 아닌 경우 다음 SSR은 무조건 픽업 SSR이 되도록 플래그 설정
                 _pickupForce = true;
-                var weapons = Singleton.Get<TableDataManager>().GetItemIDsByRare(Rare.SSR);
+                var weapons = Singleton.Get<TableDataManager>().GetItemIDsByRare(Rarity.SSR);
                 return PickFromList(weapons, -3); //CharacterManager.GetCharactersFromRare(Rare.SSR), -1);
             }
         }
@@ -217,7 +219,7 @@ public class GachaManager : MonoBehaviour
     private (int ID, RandomWeaponData Data) GetRResult()
     {
         //int idx = Random.Range(0, CharacterManager.GetRareCharacterCount(Rare.R));
-        var rList = Singleton.Get<TableDataManager>().GetItemIDsByRare(Rare.R);
+        var rList = Singleton.Get<TableDataManager>().GetItemIDsByRare(Rarity.R);
 
         return PickFromList(rList, -1);
     }

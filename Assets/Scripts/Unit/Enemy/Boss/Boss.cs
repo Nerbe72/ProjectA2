@@ -4,12 +4,17 @@ using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
+using GameStuff;
+using SoundStuff;
+
 public abstract class Boss : Character, IHurtable
 {
     protected NavMeshAgent agent;
     protected Animator animator;
     public BossData BossData => stats as BossData;
     public Character Character { get; set; }
+    public AudioClip HurtSound { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
     protected Player player;
     public event Action<int, int> OnHealthChanged;
 
@@ -32,11 +37,23 @@ public abstract class Boss : Character, IHurtable
     protected virtual void Start()
     {
         player = Singleton.Player;
+        
+        // ë³´ìŠ¤ ë“±ì¥ ì‹œ ë³´ìŠ¤ì „ BGM ì‹œì‘
+        StartBossBGM();
+    }
+    
+    private void StartBossBGM()
+    {
+        if (BossData != null && BossData.BossBGM != null)
+        {
+            var soundManager = Singleton.Get<SoundManager>();
+            if (soundManager != null)
+            {
+                soundManager.PlayBossBGM(BossData.BossBGM);
+            }
+        }
     }
 
-    /// <summary>
-    /// Á¶¿ì Æ®¸®°Å½Ã È£Ãâ
-    /// </summary>
     public virtual void SetFaced()
     {
 
@@ -44,32 +61,39 @@ public abstract class Boss : Character, IHurtable
 
     public override void TakeDamage(AttackType _type, int _damage)
     {
-        if (isDead) return; // Á×Àº »óÅÂ¸¸ Ã¼Å©
+        if (isDead) return; //  Â¸ Ã¼Å©
 
-        int taken = 0;
-        switch (_type)
-        {
-            default:
-            case AttackType.Physical:
-            case AttackType.Magical:
-                taken = Mathf.Max(1, Mathf.FloorToInt(_damage - (BossData.Defense * 0.5f)));
-                break;
-            case AttackType.Fixed:
-                taken = _damage;
-                break;
-        }
+        int takenDamage = CalculateTakenDamage(_type, _damage);
 
-        Singleton.Get<DamageIndicatorManager>().CreateIndicator(transform.position + Vector3.up, _type, taken);
-
-        taken = Mathf.Max(1, taken); // ÃÖ¼Ò µ¥¹ÌÁö 1
-        currentHealth = Math.Clamp(currentHealth - taken, 0, BossData.Health);
+        takenDamage = Mathf.Max(1, takenDamage); // Ö¼  1
+        currentHealth = Math.Clamp(currentHealth - takenDamage, 0, BossData.Health);
 
         OnHealthChanged?.Invoke(currentHealth, BossData.Health);
+
+        base.TakeDamage(_type, _damage);
 
         if (currentHealth == 0)
         {
             Dead();
         }
+    }
+
+    public override int CalculateTakenDamage(AttackType _type, int _damage)
+    {
+        int takenDamage = 0;
+        switch (_type)
+        {
+            default:
+            case AttackType.Physical:
+            case AttackType.Magical:
+                takenDamage = Mathf.Max(1, Mathf.FloorToInt(_damage - (BossData.Defense * 0.5f)));
+                break;
+            case AttackType.Fixed:
+                takenDamage = _damage;
+                break;
+        }
+
+        return takenDamage;
     }
 
     public override void Dead()
@@ -79,17 +103,41 @@ public abstract class Boss : Character, IHurtable
         agent.isStopped = true;
         isAIActive = false;
 
-        // ¸Ê °³¹æ
+        // ë³´ìŠ¤ ì‚¬ë§ ì‹œ ë§µ BGMìœ¼ë¡œ ë³µê·€
+        ReturnToMapBGM();
 
-        // ÇÃ·¹ÀÌ¾î¿¡°Ô ÀçÈ­ Áö±Ş
+        // ë³´ìƒ ì§€ê¸‰
+
+        // í”Œë ˆì´ì–´ì—ê²Œ ë³´ìƒ ì§€ê¸‰
         int reward = BossData != null ? (int)Random.Range(BossData.RewardCurrency * 0.8f, BossData.RewardCurrency + 1) : 10;
         Singleton.Inventory.AddCurrency((uint)reward);
         Singleton.Player.KillCount.AddKillCount(BossData.ID);
     }
+    
+    private void ReturnToMapBGM()
+    {
+        var soundManager = Singleton.Get<SoundManager>();
+        if (soundManager != null)
+        {
+            soundManager.ReturnToMapBGM();
+        }
+    }
+    
+    /// <summary>
+    /// ë³´ìŠ¤ ê³µê²© íŒ¨í„´ë³„ ì‚¬ìš´ë“œ ì¬ìƒ
+    /// </summary>
+    protected void PlayBossAttackSound(BossAttackPattern _pattern)
+    {
+        var audioClip = BossData.GetAttackSound(_pattern);
+        if (audioClip != null)
+        {
+            Singleton.Get<SoundManager>()?.PlayEffectOneShot(audioClip);
+        }
+    }
 
     public void Knockback(float _force)
     {
-        // º¸½º¿¡°Ô´Â ³Ë¹éÀÌ ºÒ°¡´ÉÇÔ
+        // Ô´ Ë¹ Ò°
     }
 
     public void TakeContinuousDamage(AttackType _attack, int _time, int _damage)
@@ -104,5 +152,15 @@ public abstract class Boss : Character, IHurtable
             yield return new WaitForSeconds(1f);
             TakeDamage(_type, _damage);
         }
+    }
+
+    public override int GetCalculatedDamage(WeaponItemInstance _instance = null)
+    {
+        return stats.Damage;
+    }
+
+    public override int GetCalculatedDefense(WeaponItemInstance _instance = null)
+    {
+        return stats.Defense;
     }
 }

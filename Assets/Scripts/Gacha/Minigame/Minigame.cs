@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 
+using GameStuff;
+
 public abstract class Minigame : MonoBehaviour
 {
     public event Action<bool> OnGameFinished;

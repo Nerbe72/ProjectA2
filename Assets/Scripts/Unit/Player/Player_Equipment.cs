@@ -1,61 +1,55 @@
 using System;
 using UnityEngine;
 
+using GameStuff;
+
 public partial class Player : Character
 {
     public event Action<WeaponItemInstance> OnWeaponChanged;
 
-    //private void SwapWeapon(Weapon _weapon)
-    //{
-    //    var weaponTable = SingletonManager.TableDataManager.Table.Weapon;
-    //    for (int i = 0; i < (int)WeaponType.Count; i++)
-    //    {
-    //        animator.SetBool(AnimationHash.GetActionHash((WeaponType)i), i == weaponTable.Get(_weapon.WeaponInstance.ID).WeaponType);
-    //    }
-    //}
+    [SerializeField] private AudioClip swapsound;
 
     public void EquipWeapon(WeaponItemInstance _instance, bool _broadcast = true)
     {
         EquipWeaponInternal(_instance, _broadcast);
     }
 
-    // Original logic moved here to allow overload wrapper
     private void EquipWeaponInternal(WeaponItemInstance _instance, bool _broadcast)
     {
         if (_instance == null || _instance.InstancedPrefab == null) return;
 
-        // 기존 장착 무기 삭제
         if (weaponPrefab != null)
         {
-            // 기존 무기와 형태가 같다면 삭제하지 않음
-            if (weaponPrefab.WeaponID == _instance.ItemID) return;
+            if (weaponPrefab.WeaponID == _instance.ItemID)
+            {
+                goto ChangeEquip;
+            }
+
             Destroy(weaponPrefab.gameObject);
             weaponPrefab = null;
             weaponInstance = null;
+            weaponInstanceId = Guid.Empty;
         }
 
-        // 새 무기 생성 및 장착
         var obj = _instance.InstantiateWeapon();
         if (obj != null)
         {
             Weapon newWeapon = obj.GetComponent<Weapon>();
             if (newWeapon != null)
             {
-                // 소유자 설정
                 newWeapon.SetOwner(this);
-                // Player.weapon 필드에 할당
                 weaponPrefab = newWeapon;
                 weaponInstance = _instance;
+                weaponInstanceId = _instance.InventoryID;
             }
 
-            // 트랜스폼 설정
             obj.transform.SetParent(WeaponHandle, false);
             obj.transform.localPosition = Vector3.zero;
             obj.transform.localRotation = Quaternion.identity;
         }
         else
         {
-            Debug.LogError("무기가 사전로드되지 않음");
+            Debug.LogError("Weapon Prefab Not Loaded : Player_Equipment - EquipmentWeaponInternal");
         }
 
         var weapon_selected = Singleton.Get<TableDataManager>().Table.Weapon.Get(_instance.ItemID);
@@ -65,29 +59,51 @@ public partial class Player : Character
         {
             animator.SetBool(AnimationHash.GetHash((WeaponType)i), i == weapon_selected.WeaponType);
         }
+
+    ChangeEquip:
+
         if (_broadcast && photonView != null && photonView.IsMine)
             ApplyEquipWeapon(_instance.ItemID);
+
+        
+        // Change Color
+        var adapter = Singleton.Inventory.GetWeaponAdapter(_instance);
+        if (adapter != null)
+            weaponPrefab.SetOutlineColor(adapter.enhancedLevel);
+
         OnWeaponChanged?.Invoke(_instance);
+
+        PlayEquipSound();
     }
 
-    // Legacy overload for delegates (broadcast=true by default)
+    private void PlayEquipSound()
+    {
+        if (swapsound != null)
+        {
+            var soundManager = Singleton.Get<SoundManager>();
+            if (soundManager != null)
+            {
+                soundManager.PlayEffectOneShot(swapsound);
+            }
+        }
+    }
+
     public void EquipWeapon(WeaponItemInstance _instance)
     {
         EquipWeaponInternal(_instance, true);
     }
 
-    /// <summary>
-    /// 피격판정시 호출
-    /// </summary>
     public override (AttackType type, int damage) CalculateAttack()
     {
         if (weaponPrefab == null) return (AttackType.Physical, stats.Damage);
 
-        var weapon_selected = Singleton.Get<TableDataManager>().Table.Weapon.Get(weaponInstance.ItemID);
+        var currentWeapon = GetCurrentWeapon();
+        if (currentWeapon == null) return (AttackType.Physical, stats.Damage);
 
-        //레벨 성장 데미지 포함
+        var weapon_selected = Singleton.Get<TableDataManager>().Table.Weapon.Get(currentWeapon.ItemID);
+
         int damage = stats.Damage +
-            weaponInstance.Damage +
+            currentWeapon.Damage +
             weapon_selected.DamageGrowth_STR * GetCurrentLevel(LevelType.Strength) +
             weapon_selected.DamageGrowth_DEX * GetCurrentLevel(LevelType.Dexterity) +
             weapon_selected.DamageGrowth_INT * GetCurrentLevel(LevelType.Intelligent);
@@ -95,9 +111,10 @@ public partial class Player : Character
         return ((AttackType)weapon_selected.AttackType, damage);
     }
 
-    public int GetCalculatedDamage(WeaponItemInstance _instance = null)
+    public override int GetCalculatedDamage(WeaponItemInstance _instance = null)
     {
-        if (_instance == null && weaponInstance == null) return CurrentStatus(StatType.Damage);
+        var currentWeapon = GetCurrentWeapon();
+        if (_instance == null && currentWeapon == null) return CurrentStatus(StatType.Damage);
 
         TableWeapon.Info weapon_selected;
         WeaponItemInstance weapon_instance;
@@ -109,32 +126,38 @@ public partial class Player : Character
         }
         else
         {
-            weapon_selected = Singleton.Get<TableDataManager>().Table.Weapon.Get(weaponInstance.ItemID);
-            weapon_instance = weaponInstance;
+            weapon_selected = Singleton.Get<TableDataManager>().Table.Weapon.Get(currentWeapon.ItemID);
+            weapon_instance = currentWeapon;
         }
+
+        var adapter = Singleton.Inventory.GetWeaponAdapter(weapon_instance);
 
         return CurrentStatus(StatType.Damage) +
             weapon_instance.Damage +
-            weapon_selected.DamageGrowth_STR * GetCurrentLevel(LevelType.Strength) +
-            weapon_selected.DamageGrowth_DEX * GetCurrentLevel(LevelType.Dexterity) +
-            weapon_selected.DamageGrowth_INT * GetCurrentLevel(LevelType.Intelligent);
+            (int)(adapter?.GetGrowth(LevelType.Strength) ?? weapon_selected.DamageGrowth_STR) * GetCurrentLevel(LevelType.Strength) +
+            (int)(adapter?.GetGrowth(LevelType.Dexterity) ?? weapon_selected.DamageGrowth_DEX) * GetCurrentLevel(LevelType.Dexterity) +
+            (int)(adapter?.GetGrowth(LevelType.Intelligent) ?? weapon_selected.DamageGrowth_INT) * GetCurrentLevel(LevelType.Intelligent);
     }
 
     public int GetCalculatedDamage(Levels _tempLevels)
     {
-        if (weaponInstance == null) return TempStatus(StatType.Damage, _tempLevels);
+        var currentWeapon = GetCurrentWeapon();
+        if (currentWeapon == null) return TempStatus(StatType.Damage, _tempLevels);
 
-        TableWeapon.Info weapon_selected = Singleton.Get<TableDataManager>().Table.Weapon.Get(weaponInstance.ItemID);
+        TableWeapon.Info weapon_selected = Singleton.Get<TableDataManager>().Table.Weapon.Get(currentWeapon.ItemID);
+        var adapter = Singleton.Inventory.GetWeaponAdapter(currentWeapon);
+
         return CurrentStatus(StatType.Damage) +
-            weaponInstance.Damage +
-            weapon_selected.DamageGrowth_STR * (_tempLevels.Data[LevelType.Strength]) +
-            weapon_selected.DamageGrowth_DEX * (_tempLevels.Data[LevelType.Dexterity]) +
-            weapon_selected.DamageGrowth_INT * (_tempLevels.Data[LevelType.Intelligent]);
+            currentWeapon.Damage +
+            (int)(adapter?.GetGrowth(LevelType.Strength) ?? weapon_selected.DamageGrowth_STR) * (_tempLevels.Data[LevelType.Strength]) +
+            (int)(adapter?.GetGrowth(LevelType.Dexterity) ?? weapon_selected.DamageGrowth_DEX) * (_tempLevels.Data[LevelType.Dexterity]) +
+            (int)(adapter?.GetGrowth(LevelType.Intelligent) ?? weapon_selected.DamageGrowth_INT) * (_tempLevels.Data[LevelType.Intelligent]);
     }
 
-    public int GetCalculatedDefense(WeaponItemInstance _instance = null)
+    public override int GetCalculatedDefense(WeaponItemInstance _instance = null)
     {
-        if (_instance == null && weaponInstance == null) return CurrentStatus(StatType.Damage);
+        var currentWeapon = GetCurrentWeapon();
+        if (_instance == null && currentWeapon == null) return CurrentStatus(StatType.Damage);
 
         TableWeapon.Info weapon_selected;
         WeaponItemInstance weapon_instance;
@@ -146,23 +169,78 @@ public partial class Player : Character
         }
         else
         {
-            weapon_selected = Singleton.Get<TableDataManager>().Table.Weapon.Get(weaponInstance.ItemID);
-            weapon_instance = weaponInstance;
+            weapon_selected = Singleton.Get<TableDataManager>().Table.Weapon.Get(currentWeapon.ItemID);
+            weapon_instance = currentWeapon;
         }
+
+        var adapter = Singleton.Inventory.GetWeaponAdapter(weapon_instance);
 
         return CurrentStatus(StatType.Defense) +
             weapon_instance.Defense +
-            (GetCurrentLevel(LevelType.Strength) * 1) +
-            (GetCurrentLevel(LevelType.Dexterity) * 2);
+            (int)((adapter?.GetGrowth(LevelType.Strength) ?? 1f) * GetCurrentLevel(LevelType.Strength)) +
+            (int)((adapter?.GetGrowth(LevelType.Dexterity) ?? 2f) * GetCurrentLevel(LevelType.Dexterity));
     }
 
     public int GetCalculatedDefense(Levels _tempLevels)
     {
-        if (weaponInstance == null) return TempStatus(StatType.Damage, _tempLevels);
+        var currentWeapon = GetCurrentWeapon();
+        if (currentWeapon == null) return TempStatus(StatType.Damage, _tempLevels);
+
+        var adapter = Singleton.Inventory.GetWeaponAdapter(currentWeapon);
 
         return CurrentStatus(StatType.Defense) +
-            weaponInstance.Defense +
-            (_tempLevels.Data[LevelType.Strength] * 1) +
-            (_tempLevels.Data[LevelType.Dexterity] * 2);
+            currentWeapon.Defense +
+            (int)((adapter?.GetGrowth(LevelType.Strength) ?? 1f) * (_tempLevels.Data[LevelType.Strength])) +
+            (int)((adapter?.GetGrowth(LevelType.Dexterity) ?? 2f) * (_tempLevels.Data[LevelType.Dexterity]));
+    }
+
+    public int GetCalculatedDamageWithGrowth(WeaponItemInstance _weapon, int _enhancementLevel)
+    {
+        if (_weapon == null) return CurrentStatus(StatType.Damage);
+
+        var weaponData = Singleton.Get<TableDataManager>().Table.Weapon.Get(_weapon.ItemID);
+        if (weaponData == null) return CurrentStatus(StatType.Damage);
+
+        var enhancementTable = Singleton.Get<TableDataManager>().Table.Enhancement;
+        var enhancementInfo = enhancementTable.Get(_weapon.ItemID, _enhancementLevel);
+
+        float strGrowth = weaponData.DamageGrowth_STR;
+        float dexGrowth = weaponData.DamageGrowth_DEX;
+        float intGrowth = weaponData.DamageGrowth_INT;
+
+        if (enhancementInfo != null)
+        {
+            strGrowth += enhancementInfo.AddGrowthSTR;
+            dexGrowth += enhancementInfo.AddGrowthDEX;
+            intGrowth += enhancementInfo.AddGrowthINT;
+        }
+
+        return CurrentStatus(StatType.Damage) +
+            _weapon.Damage +
+            (int)(strGrowth * GetCurrentLevel(LevelType.Strength)) +
+            (int)(dexGrowth * GetCurrentLevel(LevelType.Dexterity)) +
+            (int)(intGrowth * GetCurrentLevel(LevelType.Intelligent));
+    }
+
+    public int GetCalculatedDefenseWithGrowth(WeaponItemInstance _weapon, int _enhancementLevel)
+    {
+        if (_weapon == null) return CurrentStatus(StatType.Defense);
+
+        var enhancementTable = Singleton.Get<TableDataManager>().Table.Enhancement;
+        var enhancementInfo = enhancementTable.Get(_weapon.ItemID, _enhancementLevel);
+
+        float strGrowth = 1f;
+        float dexGrowth = 2f;
+
+        if (enhancementInfo != null)
+        {
+            strGrowth += enhancementInfo.AddGrowthSTR;
+            dexGrowth += enhancementInfo.AddGrowthDEX;
+        }
+
+        return CurrentStatus(StatType.Defense) +
+            _weapon.Defense +
+            (int)(strGrowth * GetCurrentLevel(LevelType.Strength)) +
+            (int)(dexGrowth * GetCurrentLevel(LevelType.Dexterity));
     }
 }

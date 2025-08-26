@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using WebSocketSharp;
 
+using GameStuff;
+
 public class GameManager : MonoBehaviour
 {
     public static Locale CurrentLocale = Locale.Korean;
@@ -45,9 +47,18 @@ public class GameManager : MonoBehaviour
         AfterLoaded = false;
     }
 
+    private void OnDestroy()
+    {
+        OnLocaleChanged = null;
+    }
+
     public async void StartGame()
     {
         await Singleton.Get<PhotonManager>().ConnectAndJoinRoom();
+        
+        UnityEngine.Cursor.lockState = UnityEngine.CursorLockMode.Locked;
+        UnityEngine.Cursor.visible = false;
+        
         SceneManager.LoadScene(1);
     }
 
@@ -70,12 +81,8 @@ public class GameManager : MonoBehaviour
         {
             loadedData.EquippedInventoryID = new Guid(loadedData.EquippedInventoryIDString);
         }
-        
-        SceneLoadManager.NextPosition = loadedData.Position;
-        SceneLoadManager.NextRotation = loadedData.Rotation;
-        SceneLoadManager.NextScene = (Map)loadedData.Scene;
 
-        Debug.Log("<color=green>플레이어 데이터 로드 완료</color>");
+        Debug.Log("<color=green>플레이어 데이터 로드 완료</color>"); 
         return loadedData;
     }
 
@@ -104,7 +111,7 @@ public class GameManager : MonoBehaviour
         }
 
         Singleton.Inventory.SaveInventoryData();
-        Singleton.Player.SavePlayerData();
+        Singleton.Player.SavePlayerDataWithoutPosition();
 
         Debug.Log("게임 데이터 저장 완료");
     }
@@ -116,9 +123,23 @@ public class GameManager : MonoBehaviour
         OnLocaleChanged?.Invoke();
     }
 
+    public static void ShowExit()
+    {
+        Singleton.exit.Show();
+    }
+
+    public static void ExitGame()
+    {
+        // 싱글톤 역순 제거
+
+        Singleton.UnloadAllSingleton();
+
+        Application.Quit();
+    }
+
     private void OnApplicationQuit()
     {
-        SaveGameData();
+        //SaveGameData();
         Singleton.Get<PhotonManager>().DisconnectFromPhoton();
     }
 }

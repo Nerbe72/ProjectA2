@@ -64,8 +64,8 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\System\BehaviourTreeNodes\Sequence.cs" />
     <Compile Include="Assets\Source_Effect\52SpecialEffectPack\EffectEditor\ShurikenEffectEditor\csShurikenEffectChanger.cs" />
-    <Compile Include="Assets\Scripts\UI\Menu\StatusUI.cs" />
-    <Compile Include="Assets\Scripts\UI\Inventory\Finder.cs" />
+    <Compile Include="Assets\Scripts\UI\ItemCreation\ItemCreationDialogueWindow.cs" />
+    <Compile Include="Assets\Scripts\System\Manager\ItemCreationManager.cs" />
     <Compile Include="Assets\Scripts\Unit\Player\Player_IStates\JumpState.cs" />
     <Compile Include="Assets\Scripts\System\Manager\TableDataManager.cs" />
     <Compile Include="Assets\Scripts\Unit\Player\Player_IStates\DodgeState.cs" />
@@ -77,76 +77,100 @@
     <Compile Include="Assets\Scripts\System\Manager\Gacha\TotalResult.cs" />
     <Compile Include="Assets\Source_Effect\52SpecialEffectPack\Animation&amp;Script\csAnimationSpin.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
+    <Compile Include="Assets\Scripts\UI\Title\Lantern.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\Goblin\Goblin.cs" />
     <Compile Include="Assets\Scripts\System\Table\Tables\TableWeapon.cs" />
     <Compile Include="Assets\Scripts\Interact\InteractManager.cs" />
+    <Compile Include="Assets\Scripts\UI\Enhancement\Enhance\DataField.cs" />
+    <Compile Include="Assets\Scripts\UI\Enhancement\HoverClickableFrame.cs" />
     <Compile Include="Assets\Scripts\System\Manager\Gacha\GachaResult.cs" />
-    <Compile Include="Assets\Scripts\System\Manager\RarityColor.cs" />
+    <Compile Include="Assets\Scripts\Unit\Player\Player_IStates\DeadState.cs" />
     <Compile Include="Assets\Scripts\Unit\StatData.cs" />
     <Compile Include="Assets\Scripts\UI\Inventory\Inventory.cs" />
     <Compile Include="Assets\Scripts\UI\Quest\QuestButton.cs" />
     <Compile Include="Assets\Scripts\UI\Dialogue\DialogueUI.cs" />
+    <Compile Include="Assets\Scripts\InfoFrame.cs" />
     <Compile Include="Assets\Scripts\System\BehaviourTreeNodes\Selector.cs" />
+    <Compile Include="Assets\Scripts\UI\Enhancement\Enchant\Slots.cs" />
     <Compile Include="Assets\Scripts\Unit\Player\Target\TargetDetector.cs" />
+    <Compile Include="Assets\Scripts\Item\ItemInstance\ItemInstance.cs" />
     <Compile Include="Assets\Scripts\Unit\Interfaces\IAttackable.cs" />
     <Compile Include="Assets\Scripts\Photon\PhotonManager_MapChanger.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\Player\WeaponType\RangedWeapon.cs" />
-    <Compile Include="Assets\Scripts\Item\Filter\Interface\IFilterInfo.cs" />
+    <Compile Include="Assets\Scripts\System\Manager\ItemColor.cs" />
     <Compile Include="Assets\Scripts\System\Manager\UIManager.cs" />
+    <Compile Include="Assets\Scripts\UI\Enhancement\SubWindow.cs" />
+    <Compile Include="Assets\Scripts\System\Factory\ItemFactory.cs" />
     <Compile Include="Assets\Scripts\UI\Quest\QuestDetail.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\HeadlHealthIndicator.cs" />
+    <Compile Include="Assets\Scripts\UI\Skill\SkillIndicator.cs" />
     <Compile Include="Assets\Scripts\UI\Indicator\DamageIndicator.cs" />
     <Compile Include="Assets\Scripts\System\GameTime.cs" />
     <Compile Include="Assets\Scripts\System\Manager\MapManager.cs" />
-    <Compile Include="Assets\Scripts\Item\Filter\FilterInfo.cs" />
     <Compile Include="Assets\Scripts\Unit\NPC\NPC.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\AttackHandlers\MeleeColliderHandler.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\Interfaces\IAttackStrategy.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\Boss\MeleeHitbox.cs" />
+    <Compile Include="Assets\Scripts\Item\Weapon\Enhance\WeaponEnhancementAdapter.cs" />
     <Compile Include="Assets\Scripts\Quest\NPCQuestRoot.cs" />
     <Compile Include="Assets\Scripts\UI\Quest\QuestDialogueWindow.cs" />
     <Compile Include="Assets\Scripts\Bundle\BundleManager.cs" />
     <Compile Include="Assets\Scripts\System\Stuff\Iterator\Iterator.cs" />
     <Compile Include="Assets\Scripts\Unit\NPC\NPCType\NPCLevelUP.cs" />
+    <Compile Include="Assets\Scripts\Item\Weapon\Enhance\IWeaponEnchantment.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\Player\Weapon.cs" />
     <Compile Include="Assets\Scripts\Gacha\Banner\BannerData.cs" />
     <Compile Include="Assets\Scripts\Data\PlayerSaveData.cs" />
     <Compile Include="Assets\Scripts\Gacha\Banner\BannerContainer.cs" />
-    <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\Abilities\PoisonAbilityLogic.cs" />
+    <Compile Include="Assets\Scripts\UI\Indicator\BasicIndicator\SideButton.cs" />
+    <Compile Include="Assets\Scripts\PostProcessing\HurtPostProcessingRendererFeature.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\Boss\IHitbox.cs" />
+    <Compile Include="Assets\Scripts\UI\Title\ArrowButton.cs" />
     <Compile Include="Assets\Scripts\Item\WeaponData.cs" />
-    <Compile Include="Assets\Scripts\Item\Filter\Implementation\AllItemFilter.cs" />
-    <Compile Include="Assets\Scripts\UI\Lobby\LobbyUI.cs" />
     <Compile Include="Assets\Scripts\System\Table\TableBase.cs" />
-    <Compile Include="Assets\Scripts\Item\IItemInstance.cs" />
+    <Compile Include="Assets\Scripts\UI\Gacha\HoverableFrame.cs" />
+    <Compile Include="Assets\Scripts\UI\Skill\SkillFrame.cs" />
     <Compile Include="Assets\Scripts\Item\Sort\Implementation\DamageSorter.cs" />
+    <Compile Include="Assets\Scripts\UI\Indicator\InfoField.cs" />
     <Compile Include="Assets\Scripts\System\Manager\Gacha\SkipController.cs" />
+    <Compile Include="Assets\Scripts\UI\Indicator\InteractIndicator\InteractIndicatorUI.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\Interfaces\IAbility.cs" />
     <Compile Include="Assets\Scripts\System\Table\Tables\TableNPCDialogueCondition.cs" />
     <Compile Include="Assets\Scripts\System\Table\Tables\TableDialogue.cs" />
     <Compile Include="Assets\Scripts\System\Stuff\Iterator\Aggregate.cs" />
-    <Compile Include="Assets\Scripts\Item\Filter\Implementation\WeaponFilter.cs" />
-    <Compile Include="Assets\Scripts\Item\ItemFactory.cs" />
+    <Compile Include="Assets\Scripts\System\Manager\TimeWeatherManager.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\Target.cs" />
     <Compile Include="Assets\Scripts\System\BehaviourTreeNodes\ConditionNode.cs" />
     <Compile Include="Assets\Scripts\Unit\Player\Player_IStates\AttackState.cs" />
     <Compile Include="Assets\Scripts\UI\LevelUP\LevelUPColumn.cs" />
     <Compile Include="Assets\Scripts\Photon\PhotonManager.cs" />
+    <Compile Include="Assets\Scripts\UI\AlertTemplate.cs" />
+    <Compile Include="Assets\Scripts\System\Manager\QuestPathManager.cs" />
+    <Compile Include="Assets\Scripts\UI\Enhancement\Tab.cs" />
+    <Compile Include="Assets\Scripts\UI\ClickableFrame.cs" />
     <Compile Include="Assets\Scripts\System\Table\Tables\TableProjectile.cs" />
     <Compile Include="Assets\Scripts\Item\Sort\Implementation\DefenseSorter.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\Player\WeaponType\MeleeWeapon.cs" />
+    <Compile Include="Assets\Scripts\UI\ItemCreation\Creation.cs" />
     <Compile Include="Assets\Scripts\Unit\Player\Player_Animation.cs" />
     <Compile Include="Assets\Scripts\System\Manager\EffectManager.cs" />
     <Compile Include="Assets\Scripts\Quest\Quest.cs" />
+    <Compile Include="Assets\Scripts\Item\ItemInstance\SkillItemInstance.cs" />
+    <Compile Include="Assets\Scripts\UI\UIToggleSound.cs" />
     <Compile Include="Assets\Scripts\System\NetworkRequest\LoginManager.cs" />
     <Compile Include="Assets\Scripts\System\Table\Tables\TableQuest.cs" />
     <Compile Include="Assets\Scripts\System\Manager\InputManager.cs" />
     <Compile Include="Assets\Scripts\UI\Quest\QuestIndicatorUI.cs" />
+    <Compile Include="Assets\Scripts\Enhancement\IWeaponEnhancement.cs" />
     <Compile Include="Assets\Scripts\UI\Dialogue\ChoiceButton.cs" />
     <Compile Include="Assets\Scripts\UI\Quest\QuestIndicator.cs" />
     <Compile Include="Assets\Scripts\Interact\IInteractable.cs" />
+    <Compile Include="Assets\Scripts\UI\UIButtonSound.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\Abilities\ProjectileAbilityLogic.cs" />
+    <Compile Include="Assets\Scripts\Item\ItemInstance\WeaponItemInstance.cs" />
+    <Compile Include="Assets\Scripts\UI\ItemCreation\RecipeList.cs" />
     <Compile Include="Assets\Scripts\Item\DroppedItem\DroppedItem.cs" />
+    <Compile Include="Assets\Scripts\UI\FilterSorter\Filter.cs" />
     <Compile Include="Assets\Scripts\System\Manager\QuestManager.cs" />
     <Compile Include="Assets\Scripts\UI\Stat\Level.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\Boss\DeepDragon\DeepDragon.cs" />
@@ -169,38 +193,50 @@
     <Compile Include="Assets\Scripts\UI\Settings\SettingUI.cs" />
     <Compile Include="Assets\Source_Effect\NamuFX\_CommonAssets\Scripts\Viewer.cs" />
     <Compile Include="Assets\Scripts\System\Table\Tables\TableItem.cs" />
+    <Compile Include="Assets\Scripts\UI\FilterSorter\Sorter.cs" />
     <Compile Include="Assets\Scripts\Unit\NPC\NPCType\NPCTutorial.cs" />
     <Compile Include="Assets\Scripts\System\BehaviourTreeNodes\Inverter.cs" />
     <Compile Include="Assets\Scripts\Unit\Player\Player_Entry.cs" />
     <Compile Include="Assets\Scripts\System\Stuff\Enums.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\BossData.cs" />
     <Compile Include="Assets\Scripts\Unit\AnimationHash.cs" />
+    <Compile Include="Assets\Scripts\UI\Title\TitlePlate.cs" />
+    <Compile Include="Assets\Scripts\System\Table\Tables\TableEnhancement.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\Boss\FacingTriggerController.cs" />
+    <Compile Include="Assets\Scripts\UI\Enhancement\Enchant\EnchantSubWindow.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraColliderExtension.cs" />
     <Compile Include="Assets\Scripts\System\Manager\LayerManager.cs" />
     <Compile Include="Assets\Scripts\System\Interfaces\Gacha\IFlag.cs" />
     <Compile Include="Assets\Scripts\System\Table\Tables\TablePotion.cs" />
     <Compile Include="Assets\Scripts\System\BehaviourTreeNodes\NodeStates.cs" />
     <Compile Include="Assets\Scripts\Unit\NPC\NPCType\NPCDoctor.cs" />
+    <Compile Include="Assets\Scripts\System\Factory\SkillFactory.cs" />
     <Compile Include="Assets\Scripts\System\LoadingScene\SceneLoader.cs" />
     <Compile Include="Assets\Scripts\Data\ItemData.cs" />
     <Compile Include="Assets\Scripts\Gacha\Minigame\MinigameSuccessIndicator.cs" />
     <Compile Include="Assets\Scripts\Unit\Player\Player_IStates\IdleState.cs" />
+    <Compile Include="Assets\Scripts\Item\DroppedItem\DropTable.cs" />
     <Compile Include="Assets\Scripts\System\Manager\Gacha\SingleResult.cs" />
     <Compile Include="Assets\Scripts\System\Manager\WindowStackManager.cs" />
+    <Compile Include="Assets\Scripts\UI\Enhancement\Enchant\Slot.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\AttackHandlers\ProjectileHandler.cs" />
+    <Compile Include="Assets\Scripts\Item\ItemInstance\PotionItemInstance.cs" />
     <Compile Include="Assets\Scripts\Unit\Player\Player_Effect.cs" />
+    <Compile Include="Assets\Scripts\UI\ItemCreation\ScrollFrame.cs" />
+    <Compile Include="Assets\Scripts\PostProcessing\HurtPostProcessingVolumeComponent.cs" />
     <Compile Include="Assets\Scripts\System\Manager\MinigameManager.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\Skeleton\Skeleton.cs" />
+    <Compile Include="Assets\Scripts\UI\Title\LoginPlate.cs" />
+    <Compile Include="Assets\Scripts\UI\Title\LoginUI.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\WeaponInstanceData.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\Boss\DeepDragon\DeepDragon_BehaviourTree_NodeStates.cs" />
-    <Compile Include="Assets\Scripts\UI\InteractIndicator\InteractIndicatorUI.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\Strategies\BowAttackStrategy.cs" />
     <Compile Include="Assets\Scripts\System\BehaviourTreeNodes\ActionNode.cs" />
     <Compile Include="Assets\Scripts\UI\Loading\Loading.cs" />
     <Compile Include="Assets\Scripts\Item\InventoryWrapper.cs" />
     <Compile Include="Assets\Scripts\System\BehaviourTreeNodes\RandomSelector.cs" />
     <Compile Include="Assets\Scripts\UI\Stat\Status.cs" />
+    <Compile Include="Assets\Scripts\UI\Enhancement\Enhance\EnhanceSubWindow.cs" />
     <Compile Include="Assets\Scripts\Unit\Interfaces\ITalkable.cs" />
     <Compile Include="Assets\Scripts\UI\Inventory\ItemDescription.cs" />
     <Compile Include="Assets\Scripts\System\Factory\EnemyFactory.cs" />
@@ -208,39 +244,46 @@
     <Compile Include="Assets\Source_Effect\52SpecialEffectPack\Animation&amp;Script\csMouseOrbit.cs" />
     <Compile Include="Assets\Scripts\Unit\LevelData.cs" />
     <Compile Include="Assets\Scripts\UI\LevelUP\LevelUP.cs" />
+    <Compile Include="Assets\Scripts\UI\ItemCreation\IngredientFrame.cs" />
+    <Compile Include="Assets\Scripts\Item\ItemInstance\ScrollItemInstance.cs" />
     <Compile Include="Assets\Scripts\System\Manager\EnemyManager.cs" />
     <Compile Include="Assets\Scripts\System\Manager\TargetManager.cs" />
     <Compile Include="Assets\Source_Effect\52SpecialEffectPack\EffectEditor\ShurikenEffectEditor\csShurikenEffectEditor.cs" />
-    <Compile Include="Assets\Scripts\Item\PotionItemInstance.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\Dummy.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\Enemy_PhotonSync.cs" />
     <Compile Include="Assets\Scripts\Gacha\Minigame\MinigameTimer.cs" />
     <Compile Include="Assets\Scripts\System\Table\CSVReader.cs" />
     <Compile Include="Assets\Scripts\UI\Stat\StatColumn.cs" />
-    <Compile Include="Assets\Scripts\Item\Filter\Implementation\PotionFilter.cs" />
+    <Compile Include="Assets\Scripts\UI\Title\PlateBase.cs" />
+    <Compile Include="Assets\Scripts\UI\ItemCreation\CircuableToggle.cs" />
     <Compile Include="Assets\Scripts\Gacha\Banner\GachaBanner.cs" />
     <Compile Include="Assets\Scripts\System\Manager\BootstrapManager.cs" />
     <Compile Include="Assets\Scripts\Gacha\Minigame\MinigameController.cs" />
+    <Compile Include="Assets\Scripts\System\Table\Tables\TableSkill.cs" />
     <Compile Include="Assets\Scripts\System\Manager\DialogueManager.cs" />
     <Compile Include="Assets\Source_Effect\52SpecialEffectPack\Animation&amp;Script\csDestroyEffect.cs" />
     <Compile Include="Assets\Scripts\UI\Settings\SettingDropdown.cs" />
-    <Compile Include="Assets\Scripts\UI\Menu\MenuUI.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\Boss\Boss.cs" />
     <Compile Include="Assets\Scripts\System\Stuff\Iterator\OfType.cs" />
+    <Compile Include="Assets\Scripts\Quest\QuestPath.cs" />
     <Compile Include="Assets\Scripts\UI\Inventory\ItemFrame.cs" />
     <Compile Include="Assets\Scripts\Gacha\Minigame\SpeedTextingMinigame.cs" />
+    <Compile Include="Assets\Scripts\System\Manager\ItemInfoPopUp.cs" />
     <Compile Include="Assets\Scripts\System\Manager\Gacha\GachaManager.cs" />
-    <Compile Include="Assets\Scripts\Item\ItemInstance.cs" />
     <Compile Include="Assets\Scripts\UI\Quest\QuestDialogue.cs" />
     <Compile Include="Assets\Scripts\System\Manager\SpawnManager.cs" />
     <Compile Include="Assets\Scripts\System\Table\Tables\TableRequireCurrency.cs" />
     <Compile Include="Assets\Scripts\PositionSyncTest.cs" />
+    <Compile Include="Assets\Scripts\System\Manager\PostProcessingManager.cs" />
     <Compile Include="Assets\Scripts\UI\Inventory\Inventory_SortFilter.cs" />
+    <Compile Include="Assets\Scripts\UI\Enhancement\Enchant\EnchantedSkillTemplate.cs" />
     <Compile Include="Assets\Scripts\Unit\Player\Player_Movement.cs" />
+    <Compile Include="Assets\Scripts\UI\Title\SettingPlate.cs" />
+    <Compile Include="Assets\Scripts\UI\ItemCreation\CreationItemFrame.cs" />
     <Compile Include="Assets\Scripts\System\Table\Tables\TableEnemy.cs" />
     <Compile Include="Assets\Scripts\Shader\ShockWaveController.cs" />
     <Compile Include="Assets\Scripts\System\Manager\SoundManager.cs" />
-    <Compile Include="Assets\Scripts\System\Table\Tables\TableWeaponAbility.cs" />
+    <Compile Include="Assets\Scripts\UI\Title\TitleUI.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\Projectile.cs" />
     <Compile Include="Assets\Scripts\Interact\InteractableObject.cs" />
     <Compile Include="Assets\Scripts\Effect\GroundShockwave.cs" />
@@ -248,6 +291,7 @@
     <Compile Include="Assets\Scripts\System\LoadingScene\MapConnection.cs" />
     <Compile Include="Assets\Scripts\Gacha\Result\GachaResultData.cs" />
     <Compile Include="Assets\Scripts\UI\DialogueWindow.cs" />
+    <Compile Include="Assets\Scripts\UI\Indicator\BasicIndicator\MenuUI.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\Enemy.cs" />
     <Compile Include="Assets\Scripts\Unit\Interfaces\IHurtable.cs" />
     <Compile Include="Assets\Scripts\UI\Stat\PlayerStatusUI.cs" />
@@ -255,39 +299,51 @@
     <Compile Include="Assets\Scripts\System\BehaviourTreeNodes\Node.cs" />
     <Compile Include="Assets\Scripts\UI\WindowBase.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\Goblin\Goblin_BehaviourTree.cs" />
+    <Compile Include="Assets\Scripts\UI\Settings\Exit.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\Projectiles\CurveProjectile.cs" />
     <Compile Include="Assets\Scripts\System\Manager\SceneLoadManager.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\Strategies\MeleeAttackStrategy.cs" />
-    <Compile Include="Assets\Scripts\Item\Filter\Interface\IItemFilter.cs" />
+    <Compile Include="Assets\Scripts\Gacha\Result\TotalResultUnit.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\Abilities\KnockbackAbilityLogic.cs" />
     <Compile Include="Assets\Scripts\Interact\Interactable_Objects\Warp.cs" />
     <Compile Include="Assets\Scripts\UI\Settings\Setting.cs" />
     <Compile Include="Assets\Scripts\Item\ItemData.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\EnemyData.cs" />
     <Compile Include="Assets\Scripts\Unit\Player\Player_Input.cs" />
+    <Compile Include="Assets\Scripts\UI\Enhancement\Enhance\EnhancementItemList.cs" />
     <Compile Include="Assets\Scripts\UI\Inventory\ItemMenu.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraFilterPack_Blur_Focus.cs" />
     <Compile Include="Assets\Scripts\Unit\Player\Player_Target.cs" />
+    <Compile Include="Assets\Scripts\UI\Enhancement\Enhance\EnhancementDialogWindow.cs" />
     <Compile Include="Assets\Scripts\System\Table\Tables\TableNPC.cs" />
     <Compile Include="Assets\Scripts\UI\Quest\QuestList.cs" />
     <Compile Include="Assets\Scripts\System\Interfaces\Gacha\IInitializable.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\Projectiles\BezierProjectile.cs" />
+    <Compile Include="Assets\Scripts\Item\ItemInstance\MaterialItemInstance.cs" />
     <Compile Include="Assets\Scripts\Unit\Player\Player_Equipment.cs" />
+    <Compile Include="Assets\Scripts\UI\Enhancement\SkillList.cs" />
     <Compile Include="Assets\Scripts\System\Manager\GameManager.cs" />
     <Compile Include="Assets\Scripts\System\Manager\Singleton.cs" />
     <Compile Include="Assets\Scripts\Quest\QuestInstance.cs" />
+    <Compile Include="Assets\Scripts\UI\FrameBase.cs" />
+    <Compile Include="Assets\Scripts\Item\DroppedItem\DropFactory.cs" />
     <Compile Include="Assets\Scripts\System\Manager\Gacha\SplashResult.cs" />
+    <Compile Include="Assets\Scripts\System\Table\Tables\TableScroll.cs" />
+    <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\Abilities\ContinuouseAbilityLogic.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\Skeleton\Skeleton_BehaviourTree_NodeStates.cs" />
     <Compile Include="Assets\Scripts\Item\Sort\Interfaces\ISortInfo.cs" />
+    <Compile Include="Assets\Scripts\System\Manager\CursorManager.cs" />
     <Compile Include="Assets\Scripts\System\Manager\Combat\AbilityManager.cs" />
     <Compile Include="Assets\Scripts\Unit\Player\Player_PhotonSync.cs" />
     <Compile Include="Assets\Scripts\System\Manager\ResourceLoader.cs" />
     <Compile Include="Assets\Scripts\UI\Indicator\EnemyHealthIndicator.cs" />
+    <Compile Include="Assets\Scripts\UI\Title\VCams.cs" />
     <Compile Include="Assets\Scripts\Equipment\Weapon\WeaponStuffs\AttackHandlers\CastingHandler.cs" />
+    <Compile Include="Assets\Scripts\UI\Indicator\BasicIndicator\StatusUI.cs" />
+    <Compile Include="Assets\Scripts\Item\Filter\IconForSearch.cs" />
     <Compile Include="Assets\Scripts\Unit\Player\Player.cs" />
     <Compile Include="Assets\Scripts\Unit\Enemy\Skeleton\Skeleton_BehaviourTree.cs" />
     <Compile Include="Assets\Scripts\UI\Quest\QuestColumn.cs" />
-    <Compile Include="Assets\Scripts\Item\WeaponItemInstance.cs" />
     <Compile Include="Assets\Scripts\Item\PotionData.cs" />
     <Compile Include="Assets\Scripts\System\Interfaces\IWindowStack.cs" />
     <Compile Include="Assets\Scripts\System\NetworkRequest\AuthManager.cs" />
@@ -295,9 +351,12 @@
     <Compile Include="Assets\Source_Effect\52SpecialEffectPack\Animation&amp;Script\csShowAllEffect.cs" />
     <Compile Include="Assets\Scripts\Gacha\GachaUI.cs" />
     <Compile Include="Assets\Scripts\Camera\MainCamera_Zoom.cs" />
+    <Compile Include="Assets\Scripts\Item\IStackable.cs" />
     <Compile Include="Assets\Scripts\Unit\Player\Player_Stats.cs" />
     <Compile Include="Assets\Scripts\System\Table\TableMgr.cs" />
+    <Compile Include="Assets\Scripts\UI\Indicator\Alert.cs" />
     <Compile Include="Assets\Scripts\Unit\Player\IPlayerState.cs" />
+    <Compile Include="Assets\Scripts\Interact\IItemContainer.cs" />
     <Compile Include="Assets\Scripts\Unit\Player\Player_IStates\MoveState.cs" />
     <Compile Include="Assets\Scripts\UI\Quest\QuestContent.cs" />
   </ItemGroup>
@@ -315,6 +374,7 @@
     <None Include="Assets\Resources\Table\Table_Projectile.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\Source_Characters\NPC_Quest1\Lowpoly_Characters\Sources\Modular_NPC\Shaders\PT_Modular_NPC_Shader_Toon.shader" />
+    <None Include="Assets\Resources\Table\Table_Enhancement.txt" />
     <None Include="Assets\Source_Maps\Polytope Studio\Lowpoly_Environments\Sources\Shaders\PT_Vegetation_Plants_Shader.shader" />
     <None Include="Assets\Source_Characters\NPC_Quest1\Lowpoly_Weapons\Sources\Shaders\PT_Weapons_Shader_Toon.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
@@ -327,8 +387,10 @@
     <None Include="Assets\Resources\Table\Table_Dialogue.txt" />
     <None Include="Assets\Resources\Table\Table_DialogueLocale.txt" />
     <None Include="Assets\Source_Characters\NPC_Quest1\Lowpoly_Weapons\Sources\Shaders\PT_Weapons_Shader_PBR.shader" />
+    <None Include="Assets\Resources\Table\Table_Skill.txt" />
     <None Include="Assets\Resources\UIDocument\LobbyUSS.uss" />
     <None Include="Assets\Source_Characters\NPC_Quest1\Lowpoly_Characters\Sources\Modular_Armors\Shaders\PT_Armors_Shader_PBR.shader" />
+    <None Include="Assets\AddressableAssetsData\link.xml" />
     <None Include="Assets\TextMesh Pro\Shaders\SDFFunctions.hlsl" />
     <None Include="Assets\Source_Maps\Polytope Studio\Lowpoly_Environments\Sources\Shaders\PT_Vegetation_Opaque_Shader.shader" />
     <None Include="Assets\Source_Maps\Polytope Studio\Lowpoly_Environments\Sources\Shaders\PT_Vegetation_Foliage_Shader.shader" />
@@ -345,6 +407,7 @@
     <None Include="Assets\Source_Maps\Polytope Studio\Lowpoly_Environments\Sources\Shaders\PT_Vegetation_Flowers_Shader.shader" />
     <None Include="Assets\Resources\Table\Table_WeaponAbility.txt" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
+    <None Include="Assets\Resources\Table\Table_Scroll.txt" />
     <None Include="Assets\Photon\PhotonUnityNetworking\readme.txt" />
     <None Include="Assets\Photon\PhotonLibs\netstandard2.0\Photon3Unity3D.dll" />
     <None Include="Assets\Photon\PhotonLibs\Photon3Unity3D.dll" />
@@ -1556,6 +1619,10 @@
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.Flow.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.SysrootPackage.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.SysrootPackage.Editor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.2D.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.2D.Runtime.dll</HintPath>
       <Private>False</Private>
@@ -1712,6 +1779,10 @@
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Core.Editor.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.Toolchain.Win-x86_64-Linux-x86_64">
+      <HintPath>Library\ScriptAssemblies\Unity.Toolchain.Win-x86_64-Linux-x86_64.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.ProBuilder">
       <HintPath>Library\ScriptAssemblies\Unity.ProBuilder.dll</HintPath>
       <Private>False</Private>
@@ -1722,6 +1793,10 @@
     </Reference>
     <Reference Include="Unity.Formats.Fbx.Runtime">
       <HintPath>Library\ScriptAssemblies\Unity.Formats.Fbx.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.Sysroot.Linux_x86_64">
+      <HintPath>Library\ScriptAssemblies\Unity.Sysroot.Linux_x86_64.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">

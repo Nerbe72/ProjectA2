@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using GameStuff;
+
 public partial class DeepDragon : Boss
 {
     private float distanceToPlayer;
@@ -70,7 +72,6 @@ public partial class DeepDragon : Boss
 
     private NodeStates DoNothing()
     {
-        Debug.Log("DoNothing");
         if (agent.enabled)
             agent.SetDestination(transform.position);
         animator.SetBool(AnimationHash.GetHash(ActionType.Walk), false);

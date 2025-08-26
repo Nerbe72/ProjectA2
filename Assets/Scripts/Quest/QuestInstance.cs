@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using GameStuff;
+
 [Serializable]
 public class QuestInstance
 {
@@ -13,6 +15,13 @@ public class QuestInstance
         QuestID = _id;
         State = _state;
         Objectives = new Dictionary<int, QuestObjectiveInstance>();
+    }
+
+    public QuestInstance(int _id, QuestState _state, Dictionary<int, QuestObjectiveInstance> _objectives)
+    {
+        QuestID = _id;
+        State = _state;
+        Objectives = _objectives ?? new Dictionary<int, QuestObjectiveInstance>();
     }
 
     public void AddObjectives(ObjectiveInfo _info)

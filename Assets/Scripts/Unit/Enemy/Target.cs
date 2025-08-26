@@ -21,6 +21,11 @@ public class Target : MonoBehaviour
         targetManager = Singleton.Get<TargetManager>();
         player = Singleton.Player;
         cam = Singleton.Get<CameraManager>().main;
+
+        if (owner != null)
+        {
+            owner.OnHealthChanged += OnOwnerHealthChanged;
+        }
     }
 
     private void LateUpdate()
@@ -42,13 +47,14 @@ public class Target : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //ÇÃ·¹ÀÌ¾î·ÎºÎÅÍ Æ¯Á¤ ¹üÀ§¿¡ µé¾î¿Â °æ¿ì Å¸±ê ¸®½ºÆ®¿¡ Ãß°¡µÊ
+        //í”Œë ˆì´ì–´ë¡œë¶€í„° íŠ¹ì • ë²”ìœ„ì— ë“¤ì–´ì˜¨ ê²½ìš° íƒ€ê¹ƒ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€ë¨
         if (other == null) return;
 
         if (targetManager == null)
-        {
             return;
-        }
+
+        if (owner != null && owner.Character != null && owner.Character.GetCurrentHealth() <= 0)
+            return;
 
         StopAllCoroutines();
         targetManager.AddTarget(this, isInSight);
@@ -61,19 +67,26 @@ public class Target : MonoBehaviour
 
         if (co_removeTargetHolder != null) return;
 
-        //ÀÏÁ¤ ½Ã°£ ´ë±â ÈÄ Å¸°Ù ¹è¿­¿¡¼­ »èÁ¦
+        //ì¼ì • ì‹œê°„ ëŒ€ê¸° í›„ íƒ€ê²Ÿ ë°°ì—´ì—ì„œ ì‚­ì œ
         StopAllCoroutines();
         co_removeTargetHolder = StartCoroutine(RemoveTargetDelayCo());
     }
 
     private void OnDestroy()
     {
+        if (owner != null)
+            owner.OnHealthChanged -= OnOwnerHealthChanged;
+
         targetManager.RemoveTarget(this);
     }
 
     private void OnBecameVisible()
     {
         isInSight = true;
+        
+        if (owner != null && owner.Character != null && owner.Character.GetCurrentHealth() <= 0)
+            return;
+
         Vector3 direction = (player.transform.position - transform.position).normalized;
         float distance = Vector3.Distance(transform.position, player.transform.position);
         if (Physics.Raycast(transform.position, direction, distance, LayerMask.GetMask("Wall"))) return;
@@ -82,8 +95,8 @@ public class Target : MonoBehaviour
 
     private void OnBecameInvisible()
     {
-        //º»ÀÎÀÌ ÇöÀç Å¸±êÀÎ °æ¿ì ½Ã°£ Áö¿¬ ÈÄ Á¦°Å
-        //º»ÀÎÀÌ ÇöÀç Å¸±êÀÌ ¾Æ´Ñ °æ¿ì Áï½Ã Á¦°Å
+        //ë³¸ì¸ì´ í˜„ì¬ íƒ€ê¹ƒì¸ ê²½ìš° ì‹œê°„ ì§€ì—° í›„ ì œê±°
+        //ë³¸ì¸ì´ í˜„ì¬ íƒ€ê¹ƒì´ ì•„ë‹Œ ê²½ìš° ì¦‰ì‹œ ì œê±°
         //if (targetManager.CurrentTarget == this){}
         isInSight = false;
         targetManager.RemoveTargetVisible(this);
@@ -126,5 +139,17 @@ public class Target : MonoBehaviour
         }
 
         yield break;
+    }
+
+    private void OnOwnerHealthChanged(int current, int max)
+    {
+        if (current <= 0)
+        {
+            SetIndicatorVisibility(false);
+            if (targetManager != null)
+            {
+                targetManager.RemoveTarget(this);
+            }
+        }
     }
 }

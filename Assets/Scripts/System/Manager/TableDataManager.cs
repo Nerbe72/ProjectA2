@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+using GameStuff;
+
 public class TableDataManager : MonoBehaviour
 {
     public int InitializationPriority => 0;
@@ -22,7 +24,7 @@ public class TableDataManager : MonoBehaviour
     }
 
     // 아이템 테이블에서 무기만 추출 후 레어도에 맞는 id들만 반환
-    public List<int> GetItemIDsByRare(Rare targetRare)
+    public List<int> GetItemIDsByRare(Rarity targetRare)
     {
         var itemTable = table.Item.Dictionary;
         List<int> result = new List<int>();
@@ -34,7 +36,7 @@ public class TableDataManager : MonoBehaviour
 
             if ((ItemType)item.ItemType == ItemType.Weapon)
             {
-                if ((Rare)item.Rarity == targetRare)
+                if ((Rarity)item.Rarity == targetRare)
                 {
                     result.Add(id);
                 }

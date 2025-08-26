@@ -1,5 +1,0 @@
-﻿Ability_ID,Name,Cooldown,Description,Attack_Type,Continuouse_Time,Damage,Knockback_Force,Projectile_Amount,Projectile_ID
-1001,10001001,0,11001001,2,5,50,0,0,
-1002,10001002,0,11001002,2,10,120,0,0,
-1003,10001003,0.5,11001003,0,0,0,3,0,
-1004,10001004,2,11001004,1,0,80,0,4,11004

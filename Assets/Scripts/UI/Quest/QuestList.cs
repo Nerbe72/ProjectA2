@@ -4,6 +4,8 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
+using GameStuff;
+
 public class QuestList : MonoBehaviour
 {
     [SerializeField] private GameObject ContentContainer;
@@ -57,6 +59,17 @@ public class QuestList : MonoBehaviour
 
     public void AddQuestList(int _id)
     {
+        if (localeTable == null)
+        {
+            localeTable = Singleton.Get<TableDataManager>()?.Table.Locale;
+
+            if (localeTable == null)
+            {
+                Debug.LogError($"Table Error : QuestList");
+                return;
+            }
+        }
+
         GameObject obj = Instantiate(Prefab);
         obj.transform.parent = ContentContainer.transform;
         QuestContent questContent = obj.GetComponent<QuestContent>();

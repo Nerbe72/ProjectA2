@@ -1,6 +1,8 @@
 using System.Threading.Tasks;
 using UnityEngine;
 
+using GameStuff;
+
 public class GachaUI : WindowBase
 {
     public bool IsGachaRunning = false;
@@ -76,8 +78,8 @@ public class GachaUI : WindowBase
         uint price = (uint)(_rollCount == 1 ? _banner.SinglePrice : _banner.TenPrice);
         if (!Singleton.Inventory.IsCurrencyEnough(price))
         {
-            Debug.Log("ÀçÈ­°¡ ºÎÁ·ÇÕ´Ï´Ù.");
-            // TODO: UI Ãß°¡
+            Debug.Log("ï¿½ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.");
+            // TODO: UI ï¿½ß°ï¿½
             return;
         }
         Singleton.Inventory.MinusCurrency(price);
@@ -86,18 +88,18 @@ public class GachaUI : WindowBase
 
         resultData = new GachaResultData(_banner, _rollCount);
 
-        // 30% È®·ü·Î ¹Ì´Ï°ÔÀÓ ½ÃÀÛ
+        // 30% È®ï¿½ï¿½ï¿½ï¿½ ï¿½Ì´Ï°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         //if (_rollCount == 10 && Random.Range(0, 100) < 30)
         //    ShowMinigame();
         //else
         //    DoCalculateResult();
 
-        //µð¹ö±×¿ë ¹Ì´Ï°ÔÀÓ 100% ¹ßµ¿
+        //ï¿½ï¿½ï¿½ï¿½×¿ï¿½ ï¿½Ì´Ï°ï¿½ï¿½ï¿½ 100% ï¿½ßµï¿½
         if (_rollCount == 10)
             ShowMinigame();
     }
 
-    //¹Ì´Ï°ÔÀÓ ¿Ï·á ÈÄ È£ÃâµÊ
+    //ï¿½Ì´Ï°ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ ï¿½ï¿½ È£ï¿½ï¿½ï¿½
     private void SetMinigameResult(bool _success)
     {
         resultData.MinigameSuccess = _success;
@@ -105,7 +107,6 @@ public class GachaUI : WindowBase
         CalculateResult();
     }
 
-    //ÃßÈÄ ¼­¹öÃøÀ¸·Î ÀüÈ¯ °í·Á
     private async void CalculateResult()
     {
         Singleton.Get<GachaManager>().StartGacha(ref resultData);
@@ -115,44 +116,28 @@ public class GachaUI : WindowBase
             await Task.Yield();
         }
 
-        //°á°ú°¡ µµÃâµÇ¸é ÀÎº¥Åä¸® ÀúÀå ÈÄ result ½ÇÇà
-        //¹«±â ÀÎ½ºÅÏ½º ·Îµå Æ÷ÇÔ
         for (int i = 0; i < resultData.Items.Count; i++)
         {
-            WeaponItemInstance weaponInstance = new WeaponItemInstance();
-            var item_selected = Singleton.Get<TableDataManager>().Table.Item.Get(resultData.Items[i].ID);
-            var weapon_selected = Singleton.Get<TableDataManager>().Table.Weapon.Get(resultData.Items[i].ID);
+            bool success = await Singleton.Get<ItemFactory>().CreateAndAddToInventoryAsync(
+                resultData.Items[i].ID,
+                resultData.Items[i].Data.Damage,
+                resultData.Items[i].Data.Defense
+            );
 
-            weaponInstance.ItemID = resultData.Items[i].ID;
-            weaponInstance.Damage = resultData.Items[i].Data.Damage;
-            weaponInstance.Defense = resultData.Items[i].Data.Defense;
-
-            weaponInstance.InstancedPrefab = await ResourceLoader.LoadAsync<GameObject>(item_selected.Prefab, LoadType.ItemPrefab);
-            Singleton.Inventory.TakeItem(weaponInstance);
-
-            if (weapon_selected.Abilities == null || weapon_selected.Abilities.Length < 0) return;
-
-            int count = weapon_selected.Abilities.Length;
-            for (int j = 0; j < count; j++)
+            if (!success)
             {
-                var ability_selected = Singleton.Get<TableDataManager>().Table.WeaponAbility.Get(weapon_selected.Abilities[j]);
-                if (ability_selected == null || ability_selected.ProjectileID == 0) continue;
-
-                var projectile_ability_selected = Singleton.Get<TableDataManager>().Table.Projectile.Get(ability_selected.ProjectileID);
-                await ResourceLoader.LoadAsync<GameObject>(projectile_ability_selected.Prefab, LoadType.ProjectilePrefab);
+                Debug.LogError($"GachaUI: ì•„ì´í…œ ìƒì„± ë° ì¸ë²¤í† ë¦¬ ì¶”ê°€ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤. ItemID: {resultData.Items[i].ID}");
             }
         }
-
-        Singleton.Inventory.InitInventoryFrame();
+        
         Singleton.Inventory.SaveInventoryData();
 
-        //°á°ú ÀúÀå
+        //ìž¬ì—…ë¡œë“œ
         //Task task = SingletonManager.AuthManager.SetDataAsync(Request.writegachalog, new GachaResultWrapper(logs));
         //await task.ContinueWith(task =>
         //{
-        //    Debug.LogWarning("°¡Ã­Á¤º¸ ÀúÀå ½ÇÆÐ, 1È¸ Àç½ÃµµÇÕ´Ï´Ù.");
+        //    Debug.LogWarning("Upload Error. Try Again");
         //}, TaskContinuationOptions.OnlyOnFaulted);
-
 
         ShowResult();
     }

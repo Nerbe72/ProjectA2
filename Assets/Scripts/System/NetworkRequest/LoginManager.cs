@@ -7,7 +7,7 @@ using static UnityEngine.Networking.UnityWebRequest;
 public class LoginManager : MonoBehaviour
 {
     public int InitializationPriority => 0;
-    private const string loginUrl = "http://localhost:3000/login";
+    private static string LoginUrl => AuthManager.URL + "login";
 
     private void Awake()
     {
@@ -26,7 +26,7 @@ public class LoginManager : MonoBehaviour
         byte[] postData = System.Text.Encoding.UTF8.GetBytes(jsonData);
 
         //POST
-        UnityWebRequest request = new UnityWebRequest(loginUrl, "POST");
+        UnityWebRequest request = new UnityWebRequest(LoginUrl, "POST");
         request.uploadHandler = new UploadHandlerRaw(postData);
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");

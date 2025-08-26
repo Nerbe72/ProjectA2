@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using GameStuff;
+
 public class ProjectileHandler : MonoBehaviour
 {
     [HideInInspector] public GameObject projectilePrefab;

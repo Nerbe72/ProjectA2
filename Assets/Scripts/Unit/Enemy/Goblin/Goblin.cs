@@ -1,3 +1,5 @@
+using GameStuff;
+
 public partial class Goblin : Enemy
 {
     protected override void Awake()

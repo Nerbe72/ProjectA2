@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using GameStuff;
+
 public class TableNPCDialogueCondition : TableBase
 {
     [Serializable]
@@ -23,12 +25,12 @@ public class TableNPCDialogueCondition : TableBase
         /// </summary>
         /// <param name="_conditionType"></param>
         /// <returns>조건에 맞는 컨디션 리스트(priority 오름차순 정렬)</returns>
-        public List<Info> Get(ConditionType _conditionType)
+        public List<Info> Get(QuestConditionType _conditionType)
         {
             List<Info> result = new List<Info>();
             foreach (var info in Conditions)
             {
-                if ((ConditionType)info.ConditionType == _conditionType)
+                if ((QuestConditionType)info.ConditionType == _conditionType)
                 {
                     result.Add(info);
                 }
@@ -71,12 +73,12 @@ public class TableNPCDialogueCondition : TableBase
 
     public bool CheckCondition(Info _info, Inventory _inventory, Player _player)
     {
-        var type = (ConditionType)_info.ConditionType;
+        var type = (QuestConditionType)_info.ConditionType;
         switch (type)
         {
-            case ConditionType.None:
+            case QuestConditionType.None:
                 return true;
-            case ConditionType.Quest:
+            case QuestConditionType.Quest:
                 {
                     var questParts = _info.ConditionValue.Split('|');
                     if (questParts.Length == 2)
@@ -91,19 +93,18 @@ public class TableNPCDialogueCondition : TableBase
 
                     return false;
                 }
-            case ConditionType.Item:
+            case QuestConditionType.Item:
                 {
-                    // ConditionValue 예시: "30001"
                     if (int.TryParse(_info.ConditionValue, out int itemId))
                         return _inventory.HasItem(itemId);
                     return false;
                 }
-            case ConditionType.Level:
+            case QuestConditionType.Level:
                 if (int.TryParse(_info.ConditionValue, out int level))
                     return _player.GetCurrentLevel(LevelType.Total) >= level;
                 return false;
 
-            case ConditionType.Time:
+            case QuestConditionType.Time:
                 {
                     var timeParts = _info.ConditionValue.Split('|');
                     if (timeParts.Length == 2)
@@ -126,7 +127,7 @@ public class TableNPCDialogueCondition : TableBase
                     }
                     break;
                 }
-            case ConditionType.TalkCount:
+            case QuestConditionType.TalkCount:
                 {
                     if (int.TryParse(_info.ConditionValue, out int required))
                     {

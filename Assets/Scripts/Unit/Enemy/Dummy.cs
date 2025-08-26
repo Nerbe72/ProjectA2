@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using GameStuff;
+
 public class Dummy : Enemy, IHurtable
 {
     protected override void Awake()

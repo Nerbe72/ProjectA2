@@ -78,7 +78,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3f06e67989b9764b9841b2131f5b233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 6311423779853660244, guid: 848664ffdac09314b8a515ad194d3eb3, type: 3}
   spawnPoint: {fileID: 1554850508558523446}
 --- !u!114 &7476725061363037527
 MonoBehaviour:
@@ -102,6 +102,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5177354280099760265}
     m_Modifications:
+    - target: {fileID: 643482815590200837, guid: 46f7baec56e1ecf4a8207124a0ebc030, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e1890d807f5b63f43aa071177c3a6a76, type: 2}
+    - target: {fileID: 643482815590200837, guid: 46f7baec56e1ecf4a8207124a0ebc030, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e1890d807f5b63f43aa071177c3a6a76, type: 2}
     - target: {fileID: 1436331922782279632, guid: 46f7baec56e1ecf4a8207124a0ebc030, type: 3}
       propertyPath: m_Name
       value: Bow_01

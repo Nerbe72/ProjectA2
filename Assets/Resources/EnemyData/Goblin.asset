@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: Goblin
   m_EditorClassIdentifier: 
   UnitType: 1
-  Health: 1000
-  Damage: 140
-  Defense: 100
-  AttackType: 0
+  Health: 500
+  Damage: 100
+  Defense: 80
   ID: 100001
+  HurtSound: {fileID: 8300000, guid: 636428c5537001d44bcd2051d681932b, type: 3}
+  AttackType: 0
   Speed: 3
   SightOffset: 0
   SightAngle: 105
@@ -27,4 +28,11 @@ MonoBehaviour:
   AttackDistance: 1.1
   AttackCooldown: 0
   WeaponID: 90002
-  RewardCurrency: 400
+  RewardCurrency: 1500
+  BaseDropChance: 100
+  MaxDropsPerKill: 1
+  DropItems:
+  - ItemID: 70001
+    DropRate: 100
+    MinQuantity: 5
+    MaxQuantity: 10

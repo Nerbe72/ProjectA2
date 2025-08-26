@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using GameStuff;
+using UnityEngine;
+
 public partial class Player : Character
 {
     public int CurrentMaxHp => (stats.Health + (CurrentLevels.Data[LevelType.Health] * 4) + (CurrentLevels.Data[LevelType.Strength] * 2) + (CurrentLevels.Data[LevelType.Dexterity] * 2) + (CurrentLevels.Data[LevelType.Intelligent]));
@@ -93,9 +96,14 @@ public partial class Player : Character
 
     public void LevelUp(LevelType _type, int _increaseAmount)
     {
-        int safeIncraeseAmount = _increaseAmount % (301 - CurrentLevels.GetTotal());
+        // 총합 상한 300 유지: 남은 포인트만큼만 증가
+        int remain = 300 - CurrentLevels.GetTotal();
+        int finalIncrease = Mathf.Min(_increaseAmount, Mathf.Max(remain, 0));
 
-        CurrentLevels.Data[_type] += _increaseAmount;
+        if (finalIncrease <= 0)
+            return;
+
+        CurrentLevels.Data[_type] += finalIncrease;
 
         OnLevelChanged?.Invoke();
     }
@@ -108,7 +116,7 @@ public partial class Player : Character
         CurrentLevels.Data[LevelType.Intelligent] = _tempLevels.Data[LevelType.Intelligent];
         OnLevelChanged?.Invoke();
 
-        SavePlayerData();
+        SavePlayerDataWithoutPosition();
     }
 }
 

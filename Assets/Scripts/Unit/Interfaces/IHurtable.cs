@@ -1,9 +1,14 @@
 using System;
 using System.Collections;
 
+using GameStuff;
+using UnityEngine;
+
 public interface IHurtable
 {
     public event Action<int, int> OnHealthChanged;
+
+    public AudioClip HurtSound { get; set; }
 
     public Character Character { get; set; }
 

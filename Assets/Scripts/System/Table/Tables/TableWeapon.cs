@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class TableWeapon : TableBase
 {
@@ -20,8 +21,10 @@ public class TableWeapon : TableBase
         public int DamageGrowth_DEX;
         public int DamageGrowth_INT;
         public float CastingTime;
-        public int[] Abilities;
         public int ProjectileID;
+        public int SkillSlotCount;
+        public int MaxEnchantmentCount;
+        public string AttackSoundName;
     }
 
     public Dictionary<int, Info> Dictionary = new Dictionary<int, Info>();
@@ -64,8 +67,6 @@ public class TableWeapon : TableBase
         if (_Reader.reset_row(_Row, _Col) == false)
             return false;
 
-        _Info.Abilities = new int[3];
-
         _Reader.get(_Row, ref _Info.ID);
         _Reader.get(_Row, ref _Info.WeaponType);
         _Reader.get(_Row, ref _Info.AttackType);
@@ -80,8 +81,10 @@ public class TableWeapon : TableBase
         _Reader.get(_Row, ref _Info.DamageGrowth_DEX);
         _Reader.get(_Row, ref _Info.DamageGrowth_INT);
         _Reader.get(_Row, ref _Info.CastingTime);
-        _Reader.get(_Row, ref _Info.Abilities, 3);
         _Reader.get(_Row, ref _Info.ProjectileID);
+        _Reader.get(_Row, ref _Info.SkillSlotCount);
+        _Reader.get(_Row, ref _Info.MaxEnchantmentCount);
+        _Reader.get(_Row, ref _Info.AttackSoundName);
 
         return true;
     }

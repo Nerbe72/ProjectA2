@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using GameStuff;
+
 /// <summary>
 /// 반드시 창의 사용처에 맞춰 WindowType을 설정할것
 /// </summary>

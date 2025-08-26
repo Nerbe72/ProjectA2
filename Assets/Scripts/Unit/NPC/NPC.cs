@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using UnityEngine;
 
+using GameStuff;
+
 public class NPC : Character, IInteractable
 {
     protected Animator animator;
@@ -168,5 +170,15 @@ public class NPC : Character, IInteractable
 
         Singleton.Get<InteractIndicatorUI>().SetShowIndicator(false);
         Singleton.Get<InteractManager>().UnSetInteract(this);
+    }
+
+    public override int GetCalculatedDamage(WeaponItemInstance _instance = null)
+    {
+        return int.MaxValue;
+    }
+
+    public override int GetCalculatedDefense(WeaponItemInstance _instance = null)
+    {
+        return int.MaxValue;
     }
 }

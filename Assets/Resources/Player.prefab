@@ -402,8 +402,7 @@ Transform:
   m_LocalPosition: {x: -0.105, y: 0, z: -0.021}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 8397344029355817253}
+  m_Children: []
   m_Father: {fileID: 5981935257818258905}
   m_LocalEulerAnglesHint: {x: 8.785001, y: 1.131, z: 7.3640003}
 --- !u!1 &925960677035548648
@@ -2230,15 +2229,17 @@ MonoBehaviour:
   - {fileID: 4543637045761519951}
   - {fileID: 6992717962901916189}
   - {fileID: 6908543192667153054}
-  - {fileID: 0}
+  swapsound: {fileID: 8300000, guid: 4efa7ed5a14f01543876fe43b2132615, type: 3}
   MoveSpeed: 2.6
   RotationSpeed: 15
   RunMultiply: 1.6
   AirControlMultiply: 1.2
+  FootstepWaitTime: 0
   JumpForce: 7
   GravityMultiply: 0.02
   FallMin: -8
-  GroundCheckRadiusMultiplier: 1
+  distanceToGround: 0.153
+  GroundCheckRadiusMultiplier: 0.98
   GroundCheckYOffset: 0.02
   GroundCheckDistance: 0.1
   DodgeSpeed: 5
@@ -2262,13 +2263,13 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 536870912
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
   m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 80
+  m_Interpolate: 2
+  m_Constraints: 112
   m_CollisionDetection: 1
 --- !u!136 &4711250855399158950
 CapsuleCollider:
@@ -2390,7 +2391,10 @@ MonoBehaviour:
     Name: Grounded
   - Type: 4
     SynchronizeType: 0
-    Name: Praying
+    Name: Pray
+  - Type: 4
+    SynchronizeType: 0
+    Name: Drink
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0
@@ -5828,68 +5832,6 @@ Transform:
   - {fileID: 8781529869385539922}
   m_Father: {fileID: 1984808146121195744}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &231356432834755101
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 2042546725536625100}
-    m_Modifications:
-    - target: {fileID: 8627958540866011960, guid: c5bf61c5ffb29af47b24142811345e37, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8627958540866011960, guid: c5bf61c5ffb29af47b24142811345e37, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8627958540866011960, guid: c5bf61c5ffb29af47b24142811345e37, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8627958540866011960, guid: c5bf61c5ffb29af47b24142811345e37, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8627958540866011960, guid: c5bf61c5ffb29af47b24142811345e37, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8627958540866011960, guid: c5bf61c5ffb29af47b24142811345e37, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8627958540866011960, guid: c5bf61c5ffb29af47b24142811345e37, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8627958540866011960, guid: c5bf61c5ffb29af47b24142811345e37, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8627958540866011960, guid: c5bf61c5ffb29af47b24142811345e37, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8627958540866011960, guid: c5bf61c5ffb29af47b24142811345e37, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9004800364774267266, guid: c5bf61c5ffb29af47b24142811345e37, type: 3}
-      propertyPath: m_Name
-      value: Teeth
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: c5bf61c5ffb29af47b24142811345e37, type: 3}
---- !u!4 &8397344029355817253 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8627958540866011960, guid: c5bf61c5ffb29af47b24142811345e37, type: 3}
-  m_PrefabInstance: {fileID: 231356432834755101}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &525700255023495936
 PrefabInstance:
   m_ObjectHideFlags: 0

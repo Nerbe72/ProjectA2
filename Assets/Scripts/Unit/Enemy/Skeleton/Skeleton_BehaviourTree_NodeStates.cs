@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
+using GameStuff;
+
 public partial class Skeleton : Enemy
 {
     private Coroutine hitStunCoroutine = null;
@@ -123,7 +125,6 @@ public partial class Skeleton : Enemy
 
     private NodeStates DoIdle()
     {
-        Debug.Log($"[Skeleton] DoIdle: {gameObject.name}");
         agent.stoppingDistance = 0;
         if (Vector3.Distance(SpawnPoint_Enemy, transform.position) <= 0.1f)
         {

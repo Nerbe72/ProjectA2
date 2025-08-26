@@ -1,21 +1,75 @@
-using System.Collections.Generic;
+using GameStuff;
+using System;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class DroppedItem : MonoBehaviour
+[RequireComponent(typeof(CapsuleCollider))]
+public class DroppedItem : MonoBehaviour, IInteractable, IItemContainer
 {
-    public List<Image> RotationImages;
-    public List<Image> ResizingImages;
+    public InteractType InteractType => InteractType.Item;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public bool IsNowInteractable => throw new NotImplementedException();
+
+    private ItemInstance item;
+    private int amount;
+    ItemInstance IItemContainer.Item { get => item; set => item = value; }
+    int IItemContainer.Amount { get => amount; set => amount = value; }
+
+    private string shownString;
+
+    string IInteractable.ShownString => shownString;
+
+    public event Action OnInteractStart;
+    public event Action OnInteractEnd;
+    public void DoAction()
     {
+        if (item != null)
+        {
+            Singleton.Inventory.TakeItem(item);
+            Singleton.Inventory.SaveInventoryData();
+        }
 
+        EndAction();
+        Destroy(gameObject);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void EndAction()
     {
+        Singleton.Get<InteractIndicatorUI>().SetShowIndicator(false);
+        Singleton.Get<InteractManager>().UnSetInteract(this);
+    }
 
+    void IItemContainer.SetItemContainer(int _id, int _itemCount)
+    {
+        var item_created = Singleton.Get<ItemFactory>().CreateItem(_id, true);
+        item = item_created;
+
+        if (item is IStackable _stackable)
+        {
+            _stackable.CurrentStack = _itemCount;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other == null) return;
+
+        Player player = other.GetComponent<Player>();
+
+        if (player == null) return;
+
+        Singleton.Get<InteractIndicatorUI>().SetShowIndicator(true, 11000001);
+        Singleton.Get<InteractManager>().SetInteract(this);
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other == null) return;
+
+        Player player = other.GetComponent<Player>();
+
+        if (player == null) return;
+
+        Singleton.Get<InteractIndicatorUI>().SetShowIndicator(false);
+        Singleton.Get<InteractManager>().UnSetInteract(this);
     }
 }

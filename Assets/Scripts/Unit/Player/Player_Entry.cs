@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+using GameStuff;
+
 public partial class Player : Character
 {
     //quest state
@@ -11,6 +13,20 @@ public partial class Player : Character
     public QuestStateInstances QuestStateInstance = new QuestStateInstances();
 
     public event Action OnQuestStateChanged;
+
+    public void AddQuest(int _questID, QuestState _state)
+    {
+        if (QuestStateInstance.QuestStates.ContainsKey(_questID))
+            return;
+
+        var questInstance = new QuestInstance(_questID, _state);
+        QuestStateInstance.QuestStates[_questID] = questInstance;
+        QuestStateInstance.BuildTargetIndex();
+
+        OnQuestStateChanged?.Invoke();
+        
+        SavePlayerDataWithoutPosition();
+    }
 
     public void AddQuest(QuestInstance _quest)
     {
@@ -27,6 +43,91 @@ public partial class Player : Character
 
         OnQuestStateChanged?.Invoke();
         QuestStateInstance.BuildTargetIndex();
+        
+        SavePlayerDataWithoutPosition();
+    }
+
+    public void LoadQuestData(List<QuestInstanceData> _questData, List<TalkCountData> _talkCountData, List<KillCountData> _killCountData)
+    {
+        if (_questData == null) _questData = new List<QuestInstanceData>();
+        if (_talkCountData == null) _talkCountData = new List<TalkCountData>();
+        if (_killCountData == null) _killCountData = new List<KillCountData>();
+
+        // 퀘스트 상태 로드
+        QuestStateInstance.QuestStates.Clear();
+        for (int i = 0; i < _questData.Count; i++)
+        {
+            var questData = _questData[i];
+            if (questData != null)
+            {
+                var questInstance = new QuestInstance(questData.QuestID, questData.State);
+                
+                if (questData.ObjectivesList != null)
+                {
+                    var objectivesDict = new Dictionary<int, QuestObjectiveInstance>();
+                    
+                    for (int j = 0; j < questData.ObjectivesList.Count; j++)
+                    {
+                        var objectiveData = questData.ObjectivesList[j];
+                        if (objectiveData != null)
+                        {
+                            QuestObjectiveInstance objective;
+                            
+                            switch (objectiveData.Type)
+                            {
+                                case ObjectiveType.Kill:
+                                    objective = new KillObjectiveInstance(objectiveData.Type, objectiveData.Required);
+                                    break;
+                                case ObjectiveType.Collect:
+                                    objective = new CollectObjectiveInstance(objectiveData.Type, objectiveData.Required);
+                                    break;
+                                default:
+                                    objective = new QuestObjectiveInstance(objectiveData.Type);
+                                    break;
+                            }
+                            
+                            objective.ObjectiveIndex = objectiveData.ObjectiveIndex;
+                            objective.TargetID = objectiveData.TargetID;
+                            objective.Completed = objectiveData.Completed;
+                            
+                            if (objective is KillObjectiveInstance kill)
+                            {
+                                kill.Current = objectiveData.Current;
+                            }
+                            else if (objective is CollectObjectiveInstance collect)
+                            {
+                                collect.Current = objectiveData.Current;
+                            }
+                            
+                            objectivesDict[objectiveData.ObjectiveIndex] = objective;
+                        }
+                    }
+                    
+                    questInstance = new QuestInstance(questData.QuestID, questData.State, objectivesDict);
+                }
+                
+                QuestStateInstance.QuestStates[questData.QuestID] = questInstance;
+            }
+        }
+        QuestStateInstance.BuildTargetIndex();
+        
+        // 대화 기록 로드
+        TalkCount.TalkCount.Clear();
+        for (int i = 0; i < _talkCountData.Count; i++)
+        {
+            var talkData = _talkCountData[i];
+            TalkCount.TalkCount[talkData.NPCID] = talkData.Count;
+        }
+        
+        // 사냥 기록 로드
+        KillCount.KillCount.Clear();
+        for (int i = 0; i < _killCountData.Count; i++)
+        {
+            var killData = _killCountData[i];
+            KillCount.KillCount[killData.EnemyID] = killData.Count;
+        }
+        
+        OnQuestStateChanged?.Invoke();
     }
 }
 
@@ -64,6 +165,10 @@ public class QuestStateInstances
         for (int i = 0; i < questCount; i++)
         {
             var _quest = _quests[i];
+
+            if (_quest.Objectives == null || _quest.Objectives.Count == 0)
+                continue;
+
             var _objectives = _quest.Objectives.Values.ToList();
             int objCount = _objectives.Count;
             for (int j = 0; j < objCount; j++)
@@ -80,6 +185,8 @@ public class QuestStateInstances
     {
         if (!targetToQuestMap.TryGetValue(_targetID, out var questList)) return;
         int questListCount = questList.Count;
+        bool questDataChanged = false;
+        
         for (int i = 0; i < questListCount; i++)
         {
             var index = questList[i];
@@ -91,6 +198,7 @@ public class QuestStateInstances
             if (questInstance.Objectives.TryGetValue(index.ObjectiveIndex, out var objective))
             {
                 objective.SetQuestObjective(_progress);
+                questDataChanged = true;
 
                 var objectives = questInstance.Objectives.Values.ToList();
                 int objCount = objectives.Count;
@@ -106,9 +214,16 @@ public class QuestStateInstances
                 if (allCompleted && questInstance.State == QuestState.Accepted)
                 {
                     questInstance.State = QuestState.Achieved;
-                    Singleton.Player.AddQuest(questInstance);
+                    Singleton.Player.AddQuest(questInstance.QuestID, QuestState.Achieved);
+                    questDataChanged = true;
                 }
             }
+        }
+        
+        // 퀘스트 데이터 변경 시 플레이어 데이터 저장 (위치 제외)
+        if (questDataChanged)
+        {
+            Singleton.Player.SavePlayerDataWithoutPosition();
         }
     }
 }
@@ -126,6 +241,8 @@ public class NPCTalkCount
 
         Singleton.Player.QuestStateInstance.OnTargetEvent(_npcID, ObjectiveType.Interact, TalkCount[_npcID]);
         Debug.Log($"{_npcID} 대화 카운트 증가. <color=orange>현재 카운트: {TalkCount[_npcID]}</color>");
+        
+        Singleton.Player.SavePlayerDataWithoutPosition();
     }
 
     public int GetTalkCount(int _npcID)
@@ -150,6 +267,8 @@ public class EnemyKillCount
 
         Singleton.Player.QuestStateInstance.OnTargetEvent(_enemyID, ObjectiveType.Kill, KillCount[_enemyID]);
         Debug.Log($"{_enemyID} 킬 카운트 증가. <color=orange>현재 카운트: {KillCount[_enemyID]}</color>");
+        
+        Singleton.Player.SavePlayerDataWithoutPosition();
     }
 
     public int GetKillCount(int _enemyID)

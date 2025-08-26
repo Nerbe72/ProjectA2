@@ -1,60 +1,46 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
+using System.Threading.Tasks;
 
-public class ItemFrame : MonoBehaviour, IPointerClickHandler
+public class ItemFrame : ClickableFrame
 {
-    private Toggle self;
-    [SerializeField] private Image itemImage;
-    [SerializeField] private Image itemRarityImage;
-    [SerializeField] private TMP_Text equippedIndicator;
-
-    private ItemInstance instance;
-    private bool selected;
-
-    private void Awake()
-    {
-        self = GetComponent<Toggle>();
-        self.onValueChanged.AddListener(ChangeSelected);
-    }
-
-    private void OnDestroy()
-    {
-        self.onValueChanged.RemoveAllListeners();
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
+    public override void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.button != PointerEventData.InputButton.Right) return;
         if (!selected) return;
 
-        Singleton.Inventory.ShowItemMenu(instance, GetComponent<RectTransform>());
+        base.OnPointerClick(eventData);
     }
 
-    public async void SetFrameData(ItemInstance _item)
+    public override async Task SetFrameData(ItemInstance _item)
     {
-        var item_selected = Singleton.Get<TableDataManager>().Table.Item.Get(_item.ItemID);
+        await base.SetFrameData(_item);
 
-        itemImage.sprite = await ResourceLoader.LoadAsync<Sprite>(item_selected.Icon, LoadType.ItemIcon);
-        itemRarityImage.color = RarityColor.GetColor((Rare)item_selected.Rarity);
-        instance = _item;
-        itemImage.gameObject.SetActive(true);
+        if (_item is WeaponItemInstance weaponInstance)
+        {
+            var weaponAdapter = Singleton.Inventory.GetWeaponAdapter(weaponInstance);
+            if (weaponAdapter != null && weaponAdapter.EnhancedLevel > 0)
+            {
+                SetEnhancementText($"+{weaponAdapter.EnhancedLevel}");
+            }
+            else
+            {
+                SetEnhancementText("");
+            }
+        }
+        else
+        {
+            SetEnhancementText("");
+        }
     }
 
     public void SetEquipped()
     {
-        equippedIndicator.gameObject.SetActive(true);
+        equippedText.gameObject.SetActive(true);
     }
 
     public void UnEquipped()
     {
-        equippedIndicator.gameObject.SetActive(false);
-    }
-
-    private void ChangeSelected(bool _selected)
-    {
-        selected = _selected;
-        if (_selected) Singleton.Inventory.SelectItem(instance);
+        equippedText.gameObject.SetActive(false);
     }
 }

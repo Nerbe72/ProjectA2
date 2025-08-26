@@ -1,5 +1,8 @@
 using UnityEngine;
 
+using GameStuff;
+using SoundStuff;
+
 public class JumpState : IPlayerState
 {
     public void OnJumpInput(Player _player)

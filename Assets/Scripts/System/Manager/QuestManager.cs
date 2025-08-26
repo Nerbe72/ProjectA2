@@ -1,17 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEngine;
 using System.Threading.Tasks;
 
+using GameStuff;
+
 public class QuestManager : MonoBehaviour
 {
-    public int InitializationPriority => 1;
-
-    private Player player;
-    private Inventory inventory;
-
     private int targetedQuestID = 0;
     private List<QuestNode> rootNodes = new List<QuestNode>();
     private Dictionary<int, QuestNode> questNodeMap = new Dictionary<int, QuestNode>();
@@ -35,14 +31,11 @@ public class QuestManager : MonoBehaviour
 
     private void Start()
     {
-        player = Singleton.Player;
-        inventory = Singleton.Inventory;
         CreateTree();
     }
 
     private async Task LoadQuestData()
     {
-        // 서버에서 퀘스트 데이터 받아오기 (배너와 동일 패턴)
         QuestDataContainer questWrapper = await Singleton.Get<AuthManager>().GetDataAsync<QuestDataContainer>(Request.quests);
 
         quests.Clear();
@@ -96,11 +89,6 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    private void LoadPlayerQuestInstance()
-    {
-
-    }
-
     public QuestInfo GetQuestInfo(int _id)
     {
         if (quests.ContainsKey(_id)) return quests[_id];
@@ -132,14 +120,14 @@ public class QuestManager : MonoBehaviour
             instance.State = QuestState.Accepted;
         }
 
-        player.AddQuest(instance);
+        Singleton.Player?.AddQuest(instance);
 
         if (instance.State == QuestState.Accepted && targetedQuestID == 0) SetTargetedQuest(instance.QuestID);
     }
 
     public void DeclineQuest(int _id)
     {
-        // TODO: 퀘스트 거절 처리
+        // 퀘스트 거절 처리 (무시)
     }
 
     public bool CompleteQuest(int _id)
@@ -162,7 +150,7 @@ public class QuestManager : MonoBehaviour
 
         // 상태를 완료로 변경
         questInstance.State = QuestState.Completed;
-        player.AddQuest(questInstance);
+        Singleton.Player?.AddQuest(questInstance);
 
         // 보상 지급
         var questInfo = GetQuestInfo(_id);
@@ -179,6 +167,7 @@ public class QuestManager : MonoBehaviour
         }
 
         Debug.Log($"퀘스트 완료: {_id}");
+        Singleton.Player?.SavePlayerDataWithoutPosition();
         targetedQuestID = 0;
         OnTargetQuestChanged?.Invoke(targetedQuestID);
         return true;
@@ -186,12 +175,46 @@ public class QuestManager : MonoBehaviour
 
     private void GiveQuestReward(QuestInfo _questInfo)
     {
-        inventory.AddCurrency((uint)_questInfo.Reward.Currency);
+        Singleton.Inventory?.AddCurrency((uint)_questInfo.Reward.Currency);
+
+        var items = _questInfo.Reward.itemIds;
+        var itemFactory = Singleton.Get<ItemFactory>();
+
+        int count = items.Count;
+        for (int i = 0; i < count; i++)
+        {
+            // ItemFactory를 사용하여 아이템 생성 (드롭 시스템과 동일한 방식)
+            var itemInstance = itemFactory.CreateItem(items[i], true);
+            
+            if (itemInstance is IStackable stackable)
+            {
+                stackable.CurrentStack = 30;
+            }
+
+            if (itemInstance != null)
+            {
+                Singleton.Inventory?.TakeItem(itemInstance);
+                Debug.Log($"퀘스트 보상 아이템 지급: {itemInstance.ItemID}");
+            }
+            else
+            {
+                Debug.LogError($"퀘스트 보상 아이템 생성 실패: {items[i]}");
+            }
+        }
     }
 
     public void SetTargetedQuest(int _questID)
     {
-        targetedQuestID = _questID;
+        // 이미 같은 퀘스트가 타겟되어 있으면 토글 (닫기)
+        if (targetedQuestID == _questID)
+        {
+            targetedQuestID = 0;
+        }
+        else
+        {
+            targetedQuestID = _questID;
+        }
+        
         OnTargetQuestChanged?.Invoke(targetedQuestID);
     }
 

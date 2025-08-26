@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
+using CameraType = GameStuff.CameraType;
+
 public class MinigameController : MonoBehaviour
 {
     public event Action<bool> OnEndMinigame;
@@ -42,11 +44,7 @@ public class MinigameController : MonoBehaviour
 
     public async void StartMinigame()
     {
-        Debug.Log("¹Ì´Ï°ÔÀÓ ½ÃÀÛµÊ");
-
         Singleton.Get<CameraManager>().SetCamera(CameraType.Minigame);
-
-        //¹Ì´Ï°ÔÀÓÀ» ·£´ýÀ¸·Î ¼±ÅÃÇÏ°í »ý¼ºÇÔ(prefab)
 
         bool hasLoadedGame = false;
         int count = minigameLoaded.Count;
@@ -94,7 +92,7 @@ public class MinigameController : MonoBehaviour
         success.ShowSuccess(isGameSuccess);
     }
 
-    //°á°ú ¾Ö´Ï¸ÞÀÌ¼Ç Ç¥½Ã ÀÌÈÄ È£Ãâ
+    //ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È£ï¿½ï¿½
     public void CloseMinigame()
     {
         Singleton.Get<CameraManager>().SetCamera(CameraType.Main);

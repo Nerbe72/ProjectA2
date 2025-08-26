@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 
+using GameStuff;
+
 [Serializable]
 public class StatData : ScriptableObject
 {
@@ -10,4 +12,8 @@ public class StatData : ScriptableObject
     public int Defense;
 
     public int ID;
+    
+    [Header("Sound Settings")]
+    public AudioClip HurtSound;
+    public AudioClip DeathSound;
 }

@@ -1,3 +1,4 @@
+using GameStuff;
 using UnityEngine;
 
 public class CurveProjectile : Projectile
@@ -7,9 +8,9 @@ public class CurveProjectile : Projectile
     Vector3 endPoint;
     Vector3 previousPosition;
 
-    public override void SetData(Character _owner, Transform _spawn, Target _target = null, int _abilityID = 0)
+    public override void SetData(Character _owner, Transform _spawn, Target _target = null, AttackType _type = AttackType.Fixed, int _abilityID = 0)
     {
-        base.SetData(_owner, _spawn, _target, _abilityID);
+        base.SetData(_owner, _spawn, _target, _type, _abilityID);
         // target이 유효하고 사거리 내에 있으면 목표로 설정, 아니면 forward 방향 최대 거리로 설정
         if (target != null && Vector3.Distance(startPosition, target.position) <= maxRange)
             endPoint = target.position;

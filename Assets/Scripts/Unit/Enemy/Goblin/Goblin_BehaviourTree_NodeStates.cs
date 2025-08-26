@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
+using GameStuff;
+
 public partial class Goblin : Enemy
 {
     private Coroutine hitStunCoroutine = null;

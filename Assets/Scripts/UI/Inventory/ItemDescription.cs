@@ -3,6 +3,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+using GameStuff;
+
 public class ItemDescription : MonoBehaviour
 {
     [Header("Locale")]
@@ -37,9 +39,9 @@ public class ItemDescription : MonoBehaviour
         damageFixed.text = table.Get(10000022, locale);
     }
 
-    public async void UpdateDescription(ItemInstance item)
+    public async void UpdateDescription(ItemInstance _instance)
     {
-        if (item == null)
+        if (_instance == null)
         {
             gameObject.SetActive(false);
             return;
@@ -47,55 +49,101 @@ public class ItemDescription : MonoBehaviour
 
         UpdateLocale();
 
-        var item_selected = Singleton.Get<TableDataManager>().Table.Item.Get(item.ItemID);
+        var item_selected = Singleton.Get<TableDataManager>().Table.Item.Get(_instance.ItemID);
         var locale = Singleton.Get<TableDataManager>().Table.Locale;
 
         // 아이템 정보 업데이트
         itemIcon.sprite = await ResourceLoader.LoadAsync<Sprite>(item_selected.Icon, LoadType.ItemIcon);
         itemName.text = locale.Get(item_selected.Name, GameManager.CurrentLocale);
-        itemName.color = RarityColor.GetColor((Rare)item_selected.Rarity);
+        itemName.color = ItemColor.GetColor((Rarity)item_selected.Rarity);
 
-        if (item_selected.ItemType == (int)ItemType.Weapon)
+        switch ((ItemType)item_selected.ItemType)
         {
-            var weapon_selected = Singleton.Get<TableDataManager>().Table.Weapon.Get(item.ItemID);
-            var player = Singleton.Player;
-
-            require_str.text = weapon_selected.Require_STR.ToString();
-            require_str.color = player.GetCurrentLevel(LevelType.Strength) >= weapon_selected.Require_STR ? Color.white : Color.red;
-
-            require_dex.text = weapon_selected.Require_DEX.ToString();
-            require_dex.color = player.GetCurrentLevel(LevelType.Dexterity) >= weapon_selected.Require_DEX ? Color.white : Color.red;
-
-            require_int.text = weapon_selected.Require_INT.ToString();
-            require_int.color = player.GetCurrentLevel(LevelType.Intelligent) >= weapon_selected.Require_INT ? Color.white : Color.red;
-
-            fix_str.text = weapon_selected.DamageGrowth_STR.ToString();
-            fix_dex.text = weapon_selected.DamageGrowth_DEX.ToString();
-            fix_int.text = weapon_selected.DamageGrowth_INT.ToString();
-
-            itemDescription.text = "";
-
-            var abilityTable = Singleton.Get<TableDataManager>().Table.WeaponAbility;
-
-            int count = weapon_selected.Abilities.Length;
-            for (int i = 0; i < count; i++)
+            case ItemType.Weapon:
             {
-                if (weapon_selected.Abilities[i] == 0) continue;
+                var weapon_selected = Singleton.Get<TableDataManager>().Table.Weapon.Get(_instance.ItemID);
+                var player = Singleton.Player;
 
-                var ability = abilityTable.Get(weapon_selected.Abilities[i]);
-                List<object> parameters = new List<object> { ability.Cooldown, ability.ContinuouseTime, ability.Damage, ability.KnockbackForce, ability.Projectile_Amount };
+                require_str.text = weapon_selected.Require_STR.ToString();
+                require_str.color = player.GetCurrentLevel(LevelType.Strength) >= weapon_selected.Require_STR ? Color.white : Color.red;
 
-                itemDescription.text += string.Format(locale.Get(ability.Description, GameManager.CurrentLocale), parameters.ToArray());
-                itemDescription.text += "\n";
+                require_dex.text = weapon_selected.Require_DEX.ToString();
+                require_dex.color = player.GetCurrentLevel(LevelType.Dexterity) >= weapon_selected.Require_DEX ? Color.white : Color.red;
+
+                require_int.text = weapon_selected.Require_INT.ToString();
+                require_int.color = player.GetCurrentLevel(LevelType.Intelligent) >= weapon_selected.Require_INT ? Color.white : Color.red;
+
+                // 강화된 성장수치 적용
+                var weaponInstance = _instance as WeaponItemInstance;
+                var weaponAdapter = Singleton.Inventory.GetWeaponAdapter(weaponInstance);
+                if (weaponAdapter != null)
+                {
+                    fix_str.text = weaponAdapter.GetGrowth(LevelType.Strength).ToString();
+                    fix_dex.text = weaponAdapter.GetGrowth(LevelType.Dexterity).ToString();
+                    fix_int.text = weaponAdapter.GetGrowth(LevelType.Intelligent).ToString();
+                }
+                else
+                {
+                    fix_str.text = weapon_selected.DamageGrowth_STR.ToString();
+                    fix_dex.text = weapon_selected.DamageGrowth_DEX.ToString();
+                    fix_int.text = weapon_selected.DamageGrowth_INT.ToString();
+                }
+
+                if (weaponAdapter != null)
+                {
+                    var activeSkills = weaponAdapter.GetActiveSkills();
+                    if (activeSkills.Count > 0)
+                    {
+                        itemDescription.text = "귀속된 스킬:\n";
+                        foreach (var skill in activeSkills)
+                        {
+                            itemDescription.text += Singleton.Get<AbilityManager>().GetDescription(skill.AbilityId);
+                            itemDescription.text += "\n";
+                        }
+                    }
+                    else
+                    {
+                        itemDescription.text = "";
+                    }
+                }
+                else
+                {
+                    itemDescription.text = "";
+                }
+                WeaponField.SetActive(true);
+                break;
             }
-            WeaponField.SetActive(true);
-        }
-        else
-        {
-            WeaponField.SetActive(false);
-            itemDescription.text = locale.Get(item_selected.Description, GameManager.CurrentLocale);
+            case ItemType.Skill:
+                {
+                    SetSkillDescription(_instance);
+                    break;
+                }
+            default:
+            {
+                WeaponField.SetActive(false);
+                itemDescription.text = locale.Get(item_selected.Description, GameManager.CurrentLocale);
+                break;
+            }
         }
 
         gameObject.SetActive(true);
+    }
+
+    private void SetSkillDescription(ItemInstance _instance)
+    {
+        WeaponField.SetActive(false);
+
+        var table = Singleton.Get<TableDataManager>().Table;
+        var localeTable = table.Locale;
+        var item_selected = table.Item.Get(_instance.ItemID);
+
+        if (_instance is SkillItemInstance skillItem)
+        {
+            itemDescription.text = Singleton.Get<AbilityManager>().GetDescription(skillItem.ItemID);
+        }
+        else
+        {
+            itemDescription.text = localeTable.Get(item_selected.Description, GameManager.CurrentLocale);
+        }
     }
 }

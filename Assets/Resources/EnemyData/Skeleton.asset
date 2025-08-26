@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: Skeleton
   m_EditorClassIdentifier: 
   UnitType: 1
-  Health: 999999
-  Damage: 100
-  Defense: 50
-  AttackType: 0
+  Health: 800
+  Damage: 210
+  Defense: 40
   ID: 100002
+  HurtSound: {fileID: 8300000, guid: 1a517e5433037084899e47b022b76b7d, type: 3}
+  AttackType: 0
   Speed: 5
   SightOffset: 0
   SightAngle: 130
@@ -27,4 +28,11 @@ MonoBehaviour:
   AttackDistance: 11
   AttackCooldown: 1.5
   WeaponID: 90001
-  RewardCurrency: 120
+  RewardCurrency: 2300
+  BaseDropChance: 100
+  MaxDropsPerKill: 1
+  DropItems:
+  - ItemID: 70004
+    DropRate: 100
+    MinQuantity: 8
+    MaxQuantity: 10

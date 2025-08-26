@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using GameStuff;
+
 public class MeleeHitbox : MonoBehaviour, IHitbox
 {
     private AttackType attackType;

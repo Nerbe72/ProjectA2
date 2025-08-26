@@ -1,5 +1,8 @@
 using UnityEngine;
 
+using GameStuff;
+using SoundStuff;
+
 public class DodgeState : IPlayerState
 {
     public void OnJumpInput(Player _player) { /* 회피 중 점프 불가 */ }
@@ -8,42 +11,37 @@ public class DodgeState : IPlayerState
 
     public void Enter(Player _player)
     {
-        _player.SetDodgeDirection();
+        _player.SetDodging();
+        //_player.SetDodgeDirection();
         _player.SetDodgeAnimation();
+        _player.PlayActionSound(PlayerActionType.Dodge);
         preparingNextDodge = false;
     }
 
     public void Update(Player _player)
     {
-        // 애니메이션 재생 중일 때 바로 리턴
         if (_player.IsFlagged(StateFlags.Dodging))
         {
-            // 다음 회피를 준비 중인지 확인
-            if (_player.IsFlagged(StateFlags.Dodge))
+            if (_player.IsFlagged(StateFlags.Dodge) && !preparingNextDodge)
             {
                 preparingNextDodge = true;
             }
             return;
         }
 
-        // 애니메이션이 끝났을 때 다음 동작 결정
-
-        // 회피 키가 눌려있거나 다음 회피가 준비된 경우 - 연속 회피
         if (preparingNextDodge || _player.IsFlagged(StateFlags.Dodge))
         {
             preparingNextDodge = false;
-            _player.SetDodgeDirection(); // 회피 방향 재설정
+            //_player.SetDodgeDirection();
             _player.SetDodgeAnimation();
             return;
         }
 
-        // 회피 종료 후 이동 상태로 전환
         if (_player.IsInputMoving())
         {
             _player.TransitionTo(new MoveState());
             return;
         }
-        // 이동 입력이 없으면 대기 상태로
         else
         {
             _player.TransitionTo(new IdleState());
@@ -53,7 +51,7 @@ public class DodgeState : IPlayerState
 
     public void FixedUpdate(Player _player)
     {
-        if (_player.IsFlagged(StateFlags.Dodging) || preparingNextDodge)
+        if (_player.IsFlagged(StateFlags.Dodging))
         {
             _player.ResetMoveAnimation();
             _player.SetMove(_player.DodgeMove(), _player.VerticalMove());

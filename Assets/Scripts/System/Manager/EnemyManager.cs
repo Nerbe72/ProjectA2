@@ -70,6 +70,17 @@ public class EnemyManager : MonoBehaviour
         int currentMap = mapManager.CurrentMapID;
         if (_scene.buildIndex == currentMap && currentMap >= 4)
         {
+            // 씬 전환 시 이전 스폰 캐시 정리 (파괴된 객체 키 제거)
+            var deadKeys = spawnedEnemies
+                .Where(kv => kv.Value == null)
+                .Select(kv => kv.Key)
+                .ToList();
+            for (int i = 0; i < deadKeys.Count; i++)
+                spawnedEnemies.Remove(deadKeys[i]);
+
+            // 다른 맵에서 넘어왔다면 전체 초기화
+            spawnedEnemies.Clear();
+
             if (PhotonNetwork.IsMasterClient)
             {
                 await SpawnMapEnemiesAsync();

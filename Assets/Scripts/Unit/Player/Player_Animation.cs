@@ -1,5 +1,8 @@
 using UnityEngine;
 
+using GameStuff;
+using SoundStuff;
+
 public partial class Player : Character
 {
     #region 기본 애니메이션
@@ -38,7 +41,6 @@ public partial class Player : Character
     public void SetDodgeAnimation()
     {
         animator.SetBool(AnimationHash.GetHash(ActionType.Dodge), true);
-        SetFlag(StateFlags.Dodging);
     }
 
     public void SetJumpAnimation()
@@ -93,12 +95,22 @@ public partial class Player : Character
 
     public void SetPrayAnimation()
     {
-        animator.SetBool(AnimationHash.GetHash(ActionType.Pray), false);
+        animator.SetBool(AnimationHash.GetHash(ActionType.Pray), true);
     }
 
     public void ResetPrayAnimation()
     {
+        animator.SetBool(AnimationHash.GetHash(ActionType.Pray), false);
+    }
 
+    public void SetDeadAnimation()
+    {
+        animator.SetBool(AnimationHash.GetHash(ActionType.Dead), true);
+    }
+
+    public void ReleaseDeadAnimation()
+    {
+        animator.SetBool(AnimationHash.GetHash(ActionType.Dead), false);
     }
     #endregion
 
@@ -157,6 +169,26 @@ public partial class Player : Character
     public void ResetDodgeIgnored()
     {
         SetFlag(StateFlags.DodgeIgnored, false);
+    }
+
+    public void SetDrinking()
+    {
+        SetFlag(StateFlags.Drinking);
+    }
+
+    public void ResetDrinking()
+    {
+        SetFlag(StateFlags.Drinking, false);
+    }
+
+    public void PlayHitSound()
+    {
+        Singleton.Get<SoundManager>()?.PlayPlayerActionSound(PlayerActionType.Hurt);
+    }
+
+    public void PlayDeathSound()
+    {
+        Singleton.Get<SoundManager>()?.PlayPlayerActionSound(PlayerActionType.Dead);
     }
     #endregion
 }

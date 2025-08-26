@@ -369,9 +369,9 @@ MonoBehaviour:
   stats: {fileID: 11400000, guid: 84c8933925950b245ae68a507d07a234, type: 2}
   WeaponHandle: {fileID: 6934070078127879881}
   projectileHandle: {fileID: 0}
-  SpawnPoint_Enemy: {x: 0, y: 0, z: 0}
-  SpawnRotation_Enemy: {x: -0, y: 0.016813235, z: -0, w: 0.9998587}
-  SightVisual: 1
+  SpawnPoint_Enemy: {x: 0, y: -0.0000006942162, z: 0}
+  SpawnRotation_Enemy: {x: -0, y: -0, z: -0, w: 1}
+  SightVisual: 0
   eyeTransform: {fileID: 8412495661179424778}
 --- !u!195 &2710662825118405117
 NavMeshAgent:

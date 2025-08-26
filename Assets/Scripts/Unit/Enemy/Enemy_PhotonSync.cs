@@ -3,6 +3,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
+using GameStuff;
+
 public abstract partial class Enemy : Character, IPunObservable
 {
     // 네트워크 동기화
@@ -90,17 +92,7 @@ public abstract partial class Enemy : Character, IPunObservable
     {
         if (isDead || isDying) return;
 
-        int takenDamage = 0;
-        switch (_type)
-        {
-            default:
-            case AttackType.Physical:
-                takenDamage = Mathf.Max(1, Mathf.FloorToInt(_damage - (EnemyData.Defense * 0.5f)));
-                break;
-            case AttackType.Fixed:
-                takenDamage = _damage;
-                break;
-        }
+        int takenDamage = CalculateTakenDamage(_type, _damage);
 
         currentHealth = Math.Clamp(currentHealth - takenDamage, 0, stats.Health);
         OnHealthChanged?.Invoke(currentHealth, EnemyData.Health);
@@ -113,9 +105,11 @@ public abstract partial class Enemy : Character, IPunObservable
         else
         {
             currentHealth = 0;
-            isDying = true; // AI 즉시 정지
+            isDying = true; // AI 정지
             photonView.RPC(nameof(SyncDead), RpcTarget.AllBuffered, _attackerActorNumber);
         }
+
+        base.TakeDamage(_type, _damage);
     }
 
     [PunRPC]
@@ -163,7 +157,7 @@ public abstract partial class Enemy : Character, IPunObservable
     public void SyncRespawn()
     {
         Respawn();
-        GetComponentInChildren<HeadlHealthIndicator>().UpdateHealth(currentHealth, EnemyData.Health);
+        GetComponentInChildren<HeadlHealthIndicator>()?.UpdateHealth(currentHealth, EnemyData.Health);
 
         isDead = false;
         isHit = false;

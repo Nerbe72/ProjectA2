@@ -1,297 +1,401 @@
 using System;
 
-public enum Map
+namespace SoundStuff
 {
-    None = -1,
-    World_FrontVillage = 4,
-    Village = 5,
-    Dungeon = 6,
+    public enum SoundType
+    {
+        Player,
+        Enemy,
+        /// <summary>
+        /// ÏÉÅÌò∏ÏûëÏö©
+        /// </summary>
+        Interactable,
+        /// <summary>
+        /// ÌôòÍ≤Ω
+        /// </summary>
+        Environment,
+    }
+
+    public enum EnemyType
+    {
+        Skeleton,
+        Goblin,
+        Dragon,
+    }
+
+    public enum PlayerActionType
+    {
+        Hurt,
+        Dead,
+        Dodge,
+    }
+
+    public enum BossAttackPattern
+    {
+        Dash,
+        Smash,
+        Bite,
+        Jump,
+    }
+
+    public enum FootstepType
+    {
+        Grass   = 1 << 20,
+        Stone   = 1 << 21,
+        Water   = 1 << 22,
+        Wood    = 1 << 23,
+        Metal   = 1 << 24,
+        All = Grass | Stone | Water | Wood | Metal // 11111 << 20
+    }
+
+    public enum Map
+    {
+        FrontVillage = 4,
+        Village = 5,
+        Dungeon = 6,
+    }
 }
 
-public enum Locale
+namespace GameStuff
 {
-    Korean,
-    English,
-    Japanese,
-    Count
-}
+    public enum Map
+    {
+        None = -1,
+        FrontVillage = 4,
+        Village = 5,
+        Dungeon = 6,
+    }
 
-public enum UnitType
-{
-    Player,
-    Enemy,
-    Object,
-}
+    public enum Locale
+    {
+        Korean,
+        English,
+        Japanese,
+        Count
+    }
 
-public enum EnemyType
-{
-    None,
-    Goblin,
-    Skeleton,
-}
+    public enum VolumeType
+    {
+        Master,
+        Music,
+        Effect,
+    }
 
-public enum WindowType
-{
-    SettingWindow,
-    NormalWindow,
-    GachaWindow,
-    DialogueWindow,
-}
+    public enum UnitType
+    {
+        Player,
+        Enemy,
+        Object,
+    }
 
-public enum LevelType
-{
-    Total,
-    Health,
-    Strength,
-    Dexterity,
-    Intelligent,
-    Count
-}
+    public enum EnemyType
+    {
+        None,
+        Goblin,
+        Skeleton,
+    }
 
-public enum StatType
-{
-    Health,
-    Damage,
-    Defense,
-    Count
-}
+    public enum WindowType
+    {
+        SettingWindow,
+        NormalWindow,
+        GachaWindow,
+        DialogueWindow,
+    }
 
-[Flags]
-public enum StateFlags
-{
-    None = 0,
-    Attack = 1 << 0,
-    Jump = 1 << 1,
-    Run = 1 << 2,
-    Dodge = 1 << 3,
-    Hit = 1 << 4,
-    Slope = 1 << 5,
-    Grounded = 1 << 6,
-    Targeted = 1 << 7,
-    Attacking = 1 << 8,
-    Falling = 1 << 9,
-    Dodging = 1 << 10,
-    Hitting = 1 << 11,
-    Jumping = 1 << 13,
-    Death = 1 << 14,
-    DodgeIgnored = 1 << 15,
-}
+    public enum LevelType
+    {
+        Total,
+        Health,
+        Strength,
+        Dexterity,
+        Intelligent,
+        Count
+    }
 
-public enum ActionType
-{
-    Attack,
-    Skill,
-    Dead,
-    Faced,
-    Sit,
-    Hit,
-    Walk,
-    Move,
-    Side,
-    Jump,
-    Fall,
-    Land,
-    Dodge,
-    Run,
-    Vertical,
-    Grounded,
-    Guided,
-    Pray,
+    public enum StatType
+    {
+        Health,
+        Damage,
+        Defense,
+        Count
+    }
 
-    //π´±‚∞¸∑√
-    Effect,
-    Projectile,
-    Break,
-}
+    [Flags]
+    public enum StateFlags
+    {
+        None = 0,
+        Attack = 1 << 0,
+        Jump = 1 << 1,
+        Run = 1 << 2,
+        Dodge = 1 << 3,
+        Hit = 1 << 4,
+        Slope = 1 << 5,
+        Grounded = 1 << 6,
+        Targeted = 1 << 7,
+        Attacking = 1 << 8,
+        Falling = 1 << 9,
+        Dodging = 1 << 10,
+        Hitting = 1 << 11,
+        Jumping = 1 << 13,
+        Drinking = 1 << 14,
+        Death = 1 << 15,
+        DodgeIgnored = 1 << 16,
+    }
 
-public enum Request
-{
-    writegachalog,
-    readgachalog,
-    banners,
-    weapons,
-    quests,
-}
+    public enum ActionType
+    {
+        Attack,
+        Skill,
+        Dead,
+        Faced,
+        Sit,
+        Hit,
+        Walk,
+        Move,
+        Side,
+        Jump,
+        Fall,
+        Land,
+        Dodge,
+        Run,
+        Vertical,
+        Grounded,
+        Guided,
+        Pray,
+        Drink,
 
-public enum LoadType
-{
-    ItemPrefab,
-    ProjectilePrefab,
-    ItemIcon,
-    GachaBackground,
-    GachaBanner,
-    Minigame,
-    HitEffect,
-    Icon,
-}
+        //ÏÉÅÌò∏ÏûëÏö©
+        Effect,
+        Projectile,
+        Break,
+    }
 
-public enum ItemType
-{
-    Potion,
-    Weapon
-}
+    public enum Request
+    {
+        writegachalog,
+        readgachalog,
+        banners,
+        weapons,
+        quests,
+    }
 
-public enum WeaponType
-{
-    Melee,
-    Bow,
-    Magic,
-    Count
-}
+    public enum LoadType
+    {
+        ItemPrefab,
+        ProjectilePrefab,
+        ItemIcon,
+        GachaBackground,
+        GachaBanner,
+        Minigame,
+        HitEffect,
+        Icon,
+        AudioClip,
+        Path,
+    }
 
-/// <summary>
-/// +110¿∏∑Œ ∑Œƒ…¿œ ∞Ì¡§
-/// </summary>
-public enum ItemFilterType
-{
-    All = 0,
-    Weapon = 1,
-    Potion = 2
-}
+    public enum ItemType
+    {
+        Weapon,
+        Skill,
+        Scroll,
+        Potion,
+        Material,
+        Total
+    }
 
-public enum WeaponFilterType
-{
-    All = 0,
-    Melee = 1,
-    Bow = 2,
-    Magic = 3
-}
+    public enum WeaponType
+    {
+        Melee,
+        Bow,
+        Magic,
+        Count
+    }
 
-/// <summary>
-/// +100¿∏∑Œ ∑Œƒ…¿œ º≥¡§
-/// </summary>
-public enum SortMainType
-{
-    Rarity = 0,
-    Damage = 1,
-    Defense = 2,
-}
+    public enum WeaponFilterType
+    {
+        All = 0,
+        Melee = 1,
+        Bow = 2,
+        Magic = 3
+    }
 
-public enum SortDirectionType
-{
-    Descending = 0,
-    Ascending = 1
-}
+    /// <summary>
+    /// +100 Î°úÏºÄÏùº
+    /// </summary>
+    public enum SortType
+    {
+        Rarity = 0,
+        Damage = 1,
+        Defense = 2,
+    }
 
-public enum AttackEffect
-{
-    MeleeOne,
-    MeleeTwo,
-    MeleeThree,
-    MagicOne,
-    BowOne,
-}
+    public enum SortScrollType
+    {
+        Rarity = 0,
+        DamageMin = 1,
+        DamageMax = 2,
+        DefenseMin = 3,
+        DefenseMax = 4,
+    }
 
-public enum AttackType
-{
-    Physical,
-    Magical,
-    Fixed,
-}
+    public enum SortDirectionType
+    {
+        Descending = 0,
+        Ascending = 1
+    }
 
-public enum BulletType
-{
-    Straight,
-    Curve,
-    Area,
-    RandomBezier,
-}
+    public enum CreationScrollType
+    {
+        Weapon,
+        Skill,
+        None
+    }
 
-public enum InteractType
-{
-    Warp,
-    NPC,
-    Door,
-    Text,
-    Dungeon
-}
+    public enum InfoDisplayType
+    {
+        ActualWeapon,
+        TableInfoWeapon,
+        Skill,
+    }
 
-public enum LayerType
-{
-    Ground,
-    Wall,
-    Water,
-    Player,
-    Enemy,
-}
+    public enum AttackEffect
+    {
+        MeleeOne,
+        MeleeTwo,
+        MeleeThree,
+        MagicOne,
+        BowOne,
+    }
 
-public enum AttackEvent
-{
-    MeleeStart,
-    MeleeEnd,
-    Projectile,
-    Casting,
-}
+    public enum AttackType
+    {
+        Physical,
+        Magical,
+        Fixed,
+    }
 
-public enum CameraType
-{
-    Main = 0,
-    Target,
-    Sit,
-    Minigame,
-    Talk,
-    Dead
-}
+    public enum SkillType
+    {
+        Projectile  = 0,
+        Continuous  = 1,
+        Knockback   = 2,
+        ExtraHit    = 3,
+    }
 
-public enum Rare
-{
-    R = 1,
-    SR = 2,
-    SSR = 3
-}
+    public enum PowerType
+    {
+        Percentage,
+        Fixed,
+    }
 
-public enum BannerType
-{
-    None = 0,
-    Beginner,
-    Pickup,
-    Limited,
-}
+    public enum BulletType
+    {
+        Straight,
+        Curve,
+        Area,
+        RandomBezier,
+    }
 
-public enum MinigameType
-{
-    SpeedTexting,
-    SpeedClicking,
-}
+    public enum InteractType
+    {
+        Warp,
+        NPC,
+        Item,
+        Door,
+        Dungeon
+    }
 
-public enum ConditionType
-{
-    None = 0,
-    TalkCount,
-    Quest,
-    Item,
-    Time,
-    Level
-}
+    public enum LayerType
+    {
+        Ground,
+        Wall,
+        Water,
+        Player,
+        Enemy,
+    }
 
-public enum Daylight
-{
-    Morning,
-    Day,
-    Evening,
-    Night
-}
+    public enum AttackEvent
+    {
+        MeleeStart,
+        MeleeEnd,
+        Projectile,
+        Casting,
+    }
 
-public enum ObjectiveType
-{
-    Interact,
-    Kill,
-    Collect,
-}
+    public enum CameraType
+    {
+        Main = 0,
+        Target,
+        Sit,
+        Minigame,
+        Talk,
+        Dead
+    }
 
-public enum QuestState
-{
-    Available = 10000037,
-    Accepted = 10000038,
-    Completed = 10000039,
-    Achieved = 10000041
-}
+    /// <summary>
+    /// Î†àÏñ¥ÎèÑ Í≤∏ Ïä¨Î°ØÍ∞ØÏàò
+    /// </summary>
+    public enum Rarity
+    {
+        R = 1,
+        SR = 2,
+        SSR = 3
+    }
 
-public enum EffectColor
-{
-    White,
-    Purple,
-    Red,
-    Blue,
-    Grey
+    public enum BannerType
+    {
+        None = 0,
+        Beginner,
+        Pickup,
+        Limited,
+    }
+
+    public enum MinigameType
+    {
+        SpeedTexting,
+        SpeedClicking,
+    }
+
+    public enum QuestConditionType
+    {
+        None = 0,
+        TalkCount,
+        Quest,
+        Item,
+        Time,
+        Level
+    }
+
+    public enum Daylight
+    {
+        Morning,
+        Day,
+        Evening,
+        Night
+    }
+
+    public enum ObjectiveType
+    {
+        Interact,
+        Kill,
+        Collect,
+    }
+
+    public enum QuestState
+    {
+        Available = 10000037,
+        Accepted = 10000038,
+        Completed = 10000039,
+        Achieved = 10000041
+    }
+
+    public enum EffectColor
+    {
+        White,
+        Purple,
+        Red,
+        Blue,
+        Grey
+    }
 }

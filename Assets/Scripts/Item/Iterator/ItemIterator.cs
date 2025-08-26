@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 
+using GameStuff;
+
 public class ItemIterator : Iterator<ItemInstance>
 {
     public ItemIterator(List<ItemInstance> _source) : base(_source) { Reset(); }

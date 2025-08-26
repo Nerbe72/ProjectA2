@@ -1,6 +1,9 @@
 using System.Threading.Tasks;
 using UnityEngine;
 
+using GameStuff;
+using CameraType = GameStuff.CameraType;
+
 public class CameraController : MonoBehaviour
 {
     private static Player player;

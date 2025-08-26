@@ -1,6 +1,11 @@
 using System.Collections;
 using UnityEngine;
 
+using GameStuff;
+using System;
+using UnityEngine.UIElements;
+using System.Linq;
+
 public partial class Player : Character
 {
     private Vector3 movementInput;
@@ -15,9 +20,12 @@ public partial class Player : Character
     private Coroutine attackWaitCoroutine;
     private const float attackInputDuration = 0.03f;
 
+    public static event Action<KeyCode> OnUIKeyDown;
+
     private void InitInput()
     {
         attackInputWait = new WaitForSeconds(attackInputDuration);
+        WindowStackManager.Init();
     }
 
     public void CheckNormalInputs()
@@ -50,7 +58,7 @@ public partial class Player : Character
         // 공격
         if (Input.GetMouseButtonDown(0))
         {
-            if (weaponInstance != null)
+            if (weaponInstanceId != Guid.Empty)
             {
                 if (attackWaitCoroutine != null)
                     StopCoroutine(attackWaitCoroutine);
@@ -87,53 +95,93 @@ public partial class Player : Character
 
     private void CheckUIInput()
     {
+        bool alt = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
+        CursorManager.SetAltHeld(alt);
+
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             //뽑기가 진행중이면 무시
             if (Singleton.Get<GachaUI>().IsGachaRunning) return;
 
+            if (WindowStackManager.PeekTopWindow() == null)
+            {
+                if (!IsLoadingScene)
+                {
+                    WindowStackManager.ShowUI<SettingUI>();
+                    return;
+                }
+            }
+
             WindowStackManager.PopWindow();
+            return;
         }
 
         if (InputManager.IgnoreUIInput) return;
 
-        if (Input.GetKeyDown(KeyCode.I))
+        if (Input.anyKeyDown)
         {
-            var top = WindowStackManager.PeekTopWindow();
-            var window = Singleton.Inventory;
-            if (window.gameObject.activeSelf && top != null && (top is WindowBase) == window.gameObject)
-                WindowStackManager.PopWindow();
-            else if (!window.gameObject.activeSelf)
-                (window as IWindowStack)?.ShowWindow();
+            var stringList = Input.inputString.ToList();
+
+            for (int i = 0; i < stringList.Count; i++)
+            {
+                KeyCode te = (KeyCode)(stringList[i]);
+                InvokeKey(te);
+            }
+                
+            return;
         }
 
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            ShowUI<PlayerStatusUI>();
-        }
-
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            //뽑기가 진행중이면 무시
-            if (Singleton.Get<GachaUI>().IsGachaRunning) return;
-
-            ShowUI<GachaUI>();
-        }
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            ShowUI<QuestUI>();
-        }
+        // UI 입력 동작 분리함
+        //if (Input.GetKeyDown(KeyCode.I))
+        //{
+        //    var top = WindowStackManager.PeekTopWindow();
+        //    var window = Singleton.Inventory;
+        //    
+        //    if (window.gameObject.activeSelf && top != null && (top is WindowBase) == window.gameObject)
+        //        WindowStackManager.PopWindow();
+        //    else if (!window.gameObject.activeSelf)
+        //        (window as IWindowStack)?.ShowWindow();
+        //
+        //    return;
+        //}
+        //
+        //if (Input.GetKeyDown(KeyCode.U))
+        //{
+        //    WindowStackManager.ShowUI<PlayerStatusUI>();
+        //    return;
+        //}
+        //
+        //if (Input.GetKeyDown(KeyCode.V))
+        //{
+        //    WindowStackManager.ShowUI<EnhancementDialogWindow>();
+        //    return;
+        //}
+        //
+        //if (Input.GetKeyDown(KeyCode.O))
+        //{
+        //    //뽑기가 진행중이면 무시
+        //    if (Singleton.Get<GachaUI>().IsGachaRunning) return;
+        //
+        //    WindowStackManager.ShowUI<GachaUI>();
+        //    return;
+        //}
+        //
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    WindowStackManager.ShowUI<QuestUI>();
+        //    return;
+        //}
+        //
+        //if (Input.GetKeyDown(KeyCode.B))
+        //{
+        //    WindowStackManager.ShowUI<ItemCreationDialogueWindow>();
+        //    return;
+        //}
     }
 
-    private void ShowUI<T>() where T : MonoBehaviour, IWindowStack
+    public static void InvokeKey(KeyCode _key)
     {
-        var top = WindowStackManager.PeekTopWindow();
-        var window = Singleton.Get<T>();
-        if (window.gameObject.activeSelf && top != null && (top as WindowBase) == window.gameObject)
-            WindowStackManager.PopWindow();
-        else if (!window.gameObject.activeSelf)
-            (window as IWindowStack)?.ShowWindow();
+        OnUIKeyDown?.Invoke(_key);
     }
 
     private IEnumerator AttackWait()

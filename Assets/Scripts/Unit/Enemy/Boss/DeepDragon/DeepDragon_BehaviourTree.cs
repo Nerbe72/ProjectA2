@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using GameStuff;
+
 public partial class DeepDragon : Boss
 {
     private bool chaseInitialized = false;

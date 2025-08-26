@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using GameStuff;
+
 public class DamageIndicatorManager : MonoBehaviour
 {
     public int InitializationPriority => 4;

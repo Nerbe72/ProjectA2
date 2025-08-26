@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using GameStuff;
+
 public interface IWindowStack
 {
     public WindowType WindowType { get; set; }

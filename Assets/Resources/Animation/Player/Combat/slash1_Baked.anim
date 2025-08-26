@@ -26254,8 +26254,8 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.26666668
-    functionName: HandlerAnimation
+  - time: 0.16666667
+    functionName: PlayAttackSound
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
@@ -26263,6 +26263,13 @@ AnimationClip:
     messageOptions: 0
   - time: 0.26666668
     functionName: PlayAttackEffect
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.26666668
+    functionName: HandlerAnimation
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

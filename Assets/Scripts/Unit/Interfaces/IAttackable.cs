@@ -1,3 +1,4 @@
+using GameStuff;
 
 public interface IAttackable
 {

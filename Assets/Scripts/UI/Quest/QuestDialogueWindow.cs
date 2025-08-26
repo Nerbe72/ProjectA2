@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using GameStuff;
+
 public class QuestDialogueWindow : WindowBase
 {
     public int InitializationPriority => 4;

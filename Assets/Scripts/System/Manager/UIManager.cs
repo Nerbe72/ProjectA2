@@ -2,18 +2,26 @@ public static class UIManager
 {
     public static void OffBasicUI()
     {
-        if (Singleton.Get<StatusUI>() == null || Singleton.Get<MenuUI>() == null) return;
+        var status = Singleton.Get<StatusUI>();
+        if (status != null) status.gameObject.SetActive(false);
 
-        Singleton.Get<StatusUI>().gameObject.SetActive(false);
-        Singleton.Get<MenuUI>().gameObject.SetActive(false);
+        var menu = Singleton.Get<MenuUI>();
+        if (menu != null) menu.gameObject.SetActive(false);
+
+        var skill = Singleton.Get<SkillIndicator>();
+        if (skill != null) skill.gameObject.SetActive(false);
     }
 
     public static void OnBasicUI()
     {
-        //°ÔÀÓ Á¾·á½Ã È£Ãâ ÀÌÀü¿¡ ¿ÀºêÁ§Æ®°¡ ¸ÕÀú ÆÄ±«µÈ °æ¿ì ¿¹¿Ü
-        if (Singleton.Get<StatusUI>() == null || Singleton.Get<MenuUI>() == null) return;
+        //ê²Œì„ ì¢…ë£Œ ì‹œ ì¼ë¶€ UI ì˜¤ë¸Œì íŠ¸ê°€ íŒŒê´´ë˜ì—ˆì„ ìˆ˜ ìˆìœ¼ë¯€ë¡œ ê°œë³„ ì²´í¬
+        var status = Singleton.Get<StatusUI>();
+        if (status != null) status.gameObject.SetActive(true);
 
-        Singleton.Get<StatusUI>().gameObject.SetActive(true);
-        Singleton.Get<MenuUI>().gameObject.SetActive(true);
+        var menu = Singleton.Get<MenuUI>();
+        if (menu != null) menu.gameObject.SetActive(true);
+
+        var skill = Singleton.Get<SkillIndicator>();
+        if (skill != null) skill.gameObject.SetActive(true);
     }
 }

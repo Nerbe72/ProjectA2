@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+using GameStuff;
+
 public class Status : MonoBehaviour
 {
     [Header("Locale")]

@@ -1,0 +1,4 @@
+﻿ID,CreationItemID,Price,Ingred1,Ingred2,Ingred3,Ingred4,Ingred5,Ingred6,Ingred7,Ingred8,Ingred9,Ingred10
+60001,10005,100,70001:4,70002:2,e,,,,,,,
+60002,1002,1000,70002:10,70003:4,e,,,,,,,
+60004,1004,2500,70002:14,70004:12,e,,,,,,,

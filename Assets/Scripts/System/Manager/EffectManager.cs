@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using GameStuff;
+
 public class EffectManager : MonoBehaviour
 {
     public static EffectManager Instance { get; private set; }

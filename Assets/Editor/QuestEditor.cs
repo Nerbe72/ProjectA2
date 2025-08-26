@@ -3,6 +3,8 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
+using GameStuff;
+
 public class QuestEditor : EditorWindow
 {
     private Dictionary<int, QuestInfo> quests = new Dictionary<int, QuestInfo>();

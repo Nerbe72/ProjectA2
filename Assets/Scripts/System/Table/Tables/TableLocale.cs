@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+using GameStuff;
+
 public class TableLocale : TableBase
 {
     [Serializable]

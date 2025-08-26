@@ -1,6 +1,8 @@
 using Photon.Pun;
 using UnityEngine;
 
+using GameStuff;
+
 public partial class Player : Character, IPunObservable
 {
     private Vector3 networkPosition;

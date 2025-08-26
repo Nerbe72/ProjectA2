@@ -1,78 +1,39 @@
-using ExitGames.Client.Photon;
-using NUnit.Framework;
+using GameStuff;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public partial class Inventory : WindowBase
 {
-    [SerializeField] private ToggleGroup filterGroup;
     [SerializeField] private TMP_Dropdown sortDropdown;
     [SerializeField] private ToggleGroup sortGroup;
 
-    private List<Toggle> filterToggles;
     private List<Toggle> sortToggles;
 
-    private ItemFilterType currentFilter = ItemFilterType.All;
-    private WeaponFilterType currentWeaponFilter = WeaponFilterType.All;
-    private SortMainType currentSortMain = SortMainType.Rarity;
+    private int filterIndex = 0;
+    private int filterSubIndex = 0;
+
+    private int sortIndex = 0;
     private SortDirectionType currentSortDirection = SortDirectionType.Descending;
+
+    private Filter filter;
 
     private void Start()
     {
-        // 필터 타입
-        filterToggles = filterGroup.GetComponentsInChildren<Toggle>().ToList();
-
-        for(int i = 0; i < filterToggles.Count; i++)
+        filter.OnFilterSelected += (index, subindex) =>
         {
-            var index = i;
-            filterToggles[index].onValueChanged.AddListener((isOn) =>
-            {
-                if (isOn)
-                {
-                    SetFilter((ItemFilterType)index);
-                    ApplyFilterAndSort();
-                }
-            });
+            SetSortOptions(index, subindex);
+            ApplyFilterAndSort();
+        };
 
-            if ((ItemFilterType)index == ItemFilterType.Weapon)
-            {
-                var eventTrigger = filterToggles[index].GetComponent<EventTrigger>();
-                var entry = new EventTrigger.Entry();
-
-                entry.eventID = EventTriggerType.PointerClick;
-                entry.callback.AddListener((data) =>
-                {
-                    if (filterToggles[index].isOn)
-                    {
-                        CycleWeaponFilterType();
-                        UpdateWeaponFilterImage();
-                        ApplyFilterAndSort();
-                    }
-                });
-
-                eventTrigger.triggers.Add(entry);
-            }
-        }
-
-        Image weaponFilterImage = filterToggles[1].GetComponentInChildren<Image>();
-        GameObject[] weaponFilterIndicators = new GameObject[System.Enum.GetValues(typeof(WeaponFilterType)).Length];
-        
-        // 무기 타입별
-        Button weaponToggleButton = filterToggles[1].GetComponent<Button>();
-        if (weaponToggleButton == null)
-        {
-            weaponToggleButton = filterToggles[1].gameObject.AddComponent<Button>();
-        }
-        
         // 정렬 타입
         sortDropdown.onValueChanged.AddListener((index) =>
         {
-            SetSortMain((SortMainType)index);
+            SetSortMain((SortType)index);
             ApplyFilterAndSort();
         });
 
@@ -91,12 +52,19 @@ public partial class Inventory : WindowBase
             });
         }
 
-        // 초기화
-        filterToggles[0].isOn = true;
-        filterToggles[0].onValueChanged.Invoke(true);
+        // Filter에서 현재 선택된 필터 정보를 받아와서 초기 설정
+        int currentFilterIndex = filter.GetCurrentFilterIndex();
+        int currentFilterSubIndex = filter.GetCurrentFilterSubIndex();
+        SetSortOptions(currentFilterIndex, currentFilterSubIndex);
 
-        sortDropdown.value = (int)SortMainType.Rarity;
-        sortDropdown.onValueChanged.Invoke((int)SortMainType.Rarity);
+        // 인벤토리가 이미 로드된 경우 필터 적용
+        if (items != null && items.Count > 0)
+        {
+            ApplyFilterAndSort();
+        }
+
+        sortDropdown.value = (int)SortType.Rarity;
+        sortDropdown.onValueChanged.Invoke((int)SortType.Rarity);
 
         sortToggles[(int)SortDirectionType.Descending].isOn = true;
         sortToggles[(int)SortDirectionType.Descending].onValueChanged.Invoke(true);
@@ -107,13 +75,13 @@ public partial class Inventory : WindowBase
         if (items == null || items.Count == 0)
             return;
 
-        List<ItemInstance> filteredItems = FilterItems(items.AsReadOnly());
+        List<ItemInstance> filteredItems = FilterItems(items.AsReadOnly(), filterIndex, filterSubIndex);
         List<ItemInstance> sortedItems = SortItems(filteredItems);
         
-        UpdateInventoryUI(sortedItems);
+        UpdateUI(sortedItems);
     }
     
-    private void UpdateInventoryUI(List<ItemInstance> _sortedItems)
+    private void UpdateUI(List<ItemInstance> _sortedItems)
     {
         foreach (var frame in itemFrames.Values)
         {
@@ -127,13 +95,37 @@ public partial class Inventory : WindowBase
             {
                 frame.gameObject.SetActive(true);
                 frame.transform.SetSiblingIndex(i);
+
+                if (item is WeaponItemInstance weapon)
+                {
+                    switch ((SortType)sortIndex)
+                    {
+                        case SortType.Rarity:
+                            frame.SetItemDetail("");
+                            break;
+                        case SortType.Damage:
+                            frame.SetItemDetail($"{Singleton.Player.GetCalculatedDamage(weapon)}");
+                            break;
+                        case SortType.Defense:
+                            frame.SetItemDetail($"{Singleton.Player.GetCalculatedDefense(weapon)}");
+                            break;
+                    }
+                } else if (item is IStackable stackable)
+                {
+                    frame.SetItemDetail($"{stackable.CurrentStack}/{stackable.MaxStackSize}");
+                }
             }
         }
     }
 
-    private List<ItemInstance> FilterItems(IReadOnlyList<ItemInstance> _items)
+    private List<ItemInstance> FilterItems(IReadOnlyList<ItemInstance> _items, int _filterIndex, int _filterSubIndex)
     {
-        if (_items == null) return new List<ItemInstance>();
+        if (_items == null || _items.Count == 0) return new List<ItemInstance>();
+
+        if ((ItemType)_filterIndex == ItemType.Total)
+        {
+            return _items.ToList();
+        }
 
         TableDataManager tableDataManager = Singleton.Get<TableDataManager>();
         List<ItemInstance> result = new List<ItemInstance>();
@@ -144,23 +136,20 @@ public partial class Inventory : WindowBase
             var item = _items[i];
             var itemData = tableDataManager.Table.Item.Get(item.ItemID);
 
-            switch (currentFilter)
+            switch ((ItemType)_filterIndex)
             {
-                case ItemFilterType.All:
-                    result.Add(_items[i]);
-                    break;
-                case ItemFilterType.Weapon:
+                case ItemType.Weapon:
                     {
-                        if ((ItemType)itemData.ItemType == ItemType.Weapon)
+                        if ((ItemType)itemData.ItemType == (ItemType)_filterIndex)
                         {
-                            if (currentWeaponFilter == WeaponFilterType.All)
+                            if ((WeaponFilterType)_filterSubIndex == WeaponFilterType.All)
                             {
                                 result.Add(item);
                             }
                             else
                             {
                                 var weaponData = tableDataManager.Table.Weapon.Get(item.ItemID);
-                                if (IsWeaponMatched((WeaponType)weaponData.WeaponType, currentWeaponFilter))
+                                if (weaponData != null && IsWeaponMatched((WeaponType)weaponData.WeaponType, (WeaponFilterType)_filterSubIndex))
                                 {
                                     result.Add(item);
                                 }
@@ -168,8 +157,12 @@ public partial class Inventory : WindowBase
                         }
                     }
                     break;
-                case ItemFilterType.Potion:
-                    if ((ItemType)itemData.ItemType == ItemType.Potion)
+                default:
+                case ItemType.Material:
+                case ItemType.Scroll:
+                case ItemType.Skill:
+                case ItemType.Potion:
+                    if ((ItemType)itemData.ItemType == (ItemType)_filterIndex)
                         result.Add(item);
                     break;
             }
@@ -194,8 +187,11 @@ public partial class Inventory : WindowBase
         }
     }
 
-    private void SetFilter(ItemFilterType _type)
+    private void SetSortOptions(int _index, int _subIndex)
     {
+        filterIndex = _index;
+        filterSubIndex = _subIndex;
+
         var localeTable = Singleton.Get<TableDataManager>().Table.Locale;
         var locale = GameManager.CurrentLocale;
 
@@ -203,38 +199,34 @@ public partial class Inventory : WindowBase
             return;
 
         sortDropdown.ClearOptions();
-        currentFilter = _type;
 
-        switch (_type)
+        switch ((ItemType)_index)
         {
-            case ItemFilterType.All:
-            case ItemFilterType.Weapon:
+            case ItemType.Total:
+            case ItemType.Weapon:
                 {
                     sortDropdown.AddOptions(new List<string>
                     {
-                        localeTable.Get((int)SortMainType.Rarity + 100, locale),
-                        localeTable.Get((int)SortMainType.Damage + 100, locale),
-                        localeTable.Get((int)SortMainType.Defense + 100, locale)
+                        localeTable.Get((int)SortType.Rarity + 100, locale),
+                        localeTable.Get((int)SortType.Damage + 100, locale),
+                        localeTable.Get((int)SortType.Defense + 100, locale)
                     });
                 }
                 break;
-            case ItemFilterType.Potion:
+            default:
                 {
                     sortDropdown.AddOptions(new List<string>
                     {
-                        localeTable.Get((int)SortMainType.Rarity + 100, locale)
+                        localeTable.Get((int)SortType.Rarity + 100, locale)
                     });
                 }
                 break;
         }
-
-        // default dropdown value
-        sortDropdown.value = 0;
     }
 
-    private void SetSortMain(SortMainType _sortMainType)
+    private void SetSortMain(SortType _sortMainType)
     {
-        currentSortMain = _sortMainType;
+        sortIndex = (int)_sortMainType;
     }
 
     private void SetSortDirection(SortDirectionType _sortDirectionType)
@@ -242,48 +234,6 @@ public partial class Inventory : WindowBase
         currentSortDirection = _sortDirectionType;
     }
     
-    private void CycleWeaponFilterType()
-    {
-        int nextTypeIndex = ((int)currentWeaponFilter + 1) % System.Enum.GetValues(typeof(WeaponFilterType)).Length;
-        currentWeaponFilter = (WeaponFilterType)nextTypeIndex;
-    }
-    
-    private void UpdateWeaponFilterImage()
-    {
-        //체크박스 색상
-        Image weaponFilterImage = filterToggles[(int)ItemFilterType.Weapon].graphic.GetComponent<Image>();
-        if (weaponFilterImage == null) return;
-        
-        switch (currentWeaponFilter)
-        {
-            case WeaponFilterType.All:
-                weaponFilterImage.color = Color.white;
-                break;
-            case WeaponFilterType.Melee:
-                weaponFilterImage.color = Color.grey;
-                break;
-            case WeaponFilterType.Bow:
-                weaponFilterImage.color = Color.green;
-                break;
-            case WeaponFilterType.Magic:
-                weaponFilterImage.color = Color.red;
-                break;
-        }
-
-        // 아이콘 변경
-        Image weaponFilterIcon = filterToggles[(int)ItemFilterType.Weapon].GetComponentInChildren<Finder>().GetComponent<Image>();
-        Sprite weaponFilterSprite = ResourceLoader.Load<Sprite>(currentWeaponFilter.ToString(), LoadType.Icon);
-
-        if (weaponFilterSprite != null)
-        {
-            weaponFilterIcon.sprite = weaponFilterSprite;
-        }
-        else
-        {
-            weaponFilterIcon.color = Color.clear;
-        }
-    }
-
     private List<ItemInstance> SortItems(IReadOnlyList<ItemInstance> _items)
     {
         if (_items == null || _items.Count == 0)
@@ -294,22 +244,24 @@ public partial class Inventory : WindowBase
 
         Player player = Singleton.Player;
 
-        switch (currentSortMain)
+        switch ((SortType)sortIndex)
         {
-            case SortMainType.Rarity:
+            case SortType.Rarity:
             if (currentSortDirection == SortDirectionType.Descending)
             {
+                // 내림차순
                 result.Sort((a, b) => tableDataManager.Table.Item.Get(b.ItemID).Rarity.CompareTo(
-                            tableDataManager.Table.Item.Get(a.ItemID).Rarity)); // 내림차순: 높은 레어도가 앞으로
+                        tableDataManager.Table.Item.Get(a.ItemID).Rarity));
             }
             else
             {
+                // 오름차순
                 result.Sort((a, b) => tableDataManager.Table.Item.Get(a.ItemID).Rarity.CompareTo(
-                            tableDataManager.Table.Item.Get(b.ItemID).Rarity)); // 오름차순: 낮은 레어도가 앞으로
+                        tableDataManager.Table.Item.Get(b.ItemID).Rarity)); 
             }
                 break;
                 
-            case SortMainType.Damage:
+            case SortType.Damage:
                 if (currentSortDirection == SortDirectionType.Descending)
                 {
                     result.Sort((a, b) => {
@@ -349,7 +301,7 @@ public partial class Inventory : WindowBase
                 }
                 break;
                 
-            case SortMainType.Defense:
+            case SortType.Defense:
                 if (currentSortDirection == SortDirectionType.Descending)
                 {
                     result.Sort((a, b) => {

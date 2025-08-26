@@ -2,3 +2,10 @@
     flex-direction: column;
     width: 60%;
 }
+
+.my-toggle-button .unity-toggle__checkmark {
+
+}
+.my-toggle-button .unity-toggle__input:checked {
+
+}

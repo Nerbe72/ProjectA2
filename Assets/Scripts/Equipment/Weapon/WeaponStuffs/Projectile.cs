@@ -1,5 +1,8 @@
 using UnityEngine;
 
+using GameStuff;
+using SoundStuff;
+
 [RequireComponent(typeof(Animator))]
 public abstract class Projectile : MonoBehaviour
 {
@@ -37,7 +40,7 @@ public abstract class Projectile : MonoBehaviour
         maxRange = _bulletInfo.Range;
     }
 
-    public virtual void SetData(Character _owner, Transform _spawn, Target _target = null, int _abilityID = 0)
+    public virtual void SetData(Character _owner, Transform _spawn, Target _target = null, AttackType _type = AttackType.Fixed, int _damage = 0)
     {
         startPosition = _spawn.position;
         transform.position = startPosition;
@@ -52,11 +55,11 @@ public abstract class Projectile : MonoBehaviour
             target = playerTransform;
         }
 
-        IsAbilityAttack = _abilityID != 0;
-        var calculated = IsAbilityAttack ? _owner.CalculateAttack(_abilityID) : _owner.CalculateAttack();
+        IsAbilityAttack = _damage != 0;
+        var calculated = IsAbilityAttack ? (_type, _damage) : _owner.CalculateAttack();
 
-        attackType = calculated.type;
-        damage = calculated.damage;
+        attackType = calculated.Item1;
+        damage = calculated.Item2;
 
         weaponInstance = _owner.GetCurrentWeapon();
     }
@@ -75,19 +78,16 @@ public abstract class Projectile : MonoBehaviour
 
         hurtable.TakeDamage(attackType, damage);
 
-        // do Ability
         if (weaponInstance != null && !IsAbilityAttack)
         {
-            var weapon_selected = Singleton.Get<TableDataManager>().Table.Weapon.Get(weaponInstance.ItemID);
-
-            if (weapon_selected.Abilities == null) goto DestroyEnd;
-
-            for (int i = 0; i < weapon_selected.Abilities.Length; i++)
+            var weaponAdapter = Singleton.Inventory.GetWeaponAdapter(weaponInstance);
+            if (weaponAdapter != null)
             {
-                if (weapon_selected.Abilities[i] == 0) continue;
-
-                var ability_selected = Singleton.Get<AbilityManager>().GetAbility(weapon_selected.Abilities[i]);
-                ability_selected.ApplyAbility(owner, hurtable);
+                var activeSkills = weaponAdapter.GetActiveSkills();
+                foreach (var skill in activeSkills)
+                {
+                    Singleton.Get<AbilityManager>().TryUseAbility(owner, skill.AbilityId, hurtable);
+                }
             }
         }
 

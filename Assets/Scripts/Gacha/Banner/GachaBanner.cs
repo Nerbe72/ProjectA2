@@ -1,8 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+
+using GameStuff;
 
 public class GachaBanner : MonoBehaviour
 {
@@ -27,6 +30,7 @@ public class GachaBanner : MonoBehaviour
     [SerializeField] private Button back;
 
     private Animator bannerAnimator;
+    private readonly int selectedHash = Animator.StringToHash("Selected");
 
     private GachaManager gachaManager;
 
@@ -35,6 +39,19 @@ public class GachaBanner : MonoBehaviour
     private void Awake()
     {
         bannerAnimator = GetComponent<Animator>();
+    }
+    
+    private void OnEnable()
+    {
+        if (bannerScroll != null && bannerScroll.content != null && bannerScroll.content.childCount > 0)
+        {
+            GameObject firstBanner = bannerScroll.content.GetChild(0).gameObject;
+            BannerContainer container = firstBanner.GetComponent<BannerContainer>();
+            if (container != null)
+            {
+                SelectContent(container);
+            }
+        }
     }
 
     private void OnDestroy()
@@ -103,14 +120,21 @@ public class GachaBanner : MonoBehaviour
         currentContent.SetActive(true);
 
         var container = currentContent.GetComponent<BannerContainer>();
-        container.Data = _data;
-        currentContent.GetComponent<Image>().sprite = await ResourceLoader.LoadAsync<Sprite>(container.Data.BannerPath, LoadType.GachaBanner);
+        container.SetBannerData(_data);
         currentContent.GetComponent<Button>().onClick.AddListener(() => { SelectContent(container); });
     }
 
     private async void SelectContent(BannerContainer _container)
     {
         if (_container == null) return;
+        
+        if (bannerAnimator != null)
+        {
+            bannerAnimator.SetTrigger(selectedHash);
+            
+            StopAllCoroutines();
+            StartCoroutine(FadeWeaponImageLerp());
+        }
 
         one_roll.gameObject.SetActive(true);
         ten_roll.gameObject.SetActive(true);
@@ -137,9 +161,10 @@ public class GachaBanner : MonoBehaviour
 
         for (int i = count; i < 3; i++)
         {
+            weaponImages[i].sprite = null;
             weaponImages[i].color = UnityEngine.Color.clear;
         }
-
+        
         one_roll.GetComponentsInChildren<TMP_Text>()[1].text = _container.Data.SinglePrice.ToString();
         ten_roll.GetComponentsInChildren<TMP_Text>()[1].text = _container.Data.TenPrice.ToString();
 
@@ -154,5 +179,41 @@ public class GachaBanner : MonoBehaviour
         {
             OnSelectRoll?.Invoke(_container.Data, 10);
         });
+    }
+    
+    private IEnumerator FadeWeaponImageLerp()
+    {
+        yield return null;
+        
+        float duration = 0.5f;
+        float elapsed = 0f;
+        
+        while (elapsed < duration)
+        {
+            float normalizedTime = elapsed / duration;
+            
+            for (int i = 0; i < weaponImages.Count; i++)
+            {
+                if (weaponImages[i] != null && weaponImages[i].sprite != null)
+                {
+                    Color currentColor = weaponImages[i].color;
+                    currentColor.a = Mathf.Lerp(0f, 1f, normalizedTime);
+                    weaponImages[i].color = currentColor;
+                }
+            }
+            
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        
+        for (int i = 0; i < weaponImages.Count; i++)
+        {
+            if (weaponImages[i] != null && weaponImages[i].sprite != null)
+            {
+                Color finalColor = weaponImages[i].color;
+                finalColor.a = 1f;
+                weaponImages[i].color = finalColor;
+            }
+        }
     }
 }

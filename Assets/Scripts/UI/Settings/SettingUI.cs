@@ -1,6 +1,8 @@
+using GameStuff;
+
 public class SettingUI : WindowBase
 {
-    public int InitializationPriority => 7;
+    private Setting setting;
 
     private void Awake()
     {
@@ -13,6 +15,10 @@ public class SettingUI : WindowBase
         DontDestroyOnLoad(gameObject);
         WindowType = WindowType.SettingWindow;
 
+        gameObject.SetActive(false);
+
+        setting = GetComponentInChildren<Setting>(true);
+        setting.gameObject.SetActive(true);
         gameObject.SetActive(false);
     }
 }

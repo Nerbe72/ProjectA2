@@ -1,8 +1,13 @@
+using GameStuff;
+
 public class MoveState : IPlayerState
 {
     public void OnJumpInput(Player _player)
     {
-        _player.TransitionTo(new JumpState());
+        if (_player.IsFlagged(StateFlags.Grounded))
+        {
+            _player.TransitionTo(new JumpState());
+        }
     }
 
     public void Enter(Player _player)

@@ -15,6 +15,7 @@ TagManager:
   - Attack
   - Interact
   - Weapon
+  - Wall
   - 
   - 
   - 
@@ -24,12 +25,11 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Grass
+  - Stone
+  - Water
+  - Wood
+  - Metal
   - 
   - 
   - 

@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+using GameStuff;
+using System.Linq;
+
 public class TotalResult : MonoBehaviour, IFlag
 {
     public bool FlagEnd { get; set; }
@@ -10,8 +13,7 @@ public class TotalResult : MonoBehaviour, IFlag
 
     [Header("결과 관리")]
     [SerializeField] private GameObject characterGroup;
-    [SerializeField] private List<Image> characterImages; //캐릭터 이미지 변경
-    [SerializeField] private List<Image> characterFrames; //등급에 맞춰 색상변경
+    private List<HoverableFrame> resultUnits;
 
     private Animator totalAnimator;
     private int hashSlide;
@@ -21,12 +23,7 @@ public class TotalResult : MonoBehaviour, IFlag
         totalAnimator = GetComponent<Animator>();
         hashSlide = Animator.StringToHash("Slide");
 
-        InitData();
-    }
-
-    private void InitData()
-    {
-        characterGroup = GetComponentInChildren<HorizontalLayoutGroup>(true).gameObject;
+        resultUnits = characterGroup.GetComponentsInChildren<HoverableFrame>(true).ToList();
     }
 
     public void PlaySlide()
@@ -35,15 +32,14 @@ public class TotalResult : MonoBehaviour, IFlag
         //totalAnimator.SetTrigger(hashSlide);
     }
 
-    public async void InitDatas(List<(TableItem.Info Info, RandomWeaponData Data)> _weapons, List<UnityEngine.Color> _colors)
+    public void InitDatas(List<(TableItem.Info Info, RandomWeaponData Data)> _weapons, List<UnityEngine.Color> _colors)
     {
-        InitData();
-
         int count = _weapons.Count;
         for (int i = 0; i < count; i++)
         {
-            characterImages[i].sprite = await ResourceLoader.LoadAsync<Sprite>(_weapons[i].Info.Icon, LoadType.ItemIcon);
-            characterFrames[i].color = _colors[i];
+            resultUnits[i].SetFrameDataFromRandom(_weapons[i].Info, _weapons[i].Data);
+            //resultUnits[i].Image.sprite = await ResourceLoader.LoadAsync<Sprite>(_weapons[i].Info.Icon, LoadType.ItemIcon);
+            //resultUnits[i].Frame.color = _colors[i];
         }
     }
 

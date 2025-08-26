@@ -13,10 +13,18 @@ MonoBehaviour:
   m_Name: DeepDragon
   m_EditorClassIdentifier: 
   UnitType: 1
-  Health: 5000
+  Health: 4200
   Damage: 250
   Defense: 120
   ID: 900001
+  HurtSound: {fileID: 8300000, guid: c71c43c0e772d80488351b73604be8a7, type: 3}
+  DeathSound: {fileID: 0}
   AttackType: 0
   Speed: 2
-  RewardCurrency: 10000
+  RewardCurrency: 100000
+  BossBGM: {fileID: 8300000, guid: 26333ad8b826fcb48977143e544e9053, type: 3}
+  AttackSounds:
+  - {fileID: 8300000, guid: 669fcd304d04a3145bf3850b499ca774, type: 3}
+  - {fileID: 8300000, guid: 1fd31868d68903d4f9e2c4a3b7ef98f3, type: 3}
+  - {fileID: 8300000, guid: ac6034ade498bb94b87620cdf6eac48b, type: 3}
+  - {fileID: 8300000, guid: 35837a2c27a8ec646837fd781273b015, type: 3}

@@ -1,5 +1,32 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+
+using GameStuff;
+
+[Serializable]
+public class QuestObjectiveInstanceData
+{
+    public int ObjectiveIndex;
+    public ObjectiveType Type;
+    public int TargetID;
+    public bool Completed;
+    
+    // KillObjectiveInstance용
+    public int Current;
+    public int Required;
+    
+    // CollectObjectiveInstance용 (위와 동일한 필드 사용)
+}
+
+[Serializable]
+public class QuestInstanceData
+{
+    public int QuestID;
+    public QuestState State;
+    public List<QuestObjectiveInstanceData> ObjectivesList;
+}
 
 [Serializable]
 public class PlayerSaveData
@@ -25,13 +52,18 @@ public class PlayerSaveData
     public Guid EquippedInventoryID;
     public string EquippedInventoryIDString;
 
+    // 퀘스트 관련 데이터
+    public List<QuestInstanceData> QuestData;
+    public List<TalkCountData> TalkCountData;
+    public List<KillCountData> KillCountData;
+
     public PlayerSaveData()
     {
         // 레벨 초기화
-        Level_Health = 0;
-        Level_Strength = 0;
-        Level_Dexterity = 0;
-        Level_Intelligent = 0;
+        Level_Health = 1;
+        Level_Strength = 1;
+        Level_Dexterity = 1;
+        Level_Intelligent = 1;
 
         // 기본 스탯
         MaxHealth = 100;
@@ -46,6 +78,11 @@ public class PlayerSaveData
 
         // 무기 초기화
         EquippedInventoryID = Guid.Empty;
+
+        // 퀘스트 초기화
+        QuestData = new List<QuestInstanceData>();
+        TalkCountData = new List<TalkCountData>();
+        KillCountData = new List<KillCountData>();
     }
 
     public static PlayerSaveData FromPlayer(Player _player, Vector3 _position)
@@ -76,7 +113,41 @@ public class PlayerSaveData
             Position = _position,
             Rotation = _player.transform.rotation,
 
-            Scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex
+            Scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex,
+
+            // 퀘스트 데이터 저장
+            QuestData = _player.QuestStateInstance.QuestStates.Values.Select(qsi => new QuestInstanceData
+            {
+                QuestID = qsi.QuestID,
+                State = qsi.State,
+                ObjectivesList = qsi.Objectives.Values.Select(obj => new QuestObjectiveInstanceData
+                {
+                    ObjectiveIndex = obj.ObjectiveIndex,
+                    Type = obj.Type,
+                    TargetID = obj.TargetID,
+                    Completed = obj.Completed,
+                    Current = obj is KillObjectiveInstance kill ? kill.Current : 0,
+                    Required = obj is KillObjectiveInstance killObj ? killObj.Required : 
+                              obj is CollectObjectiveInstance collect ? collect.Required : 0
+                }).ToList()
+            }).ToList(),
+            TalkCountData = _player.TalkCount.TalkCount.Select(kvp => new TalkCountData { NPCID = kvp.Key, Count = kvp.Value }).ToList(),
+            KillCountData = _player.KillCount.KillCount.Select(kvp => new KillCountData { EnemyID = kvp.Key, Count = kvp.Value }).ToList()
         };
     }
 }
+
+[Serializable]
+public class TalkCountData
+{
+    public int NPCID;
+    public int Count;
+}
+
+[Serializable]
+public class KillCountData
+{
+    public int EnemyID;
+    public int Count;
+}
+

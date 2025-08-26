@@ -23,7 +23,6 @@ public class QuestUI : WindowBase
         questDetail = GetComponentInChildren<QuestDetail>(true);
         questList.OnSelectQuest += questDetail.SetData;
 
-        questList.gameObject.SetActive(true);
         gameObject.SetActive(false);
     }
 }

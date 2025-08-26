@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using GameStuff;
+
 public partial class Player : Character
 {
     [SerializeField] private List<ParticleSystem> attackEffects;

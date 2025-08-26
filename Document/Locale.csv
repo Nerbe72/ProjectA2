@@ -1,4 +1,6 @@
 ﻿Locale_ID,KO,EN,JA
+0,클릭하여 진입,Click to Enter,
+1,게임종료,Exit Game,
 4,마을 앞,Front Village,
 5,마을,Village,
 6,던전,Dungeon,
@@ -8,6 +10,16 @@
 110,전체,All,
 111,무기,Weapon,
 112,포션,Potion,
+200,스크롤 레어도,Scroll Rarity,
+201,데미지 최솟값,Damage Min,
+202,데미지 최댓값,Damage Max,
+203,방어 최솟값,Defense Min,
+204,방어 최댓값,Defense Max,
+100000000,마을 앞 | 마을 앞의 수상한 의사가 무언가를 부탁할지도 모릅니다.,,
+100000001,마을 | 마을에 있는 석상에서는 레벨업을 할 수 있습니다.,,
+100000002,던전 | 던전의 끝에는 강력한 몬스터가 자리잡고 있습니다.\n강적을 처지하고 막대한 보상을 획득하세요.,,
+1000000000,흐르는 별,,
+1000000001,날카로운 촉,,
 100001,고블린,Goblin,ゴブリン
 100002,스켈레톤,Skeleton,
 900001,깊은 곳의 드래곤,Deep Dragon,
@@ -22,7 +34,7 @@
 10000009,능력치,Stat,
 10000010,기본능력,Basic Status,
 10000011,보유 코인,Remained Coin,
-10000012,다음 레벨 요구,Next Required,
+10000012,요구,Required,
 10000013,무기보정,Weapon Fixed,
 10000014,최종 데미지,Final Damage,
 10000015,레벨업,Level Up,
@@ -54,10 +66,24 @@
 10000041,달성,Achieved,
 10000042,최종 방어,Final Defense,
 10000043,이동한다,Move,
+10000044,재료,Ingredient,
+10000045,제작,Create,
+10000046,고정,Fixed Damage,
+10000047,공격력%,% of Damage,
+10000048,강화,Enhancement,
+10000049,결속,Enchantment,
+10000050,요구 슬롯,Slot Required,
+10000051,스킬 설명,Skill Detail,
+10000052,근력 보정,STR Fix,
+10000053,기량 보정,DEX Fix,
+10000054,지성 보정,INT Fix,
+10000055,최종 공격력,Final DMG,
+10000056,최종 방어력,Final DEF,
+10000057,강화 카운트,Enchantment,
 10001001,독,Poison,毒
 10001002,맹독,Deadly Poison,狂毒
 10001003,밀치기,Knockback,ヒット
-10001004,휘석탄환,Gem Bullet,輝石弾丸
+10001004,휘석마법,Gem Bullet,輝石弾丸
 10010001,데몬 소드,Demon Sword,デーモンソード
 10010002,소드7,Sword 7,ソード7
 10010003,나무 활,Wooden Bow,
@@ -65,16 +91,25 @@
 10010005,이빨,Teeth,
 10010006,눈보라의 속삭임,Whisper of the Blizzard,
 10010007,카르네아의 재,Ashes of Karnea,
+10060001,이빨 무기제작 스크롤,Teeth Weaponh Crafting Scroll,
+10060002,맹독 스킬제작 스크롤,Deadly Poison Skill Crafting Scroll,
+10060004,휘석마법 스킬제작 스크롤,Magic Bolt Skill Crafting Scroll,
+10070001,고블린의 이빨,Goblin's Teeth,
+10070002,돌,Stone,
+10070003,녹슨 금속,Rusted Metal,
+10070004,영혼의 정수,Essence of Soul,
 10080001,회복 포션,Healing Potion,回復ポーション
 11000000,말을 건다,Talk,
 11000001,아이템을 획득한다,Take,
 11000002,바라본다,Look,
-11001001,공격 적중시 대상에게 {1}초 동안 매초 {2}의 독 데미지를 입힌다,On hit inflicts {2} poison damage per second to the target for {1} seconds.,攻撃命中時、対象に{1}秒間毎秒{2}の毒ダメージを与える
-11001002,공격 적중시 대상에게 {1}초 동안 매초 {2}의 치명적인 독 데미지를 입힌다,On hit inflicts {2} deadly poison damage per second to the target for {1} seconds.,攻撃命中時、対象に{1}秒間毎秒{2}の致命的な毒ダメージを与える
+11000010,보정치(*능력치),Fixed(*Stat),
+11000011,요구치,Required,
+11001001,공격 적중시 대상에게 {1}초 동안 독 데미지를 입힌다.\n매초 {2}만큼의 {3} 피해를 가한다.,On hit inflicts {2} {3} poison per second to the target for {1} seconds.,攻撃命中時、対象に{1}秒間毎秒{2}の毒ダメージを与える
+11001002,공격 적중시 대상에게 {1}초 동안 치명적인 독 데미지를 입힌다.\n매초 {2}만큼의 {3} 피해를 가한다.,On hit inflicts {2} {3} deadly poison per second to the target for {1} seconds.,攻撃命中時、対象に{1}秒間毎秒{2}の致命的な毒ダメージを与える
 11001003,공격 적중시 적을 약간 밀어낸다,Upon hit rises toward the enemy.,攻撃命中時、敵を少し押し出す
 11001004,"공격 적중시 대상을 향해 날아가는 작은 휘석을 {4}개 발사한다.
-휘석은 공격력의 {2}% 만큼의 피해를 가한다.","On hit fires {4} small fragments toward the target.
-Each fragment deals {2}% of attack damage.","攻撃命中時、対象に向かって飛ぶ小さな輝石を{4}個発射する
+각 휘석은 {2}만큼의 {3} 피해를 가한다.","On hit fires {4} small fragments toward the target.
+Each fragment deals {2} {3}","攻撃命中時、対象に向かって飛ぶ小さな輝石を{4}個発射する
 輝石は攻撃力の{2}%分のダメージを与える"
 11010001,,,
 11010002,,,
@@ -83,20 +118,25 @@ Each fragment deals {2}% of attack damage.","攻撃命中時、対象に向か�
 11010005,,,
 11010006,,,
 11010007,,,
+11060001,이빨을 제작할 수 있는 스크롤\n고블린의 이빨은 강력하기에 무기로 적합하다,"Scroll to craft teeth: Goblin teeth are strong, making them suitable as weapons.",
+11060002,맹독을 제작할 수 있는 스크롤\n강력한 독성 진액을 무기에 주입한다,Scroll to craft deadly poison: Inject powerful toxic fluid into weapons.,
+11060004,휘석마법을 제작할 수 있는 스크롤\n영혼으로 휘감긴 돌을 무기에 깃들게 한다,Scroll to craft pyroxene magic: Infuse weapons with stones wrapped in spirits.,
+11070001,단단한 고블린의 이빨\n어떤 도구에도 적합하다,Hard goblin teeth: Suitable for any tool.,
+11070002,일반적인 돌\n깨고 갈아낸 돌은 그리 날카롭지는 않지만 적을 찢듯이 후벼팔 수 있다,"Common stone: Broken and ground stones are not very sharp, but can tear and gouge enemies.",
+11070003,녹슬고 깨진 금속\n들고만 있어도 위협적이지만 가공하면 더욱 공격적인 무기가 된다,"Rusty and broken metal: Even just holding it is threatening, but processing it makes it a more aggressive weapon.",
+11070004,영혼은 모든 존재에 깃들어 있지만 스켈레톤에게는 없어서는 안되는 것이다,"Spirit: It dwells in all beings, but is indispensable for skeletons.",
 11080001,체력을 회복한다,Regeneration Health,たいりょくかいふく
 11090001,,,
-80000001,시간이 필요해,,
-80000002,성가신 고블린,,
+80000001,시간이 필요해,Time is needed,
+80000002,성가신 고블린,Annoying goblin,
 80000003,,,
-81000001,의사에게는 잠시 시간이 필요해 보입니다.\n잠시 후 다시 말을 걸어봐야 할 듯 싶습니다.,,
-81000002,고블린에 의해 연구를 하기 힘듭니다. \n 의사를 위해 고블린을 잡아줍니다.,,
+81000001,의사에게는 잠시 시간이 필요해 보입니다.\n잠시 후 다시 말을 걸어봐야 할 듯 싶습니다.,The doctor seems to need some time. You'll need to talk to them again later.,
+81000002,고블린에 의해 연구를 하기 힘듭니다. \n 의사를 위해 고블린을 잡아줍니다.,It's difficult to conduct research due to goblins. Please catch goblins for the doctor.,
 81000003,,,
 82000001,{0} {1} 마리 처치,Kill {0} : {1},
 82000002,{0} {1}개 수집,Collect {0} : {1},
 82000003,{0}과(와) 대화하기,Talk with {0},
-90000001,행인,,
+90000001,행인,Passerby,
 90000002,천사의 석상,Angel Statue,
-90000003,수상한 의사,,
+90000003,수상한 의사,Suspicious doctor,
 90000004,경고문,Warning Sign,
-100000001,테스트1,Test1,
-100000002,테스트2,Test2,

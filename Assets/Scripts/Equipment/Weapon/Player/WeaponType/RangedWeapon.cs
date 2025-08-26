@@ -1,13 +1,17 @@
 using UnityEngine;
 
+using GameStuff;
+
 [RequireComponent(typeof(ProjectileHandler))]
 public class RangedWeapon : Weapon
 {
     private ProjectileHandler projectileHandler;
     [SerializeField] private bool ShowShockwave;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         projectileHandler = GetComponent<ProjectileHandler>();
     }
 

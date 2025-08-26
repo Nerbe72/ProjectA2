@@ -17,7 +17,7 @@ public class StraightProjectile : Projectile
 
         if (distance >= (maxRange * maxRange))
         {
-            Destroy(gameObject); //추후 애니메이션, 코루틴으로 제어
+            Destroy(gameObject);
             return;
         }
 

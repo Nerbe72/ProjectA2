@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+using GameStuff;
+
 public class SpeedTextingMinigame : Minigame
 {
     public override MinigameType Type { get { return MinigameType.SpeedTexting; } }
@@ -19,6 +21,8 @@ public class SpeedTextingMinigame : Minigame
     {
         parent = GetComponentsInChildren<RectTransform>(true)[2];
         textPrefab = GetComponentInChildren<TMP_Text>(true).gameObject;
+        var canvas = GetComponentInChildren<Canvas>(true);
+        canvas.sortingOrder = 99;
     }
 
     public override void SetGame()

@@ -8429,7 +8429,7 @@ MonoBehaviour:
   projectileHandle: {fileID: 0}
   SpawnPoint_Enemy: {x: 20.26, y: 0, z: 19.37}
   SpawnRotation_Enemy: {x: -0, y: -0.5745258, z: -0, w: 0.8184865}
-  SightVisual: 1
+  SightVisual: 0
   eyeTransform: {fileID: 1539655521518622212}
 --- !u!95 &9202583841383402934
 Animator:

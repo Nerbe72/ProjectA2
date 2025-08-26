@@ -1,3 +1,4 @@
+using GameStuff;
 
 public interface ISortInfo
 {
@@ -7,7 +8,7 @@ public interface ISortInfo
     /// 정렬 타입 반환
     /// </summary>
     /// <returns></returns>
-    public SortMainType GetSortMain();
+    public SortType GetSortMain();
 
     /// <summary>
     /// 정렬 방향 반환

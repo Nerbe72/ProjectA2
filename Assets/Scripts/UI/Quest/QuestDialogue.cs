@@ -2,6 +2,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+using GameStuff;
+
 public class QuestDialogue : MonoBehaviour
 {
     private QuestManager questManager;

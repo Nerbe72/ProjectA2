@@ -1,5 +1,7 @@
 using UnityEngine;
 
+using GameStuff;
+
 public static class SceneLoadManager
 {
     public static MapConnection SelectedConnection;

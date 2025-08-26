@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using GameStuff;
+
 public static class AnimationHash
 {
     public static Dictionary<ActionType, int> ActionHash;

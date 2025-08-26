@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+using GameStuff;
+
 public class SingleResult : MonoBehaviour, IFlag
 {
     public bool FlagEnd { get; set; }
@@ -43,8 +45,6 @@ public class SingleResult : MonoBehaviour, IFlag
 
     private void MoveNext()
     {
-        //animator.Rebind();
-
         if (weaponIndex >= items.Count)
         {
             CloseSingle();
@@ -53,7 +53,7 @@ public class SingleResult : MonoBehaviour, IFlag
 
         weaponImage.sprite = ResourceLoader.Load<Sprite>(items[weaponIndex].Info.Icon, LoadType.ItemIcon);
         weaponName.text = Singleton.Get<TableDataManager>().Table.Locale.Get(items[weaponIndex].Info.Name, GameManager.CurrentLocale);
-        weaponRarity.text = ((Rare)items[weaponIndex].Info.Rarity).ToString();
+        weaponRarity.text = ((Rarity)items[weaponIndex].Info.Rarity).ToString();
         weaponDamage.text = items[weaponIndex].Data.Damage.ToString();
         weaponDefense.text = items[weaponIndex].Data.Defense.ToString();
 

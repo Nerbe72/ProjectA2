@@ -61,7 +61,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3f06e67989b9764b9841b2131f5b233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectilePrefab: {fileID: 0}
+  projectilePrefab: {fileID: 6311423779853660244, guid: 848664ffdac09314b8a515ad194d3eb3, type: 3}
   spawnPoint: {fileID: 696546017249907509}
 --- !u!1 &6570301402803407896
 GameObject:
@@ -106,6 +106,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2427106056267965394, guid: a289b446aad1c354c849ab51a03a78ab, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: c419dbd1d2893af40919c52e44531881, type: 2}
     - target: {fileID: 3595557804323297469, guid: a289b446aad1c354c849ab51a03a78ab, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

@@ -1,12 +1,17 @@
 using UnityEngine;
 
+using GameStuff;
+using SoundStuff;
+
 [RequireComponent(typeof(MeleeColliderHandler))]
 public class MeleeWeapon : Weapon
 {
     private MeleeColliderHandler colliderHandler;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         colliderHandler = GetComponent<MeleeColliderHandler>();
     }
 
@@ -37,7 +42,20 @@ public class MeleeWeapon : Weapon
 
         var calculated = owner.CalculateAttack();
 
-        this.UseWeapon();
         hurtable.TakeDamage(calculated.type, calculated.damage);
+
+        var weaponInstance = owner.GetCurrentWeapon();
+        if (weaponInstance != null)
+        {
+            var weaponAdapter = Singleton.Inventory.GetWeaponAdapter(weaponInstance);
+            if (weaponAdapter != null)
+            {
+                var activeSkills = weaponAdapter.GetActiveSkills();
+                foreach (var skill in activeSkills)
+                {
+                    Singleton.Get<AbilityManager>().TryUseAbility(owner, skill.AbilityId, hurtable);
+                }
+            }
+        }
     }
 }

@@ -4,6 +4,9 @@ using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+using GameStuff;
+using CameraType = GameStuff.CameraType;
+
 public class CameraManager : MonoBehaviour
 {
     public int InitializationPriority => 1;
@@ -115,28 +118,38 @@ public class CameraManager : MonoBehaviour
         if (vCams[(int)_followType].gameObject.activeSelf)
             return;
 
-        if (_follow == null)
-            vCams[(int)_followType].GetComponent<CinemachineCamera>().Follow = Singleton.Player.transform;
-        else
-            vCams[(int)_followType].GetComponent<CinemachineCamera>().Follow = _follow;
-
-
-        if (vCams[(int)_followType].GetComponent<CinemachineOrbitalFollow>() != null)
+        switch (_followType)
         {
-            StopAllCoroutines();
-            StartCoroutine(AutoCentering(vCams[(int)_followType].GetComponent<CinemachineOrbitalFollow>()));
+            case CameraType.Talk:
+                if (_follow != null)
+                {
+                    var talkCamera = vCams[(int)_followType];
+                    talkCamera.transform.position = _follow.position;
+                    talkCamera.transform.rotation = _follow.rotation;
+                    talkCamera.GetComponent<CinemachineCamera>().Follow = null;
+                }
+                break;
+            case CameraType.Minigame:
+                break;
+            default:
+                // Main, Target, Sit, Dead 등 일반 카메라들
+                if (_follow == null)
+                    vCams[(int)_followType].GetComponent<CinemachineCamera>().Follow = Singleton.Player.transform;
+                else
+                    vCams[(int)_followType].GetComponent<CinemachineCamera>().Follow = _follow;
+
+                if (vCams[(int)_followType].GetComponent<CinemachineOrbitalFollow>() != null)
+                {
+                    StopAllCoroutines();
+                    StartCoroutine(AutoCentering(vCams[(int)_followType].GetComponent<CinemachineOrbitalFollow>()));
+                }
+                break;
         }
 
+        // 모든 카메라 비활성화 후 해당 카메라만 활성화
         for (int i = 0; i < vCams.Count; i++)
         {
             if (vCams[i] == null) continue;
-
-            if (_follow != null)
-            {
-                vCams[i].transform.position = _follow.transform.position;
-                vCams[i].transform.rotation = _follow.transform.rotation;
-            }
-
             vCams[i].gameObject.SetActive(i == (int)_followType);
         }
     }

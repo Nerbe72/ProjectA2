@@ -7,6 +7,8 @@ using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
+using GameStuff;
+
 [RequireComponent(typeof(NavMeshAgent))]
 public abstract partial class Enemy : Character, IHurtable
 {
@@ -30,11 +32,20 @@ public abstract partial class Enemy : Character, IHurtable
     protected bool isAttack = false;
     protected bool isAttacking = false;
     
+    // 넉백 관련 변수들
+    protected bool isKnockbacked = false;
+    protected Vector3 knockbackDirection;
+    protected float knockbackDistance;
+    protected float originalSpeed;
+    protected Coroutine knockbackCoroutine;
+    
     protected int networkEnemyID;
     protected int networkSpawnID;
     protected int networkMapID;
 
     public Character Character { get; set; }
+    public AudioClip HurtSound { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
     public event Action<int, int> OnHealthChanged;
 
     protected new PhotonView photonView;
@@ -56,13 +67,9 @@ public abstract partial class Enemy : Character, IHurtable
 
         EquipWeapon();
 
-        // 자식 클래스에서 구현된 행동 트리를 생성하여 rootNode에 할당합니다.
         rootNode = CreateBehaviourTree();
-
     }
 
-
-    
     [PunRPC]
     public void InitializeEnemyData(int _enemyID, int _spawnID, int _mapID)
     {
@@ -101,15 +108,15 @@ public abstract partial class Enemy : Character, IHurtable
             }
             transform.rotation = SpawnRotation_Enemy;
         }
-
-
     }
 
     protected virtual void FixedUpdate()
     {
-        // AI 로직은 마스터 클라이언트에서만 실행합니다.
         if (!PhotonNetwork.IsMasterClient) return;
         if (isDead || isDying) return;
+        
+        // 넉백 중일 때는 AI 동작 중단
+        if (isKnockbacked) return;
 
         UpdateTarget();
         rootNode?.Evaluate();
@@ -117,7 +124,6 @@ public abstract partial class Enemy : Character, IHurtable
 
     protected virtual void UpdateTarget()
     {
-        // 가장 가까운 플레이어를 찾습니다.
         float closestDistSqr = Mathf.Infinity;
         Player closestPlayer = null;
         foreach (var player in FindObjectsByType<Player>(FindObjectsSortMode.None))
@@ -134,7 +140,6 @@ public abstract partial class Enemy : Character, IHurtable
 
     private void LateUpdate()
     {
-        // 마스터 클라이언트가 아니면(즉, 원격 클라이언트이면) 네트워크 데이터를 기반으로 위치를 보간합니다.
         if (!photonView.IsMine)
         {
             transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * 10f);
@@ -247,6 +252,25 @@ public abstract partial class Enemy : Character, IHurtable
         }
 
         photonView.RPC(nameof(TakeDamageOnMaster), RpcTarget.MasterClient, _type, _damage, PhotonNetwork.LocalPlayer.ActorNumber);
+
+        base.TakeDamage(_type, _damage);
+    }
+
+    public override int CalculateTakenDamage(AttackType _type, int _damage)
+    {
+        int takenDamage = 0;
+        switch (_type)
+        {
+            default:
+            case AttackType.Physical:
+                takenDamage = Mathf.Max(1, Mathf.FloorToInt(_damage - (EnemyData.Defense * 0.5f)));
+                break;
+            case AttackType.Fixed:
+                takenDamage = _damage;
+                break;
+        }
+
+        return takenDamage;
     }
 
     public override void Dead()
@@ -258,6 +282,20 @@ public abstract partial class Enemy : Character, IHurtable
 
         if (agent != null && agent.isOnNavMesh)
             agent.isStopped = true;
+
+        // 아이템 드롭
+        CreateItemDrops();
+    }
+
+    private async void CreateItemDrops()
+    {
+        if (EnemyData != null)
+        {
+            Vector3 dropPosition = transform.position + (Vector3.up * 0.05f);
+
+            var droppedItems = await Singleton.Get<DropFactory>().CreateDrops(EnemyData, dropPosition);
+            Debug.Log($"Enemy {EnemyData.ID} dropped {droppedItems.Count} items");
+        }
     }
 
     public virtual void Respawn()
@@ -300,7 +338,30 @@ public abstract partial class Enemy : Character, IHurtable
 
     public virtual void Knockback(float _force)
     {
-
+        // 이미 넉백 중이면 무시
+        if (isKnockbacked) return;
+        
+        // 넉백 거리 계산 (강도에 비례)
+        knockbackDistance = _force * 2.0f;
+        
+        // 공격자 방향의 반대 방향으로 넉백
+        if (currentTarget != null)
+        {
+            knockbackDirection = (transform.position - currentTarget.transform.position).normalized;
+        }
+        else
+        {
+            // 타겟이 없으면 랜덤 방향
+            knockbackDirection = Random.insideUnitSphere.normalized;
+            knockbackDirection.y = 0; // Y축은 제거
+        }
+        
+        // 넉백 코루틴 시작
+        if (knockbackCoroutine != null)
+        {
+            StopCoroutine(knockbackCoroutine);
+        }
+        knockbackCoroutine = StartCoroutine(KnockbackCoroutine());
     }
 
     public virtual void CreateFollowedProjectile(AttackType _type, int _amount, float _damagePercent, GameObject _prefab)
@@ -323,6 +384,16 @@ public abstract partial class Enemy : Character, IHurtable
         return (AttackType.Physical, stats.Damage);
     }
 
+    public override int GetCalculatedDamage(WeaponItemInstance _instance = null)
+    {
+        return stats.Damage;
+    }
+
+    public override int GetCalculatedDefense(WeaponItemInstance _instance = null)
+    {
+        return stats.Defense;
+    }
+
     public void SetDying()
     {
         animator.SetBool(AnimationHash.GetHash(ActionType.Dead), false);
@@ -332,6 +403,33 @@ public abstract partial class Enemy : Character, IHurtable
     public void ResetDying()
     {
         isDying = false;
+    }
+    
+    /// <summary>
+    /// 넉백 중인지 확인
+    /// </summary>
+    public bool IsKnockbacked()
+    {
+        return isKnockbacked;
+    }
+    
+    /// <summary>
+    /// 넉백 강제 중단
+    /// </summary>
+    public void StopKnockback()
+    {
+        if (knockbackCoroutine != null)
+        {
+            StopCoroutine(knockbackCoroutine);
+            knockbackCoroutine = null;
+        }
+        
+        if (isKnockbacked)
+        {
+            agent.ResetPath();
+            agent.speed = originalSpeed;
+            isKnockbacked = false;
+        }
     }
 
     protected float DistanceFromPlayer()
@@ -379,5 +477,54 @@ public abstract partial class Enemy : Character, IHurtable
             yield return new WaitForSeconds(1f);
             TakeDamage(_type, _damage);
         }
+    }
+    
+    /// <summary>
+    /// NavMeshAgent를 사용한 넉백 코루틴
+    /// </summary>
+    protected IEnumerator KnockbackCoroutine()
+    {
+        // 넉백 상태 시작
+        isKnockbacked = true;
+        
+        // 원래 속도 저장
+        originalSpeed = agent.speed;
+        
+        // 넉백 속도 설정 (빠른 이동)
+        agent.speed = originalSpeed * 3.0f;
+        
+        // 넉백 목표 위치 계산
+        Vector3 knockbackTarget = transform.position + (knockbackDirection * knockbackDistance);
+        
+        // NavMesh 경로 계산
+        NavMeshPath path = new NavMeshPath();
+        if (agent.CalculatePath(knockbackTarget, path))
+        {
+            // 경로가 유효하면 이동
+            agent.SetDestination(knockbackTarget);
+            
+            // 넉백 이동 완료까지 대기
+            while (agent.remainingDistance > 0.1f && agent.hasPath)
+            {
+                yield return null;
+            }
+        }
+        else
+        {
+            // 경로가 유효하지 않으면 최대한 이동
+            Vector3 fallbackTarget = transform.position + (knockbackDirection * (knockbackDistance * 0.5f));
+            agent.SetDestination(fallbackTarget);
+            
+            // 짧은 시간 동안 이동
+            yield return new WaitForSeconds(0.5f);
+        }
+        
+        // 넉백 완료 후 상태 복구
+        agent.ResetPath();
+        agent.speed = originalSpeed;
+        isKnockbacked = false;
+        knockbackCoroutine = null;
+        
+        Debug.Log($"[Enemy] 넉백 완료: {gameObject.name}");
     }
 }

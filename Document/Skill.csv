@@ -1,0 +1,6 @@
+﻿Ability_ID,Type,Name,Description,RequiredSlotAmount,Cooldown,Attack_Type,Continuouse_Time,DamageType,Power(% of dmg),Projectile_Amount,Projectile_ID
+1001,1,10001001,11001001,1,2,2,5,0,50,0,
+1002,1,10001002,11001002,2,4,2,10,0,120,0,
+1003,2,10001003,11001003,1,1,0,0,0,3,0,
+1004,0,10001004,11001004,1,3,1,0,1,80,4,11004
+1005,0,10001005,11001005,2,0.4,1,0,1,80,12,11004

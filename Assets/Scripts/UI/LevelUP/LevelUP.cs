@@ -5,6 +5,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+using GameStuff;
+
 public class LevelUP : MonoBehaviour
 {
     [SerializeField] private TMP_Text title;
@@ -168,9 +170,10 @@ public class LevelUP : MonoBehaviour
 
     public void UpdateRemainedCoin(uint _currentCoin)
     {
-        if (!gameObject.activeSelf)
+        if (!gameObject.activeInHierarchy)
         {
             remainedCoin.Value.text = _currentCoin.ToString();
+            return;
         }
         StopAllCoroutines();
         StartCoroutine(RemainedCoinLerp(_currentCoin));

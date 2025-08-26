@@ -1,10 +1,9 @@
-// This script is part of ProjectA2.
-// Description: Handles ground shockwave effect and hit detection logic.
-// Author: [Your Name or Team] - [Date]
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+
+using GameStuff;
 
 public class GroundShockwave : MonoBehaviour
 {
@@ -22,10 +21,10 @@ public class GroundShockwave : MonoBehaviour
     private List<ParticleSystem> particleList = new List<ParticleSystem>();
 
     private Transform player;
-    [Header("Start Range")][SerializeField] private TriggerMinMax startMinMax = new TriggerMinMax { min = 2.6f, max = 3.1f };
-    [Header("End Range")][SerializeField] private TriggerMinMax endMinMax = new TriggerMinMax { min = 8.9f, max = 9.9f };
-    [Header("Wave Time (seconds)")][SerializeField] private float startTime = 0.1f;
-    [SerializeField] private float endTime = 0.53f;
+    [Header("Start Range")][SerializeField] private TriggerMinMax startMinMax = new TriggerMinMax { min = 5f, max = 5.5f };
+    [Header("End Range")][SerializeField] private TriggerMinMax endMinMax = new TriggerMinMax { min = 10.6f, max = 11.4f };
+    [Header("Wave Time (seconds)")][SerializeField] private float startTime = 0.3f;
+    [SerializeField] private float endTime = 0.61f;
 
     private bool isHit = false;
 

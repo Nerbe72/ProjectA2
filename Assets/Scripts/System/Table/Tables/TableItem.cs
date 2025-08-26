@@ -12,7 +12,6 @@ public class TableItem : TableBase
         public int ItemType;
         public int Rarity;
         public string Prefab;
-        public int WeaponID;
         public int Description;
     }
 
@@ -62,7 +61,6 @@ public class TableItem : TableBase
         _Reader.get(_Row, ref _Info.ItemType);
         _Reader.get(_Row, ref _Info.Rarity);
         _Reader.get(_Row, ref _Info.Prefab);
-        _Reader.get(_Row, ref _Info.WeaponID);
         _Reader.get(_Row, ref _Info.Description);
 
         return true;

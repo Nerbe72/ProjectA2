@@ -1,9 +1,13 @@
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 public static class Singleton
 {
     // key: typeof(T), value: instance
-    private static Dictionary<System.Type, UnityEngine.Object> singletons = new Dictionary<System.Type, UnityEngine.Object>();
+    private static Dictionary<System.Type, (int priority, UnityEngine.MonoBehaviour data)> singletons = new Dictionary<System.Type, (int priority, UnityEngine.MonoBehaviour data)>();
+    private static int lastPriority = 0;
+    public static Exit exit = null;
 
     #region Player
     public static Player Player = null;
@@ -16,9 +20,9 @@ public static class Singleton
 
         if (singletons.ContainsKey(type))
         {
-            if (singletons[type] != null)
+            if (singletons[type].data != null)
             {
-                return singletons[type] as T;
+                return singletons[type].data as T;
             }
         }
         return null;
@@ -29,32 +33,52 @@ public static class Singleton
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="_instance"></param>
-    /// <returns>������ �����Ͱ� �����ϴ���</returns>
-    public static bool Add<T>(T _instance) where T : UnityEngine.Object
+    /// <returns>singleton 사전 존재 여부</returns>
+    public static bool Add<T>(T _instance) where T : UnityEngine.MonoBehaviour
     {
         var type = typeof(T);
         if (singletons.ContainsKey(type))
         {
-            // UnityEngine.Object로 캐스팅하여 Unity의 null 체크(파괴되었는지)를 수행
-            var existingInstance = singletons[type] as UnityEngine.Object;
+            var existingInstance = singletons[type].data as UnityEngine.MonoBehaviour;
             if (existingInstance != null)
             {
-                return true; // 파괴되지 않은 유효한 인스턴스가 존재함
+                return true;
             }
             else
             {
-                // 키는 있지만 값이 null(파괴된 경우)이므로, 새 인스턴스로 교체
-                singletons[type] = _instance;
+                singletons[type] = (lastPriority, _instance);
+                lastPriority += 1;
                 return false;
             }
         }
 
-        singletons.Add(typeof(T), _instance);
+        singletons.Add(typeof(T), (lastPriority, _instance));
+
+        lastPriority += 1;
         return false;
     }
 
     public static void UnloadAllSingleton()
     {
-        //bootstrapmanager���� �������� ��ε�
+        // 딕셔너리 역순 해제
+        // 플레이어 해제
+        // 인벤토리 해제
+        // exit 해제
+
+        List<(int priority, MonoBehaviour data)> values = (singletons.Values).ToList();
+        values.OrderByDescending((v) => { return (v.priority); });
+
+        int count = values.Count;
+
+        for (int i = count - 1; i >= 0; i--)
+        {
+            var value = values[i];
+            if (value.data != null)
+            {
+                Object.Destroy(value.data.gameObject);
+            }
+        }
+
+        singletons.Clear();
     }
 }

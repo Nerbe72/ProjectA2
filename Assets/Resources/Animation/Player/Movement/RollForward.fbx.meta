@@ -75,6 +75,13 @@ ModelImporter:
       curves: []
       events:
       - time: 0
+        functionName: SetDodgeDirection
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
         functionName: SetDodging
         data: 
         objectReferenceParameter: {instanceID: 0}
@@ -95,15 +102,15 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 1
-        functionName: ResetDodging
+      - time: 0.6666667
+        functionName: ResetDodgeIgnored
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.6666667
-        functionName: ResetDodgeIgnored
+      - time: 1
+        functionName: ResetDodging
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

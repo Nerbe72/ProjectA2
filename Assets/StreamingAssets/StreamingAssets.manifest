@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-UnityVersion: 6000.0.35f1
-CRC: 2751848843
+UnityVersion: 6000.0.49f1
+CRC: 1624551548
 HashAppended: 0
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: minigame.speed_texting
+      Name: minigame
       Dependencies: {}

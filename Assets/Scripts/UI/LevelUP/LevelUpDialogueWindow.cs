@@ -1,9 +1,9 @@
 using UnityEngine;
 
+using GameStuff;
+
 public class LevelUpDialogueWindow : WindowBase
 {
-    public int InitializationPriority => 4;
-
     private Animator animator;
 
     private LevelUP levelUp;

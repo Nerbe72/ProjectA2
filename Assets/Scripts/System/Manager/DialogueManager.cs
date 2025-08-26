@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+using GameStuff;
+using CameraType = GameStuff.CameraType;
+
 public class DialogueManager : MonoBehaviour
 {
     private TableDataManager tableDataManager;

@@ -1,6 +1,8 @@
 using TMPro;
 using UnityEngine;
 
+using GameStuff;
+
 public class QuestIndicator : MonoBehaviour
 {
     [SerializeField] private TMP_Text QuestName;
@@ -13,12 +15,12 @@ public class QuestIndicator : MonoBehaviour
     private void Awake()
     {
         animator = GetComponent<Animator>();
-    }
-
-    private async void Start()
-    {
         showHash = AnimationHash.GetHash("Show");
         completeHash = AnimationHash.GetHash("Complete");
+    }
+
+    private void Start()
+    {
         Singleton.Get<QuestManager>().OnTargetQuestChanged += SetQuestProgress;
         animator.SetBool(showHash, false);
         animator.SetBool(completeHash, false);
@@ -37,6 +39,7 @@ public class QuestIndicator : MonoBehaviour
         {
             animator.SetBool(showHash, false);
             animator.SetBool(completeHash, false);
+            Singleton.Get<QuestPathManager>().ClearPath();
             return;
         }
 
@@ -92,5 +95,11 @@ public class QuestIndicator : MonoBehaviour
 
         animator.SetBool(showHash, true);
         animator.SetBool(completeHash, quest_progress.State == QuestState.Achieved);
+
+        // path
+        if (quest_progress.State == QuestState.Accepted)
+            Singleton.Get<QuestPathManager>().DrawPath(_questID);
+        else
+            Singleton.Get<QuestPathManager>().ClearPath();
     }
 }

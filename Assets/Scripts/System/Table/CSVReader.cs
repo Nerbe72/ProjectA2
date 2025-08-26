@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+using GameStuff;
+
 public class CSVReader
 {
     //	private UnityEngine.TextAsset _csv_file;
@@ -185,6 +187,26 @@ public class CSVReader
             }
 
             val[i] = (int)System.Convert.ToInt32(s);
+        }
+    }
+
+    /// <summary>
+    /// cnt만큼 읽지만 e를 만나면 중단한다.
+    /// </summary>
+    /// <param name="row"></param>
+    /// <param name="val"></param>
+    /// <param name="nCnt">최대 읽기 갯수</param>
+    public void get(int row, ref List<string> val, int nCnt)
+    {
+        for (int i = 0; i < nCnt; ++i)
+        {
+            string s = _arr_grid[cur_col, row];
+            ++cur_col;
+
+            if ((s == null) || (s == "") || (s == "e"))
+                return;
+
+            val.Add(s);
         }
     }
 

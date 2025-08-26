@@ -1,6 +1,9 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
+using GameStuff;
 
 public class Warp : InteractableObject
 {
@@ -21,7 +24,14 @@ public class Warp : InteractableObject
             playerRigidbody.rotation = destination.rotation;
 
             player.UnlockMovementAfterWarp();
+            StartCoroutine(SavePlayerDataDelayed());
         }
+    }
+
+    private IEnumerator SavePlayerDataDelayed()
+    {
+        yield return new WaitForSeconds(0.2f);
+        Singleton.Player.SavePlayerData();
     }
 
     public override void DoAction()
@@ -33,6 +43,8 @@ public class Warp : InteractableObject
 
         SceneLoadManager.SelectedConnection = connection;
         SceneLoadManager.NextScene = nextMap;
+        
+        InteractManager.Clear();
         SceneManager.LoadScene(1);
     }
 

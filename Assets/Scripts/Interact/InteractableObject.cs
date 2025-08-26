@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 
+using GameStuff;
+
 public abstract class InteractableObject : MonoBehaviour, IInteractable
 {
     protected InteractType interactType;
@@ -37,11 +39,6 @@ public abstract class InteractableObject : MonoBehaviour, IInteractable
 
         Singleton.Get<InteractIndicatorUI>().SetShowIndicator(false);
         Singleton.Get<InteractManager>().UnSetInteract(this);
-    }
-
-    public void SetInteractType(InteractType _type)
-    {
-        interactType = _type;
     }
 
     public virtual void DoAction()

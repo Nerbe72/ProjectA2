@@ -1,3 +1,5 @@
+using GameStuff;
+
 public partial class Player : Character
 {
     private TargetManager targetManager;

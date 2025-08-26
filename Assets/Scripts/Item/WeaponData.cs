@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
+using GameStuff;
+
 public class WeaponData : ItemData
 {
     public WeaponType WeaponType;
@@ -18,7 +20,7 @@ public class WeaponData : ItemData
     public int DamageFix_INT;
 
     [Header("Visual")]
-    public AssetReferenceGameObject WeaponPrefabReference; // gameobject ĳ��ȭ?
+    public AssetReferenceGameObject WeaponPrefabReference;
 
     [Header("Random Stat Range")]
     [Tooltip("Range (X ~ Y)")] public Vector2 DamageRange;
@@ -29,9 +31,9 @@ public class WeaponData : ItemData
     public Quaternion HandleRotation;
     public Vector3 HandleScale;
 
-    [Header("Ability")]
+    [Header("Skill")]
     [SerializeReference]
-    public List<AbilityLogic> abilityDatas;
+    public List<AbilityLogic> skillDatas;
 
     public int AdditionalDamage(int _levelSTR, int _levelDEX, int _levelINT)
     {

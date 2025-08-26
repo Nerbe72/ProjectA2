@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using UnityEditor;
 using UnityEngine;
 
 public class MinigameManager : MonoBehaviour
 {
-    //∞Ê∑Œ∑Œ∫Œ≈Õ ∞°¡Æø»
     private List<GameObject> gameList = new List<GameObject>();
 
     public int InitializationPriority => 3;
@@ -25,23 +23,14 @@ public class MinigameManager : MonoBehaviour
 
     private async void LoadMinigames()
     {
-        var names = AssetDatabase.GetAllAssetBundleNames();
+        var async = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, "minigame"));
+        while (!async.isDone) await Task.Yield();
 
-        foreach(var name in names)
-        {
-            var filter = name.Split('.')[0];
+        var bundle = async.assetBundle;
+        var loaded = bundle.LoadAllAssets<GameObject>();
+        gameList.AddRange(loaded);
 
-            if (!filter.Equals("minigame")) continue;
-
-            var async = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, name));
-            while (!async.isDone) await Task.Yield();
-
-            var bundle = async.assetBundle;
-            var loaded = bundle.LoadAllAssets<GameObject>();
-            gameList.AddRange(loaded);
-        }
-
-        Debug.Log($"<color=green>πÃ¥œ∞‘¿” {gameList.Count}∞≥ ∑ŒµÂµ </color>");
+        Debug.Log($"<color=green>ÎØ∏ÎãàÍ≤åÏûÑ {gameList.Count}Í∞ú Î°úÎìúÎê®</color>");
     }
 
     public GameObject GetRandomMinigame()
