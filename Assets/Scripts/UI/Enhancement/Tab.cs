@@ -13,7 +13,7 @@ public class Tab : MonoBehaviour
     private Animator animator;
     private Toggle toggle;
 
-    public event Action<int> OnTabSelected;
+    public Action<int> OnTabSelected;
 
     private void Awake()
     {

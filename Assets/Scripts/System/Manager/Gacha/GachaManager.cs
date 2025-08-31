@@ -94,13 +94,6 @@ public class GachaManager : MonoBehaviour
                 SSRChance += (currentSSRCount - ssrAdventageStart - 1) * ssrChanceIncrease;
             }
 
-            // ssr확률 증가 계산
-            SSRChance = _result.Banner.SSR_Percent;
-            if (currentSSRCount >= ssrAdventageStart)
-            {
-                SSRChance += (currentSSRCount - ssrAdventageStart - 1) * ssrChanceIncrease;
-            }
-
             // SSR 판정
             float roll = Random.Range(0f, 100f);
             if (roll < SSRChance)

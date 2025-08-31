@@ -8,7 +8,8 @@ using GameStuff;
 
 public class EnhancementDialogWindow : WindowBase
 {
-    private ToggleGroup toggleGroup;
+    private ToggleGroup tabGroup;
+    private Tab[] tabs;
     private List<SubWindow> subWindows;
     private SkillList skillList;
     private EnhanceSubWindow enhanceSubWindow;
@@ -25,16 +26,16 @@ public class EnhancementDialogWindow : WindowBase
 
         DontDestroyOnLoad(gameObject);
 
-        toggleGroup = GetComponentInChildren<ToggleGroup>();
+        tabGroup = GetComponentInChildren<ToggleGroup>();
         subWindows = GetComponentsInChildren<SubWindow>().ToList();
         skillList = GetComponentInChildren<SkillList>();
         enhanceSubWindow = GetComponentInChildren<EnhanceSubWindow>();
         enchantSubWindow = GetComponentInChildren<EnchantSubWindow>();
         enhancementItemList = GetComponentInChildren<EnhancementItemList>();
 
-        var tabs = GetComponentsInChildren<Tab>().ToList();
+        tabs = tabGroup.GetComponentsInChildren<Tab>();
 
-        int count = tabs.Count;
+        int count = tabs.Length;
 
         for (int i = 0; i < count; i++)
         {
@@ -49,6 +50,11 @@ public class EnhancementDialogWindow : WindowBase
         skillList.OnSkillSelected += OnSkillSelected;
 
         gameObject.SetActive(false);
+    }
+
+    private void OnEnable()
+    {
+        tabs[0].OnTabSelected?.Invoke(0);
     }
 
     private void OnDestroy()

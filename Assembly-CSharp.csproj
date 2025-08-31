@@ -189,7 +189,6 @@
     <Compile Include="Assets\Scripts\Unit\Player\Player_IStates\HitState.cs" />
     <Compile Include="Assets\Scripts\Item\Sort\Implementation\RaritySorter.cs" />
     <Compile Include="Assets\Scripts\Unit\Character.cs" />
-    <Compile Include="Assets\Scripts\System\MainStarter\GameStart.cs" />
     <Compile Include="Assets\Scripts\UI\Settings\SettingUI.cs" />
     <Compile Include="Assets\Source_Effect\NamuFX\_CommonAssets\Scripts\Viewer.cs" />
     <Compile Include="Assets\Scripts\System\Table\Tables\TableItem.cs" />
@@ -390,7 +389,6 @@
     <None Include="Assets\Resources\Table\Table_Skill.txt" />
     <None Include="Assets\Resources\UIDocument\LobbyUSS.uss" />
     <None Include="Assets\Source_Characters\NPC_Quest1\Lowpoly_Characters\Sources\Modular_Armors\Shaders\PT_Armors_Shader_PBR.shader" />
-    <None Include="Assets\AddressableAssetsData\link.xml" />
     <None Include="Assets\TextMesh Pro\Shaders\SDFFunctions.hlsl" />
     <None Include="Assets\Source_Maps\Polytope Studio\Lowpoly_Environments\Sources\Shaders\PT_Vegetation_Opaque_Shader.shader" />
     <None Include="Assets\Source_Maps\Polytope Studio\Lowpoly_Environments\Sources\Shaders\PT_Vegetation_Foliage_Shader.shader" />

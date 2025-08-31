@@ -20,7 +20,7 @@ public class WindowsProfile : IBuildProfile
 {
     public BuildTargetGroup TargetGroup => BuildTargetGroup.Standalone;
     public BuildTarget Target => BuildTarget.StandaloneWindows64;
-    public string OutputDir => Path.Combine("Builds", "Windows");
+    public string OutputDir => Path.Combine("..", "ProjectA2-Build", "Windows");
     public string FileName => PlayerSettings.productName + ".exe";
     public ScriptingImplementation Backend => ScriptingImplementation.IL2CPP; // Release 기본값
 }
@@ -29,7 +29,7 @@ public class LinuxProfile : IBuildProfile
 {
     public BuildTargetGroup TargetGroup => BuildTargetGroup.Standalone;
     public BuildTarget Target => BuildTarget.StandaloneLinux64;
-    public string OutputDir => Path.Combine("Builds", "Linux");
+    public string OutputDir => Path.Combine("..", "ProjectA2-Build", "Linux");
     public string FileName => PlayerSettings.productName + ".x86_64";
     public ScriptingImplementation Backend => ScriptingImplementation.IL2CPP; // 요청: Linux IL2CPP
 }
@@ -59,11 +59,11 @@ public static class BuildCI
     // CLI: -batchmode -nographics -quit -executeMethod BuildCI.BuildAll
     public static void BuildAll()
     {
-        var winReport = BuildSingle(new WindowsProfile());
-        LogSummary(winReport);
-
         var linuxReport = BuildSingle(new LinuxProfile());
         LogSummary(linuxReport);
+
+        var winReport = BuildSingle(new WindowsProfile());
+        LogSummary(winReport);
 
         // 실패 시 종료 코드 비-0로 설정
         if (winReport.summary.result != BuildResult.Succeeded || linuxReport.summary.result != BuildResult.Succeeded)
@@ -102,6 +102,8 @@ public static class BuildCI
         try
         {
             PlayerSettings.SetScriptingBackend(_profile.TargetGroup, _profile.Backend);
+            // 플랫폼 전환 (Windows→Linux 등) 후 클린 빌드
+            EditorUserBuildSettings.SwitchActiveBuildTarget(_profile.TargetGroup, _profile.Target);
 
             var options = new BuildPlayerOptions
             {
@@ -109,7 +111,7 @@ public static class BuildCI
                 targetGroup = _profile.TargetGroup,
                 target = _profile.Target,
                 locationPathName = location,
-                options = BuildOptions.None // Release
+                options = BuildOptions.CleanBuildCache // Release + Clean
             };
 
             Debug.Log($"[BuildCI] Start build: {_profile.Target} -> {location}");

@@ -20,6 +20,7 @@ public class Exit : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         exitButton.onClick.AddListener( () => { GameManager.ExitGame(); });
+        backButton.onClick.AddListener( () => { gameObject.SetActive(false); });
         gameObject.SetActive(false);
     }
 

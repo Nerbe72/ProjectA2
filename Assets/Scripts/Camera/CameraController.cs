@@ -9,6 +9,11 @@ public class CameraController : MonoBehaviour
     private static Player player;
     private static CameraManager cameraManager;
 
+    private Camera mainCamera;
+    [SerializeField] private float targetAspect = 16f / 9f;
+    private int prevScreenWidth;
+    private int prevScreenHeight;
+
     private void Awake()
     {
         if (Singleton.Add(this))
@@ -18,6 +23,11 @@ public class CameraController : MonoBehaviour
         }
 
         DontDestroyOnLoad(gameObject);
+
+        mainCamera = GetComponent<Camera>();
+        prevScreenWidth = Screen.width;
+        prevScreenHeight = Screen.height;
+        SetAspect();
     }
 
     private async void Start()
@@ -37,6 +47,13 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
+        if (Screen.width != prevScreenWidth || Screen.height != prevScreenHeight)
+        {
+            prevScreenWidth = Screen.width;
+            prevScreenHeight = Screen.height;
+            SetAspect();
+        }
+
         if (player == null || cameraManager == null) return;
 
         Target currentTarget = Singleton.Get<TargetManager>().CurrentTarget;
@@ -47,6 +64,23 @@ public class CameraController : MonoBehaviour
         if (currentTarget != null)
         {
             cameraManager.UpdateTargeting(CameraType.Target, player.transform, currentTarget, isSprinting);
+        }
+    }
+
+    private void SetAspect()
+    {
+        if (mainCamera == null) return;
+
+        float windowAspect = (float)Screen.width / Screen.height;
+        float scale = windowAspect / targetAspect;
+
+        if (scale < 1f)
+        {
+            mainCamera.rect = new Rect((1f - scale) / 2f, 0f, scale, 1f);
+        }
+        else
+        {
+            mainCamera.rect = new Rect(0f, (1f - 1f / scale) / 2f, 1f, 1f / scale);
         }
     }
 

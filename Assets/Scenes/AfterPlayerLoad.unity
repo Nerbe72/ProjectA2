@@ -9595,7 +9595,19 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2307042401828746112, guid: c222d928088e0724c880f7acef6d00e5, type: 3}
+      propertyPath: m_StartAxis
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2307042401828746112, guid: c222d928088e0724c880f7acef6d00e5, type: 3}
+      propertyPath: m_Constraint
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2307042401828746112, guid: c222d928088e0724c880f7acef6d00e5, type: 3}
       propertyPath: m_ChildAlignment
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2307042401828746112, guid: c222d928088e0724c880f7acef6d00e5, type: 3}
+      propertyPath: m_ConstraintCount
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3271020303554053246, guid: c222d928088e0724c880f7acef6d00e5, type: 3}
@@ -20104,7 +20116,7 @@ GameObject:
   - component: {fileID: 1593144710}
   - component: {fileID: 1593144711}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: TabGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
