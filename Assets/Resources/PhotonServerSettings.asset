@@ -60,6 +60,7 @@ MonoBehaviour:
   - DamageOnMaster
   - TakeDamageOnMaster
   - SyncReward
+  - SpawnDrop
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

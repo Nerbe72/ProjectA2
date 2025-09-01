@@ -140,6 +140,15 @@ public abstract partial class Enemy : Character, IPunObservable
             int reward = EnemyData != null ? (int)UnityEngine.Random.Range(EnemyData.RewardCurrency * 0.85f, EnemyData.RewardCurrency) : 10;
             photonView.RPC(nameof(GiveReward), RpcTarget.AllBuffered, reward, killerActorNumber);
             Singleton.Get<EnemyManager>().SetDeadFlag(this);
+
+            if (killerActorNumber >= 0)
+            {
+                var killer = PhotonNetwork.CurrentRoom.GetPlayer(killerActorNumber);
+                if (killer != null)
+                {
+                    photonView.RPC(nameof(SpawnDrop), killer);
+                }
+            }
         }
     }
     
@@ -151,6 +160,12 @@ public abstract partial class Enemy : Character, IPunObservable
             Singleton.Inventory.AddCurrency((uint)_reward);
             Singleton.Player.KillCount.AddKillCount(EnemyData.ID);
         }
+    }
+
+    [PunRPC]
+    private void SpawnDrop()
+    {
+        CreateItemDrops();
     }
     
     [PunRPC]

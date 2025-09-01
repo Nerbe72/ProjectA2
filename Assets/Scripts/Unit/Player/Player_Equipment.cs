@@ -46,6 +46,14 @@ public partial class Player : Character
             obj.transform.SetParent(WeaponHandle, false);
             obj.transform.localPosition = Vector3.zero;
             obj.transform.localRotation = Quaternion.identity;
+
+            if (photonView != null && !photonView.IsMine)
+            {
+                foreach (var col in obj.GetComponentsInChildren<Collider>(true))
+                {
+                    Destroy(col);
+                }
+            }
         }
         else
         {

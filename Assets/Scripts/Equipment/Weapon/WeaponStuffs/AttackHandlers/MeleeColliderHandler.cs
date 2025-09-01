@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[RequireComponent(typeof(CapsuleCollider))]
+// [RequireComponent(typeof(CapsuleCollider))]
 public class MeleeColliderHandler : MonoBehaviour
 {
     CapsuleCollider capsuleCollider;
@@ -12,11 +12,13 @@ public class MeleeColliderHandler : MonoBehaviour
 
     public void OnAttackStart()
     {
-        capsuleCollider.enabled = true;
+        if (capsuleCollider != null)
+            capsuleCollider.enabled = true;
     }
 
     public void OnAttackEnd()
     {
-        capsuleCollider.enabled = false;
+        if (capsuleCollider != null)
+            capsuleCollider.enabled = false;
     }
 }
