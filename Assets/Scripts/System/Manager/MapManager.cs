@@ -10,6 +10,8 @@ public class MapManager : MonoBehaviour
 
     public void SetCurrentMap(int _mapId)
     {
+        Debug.Log("setcurrentmap: "+_mapId);
+
         if (CurrentMapID == _mapId)
             return;
 

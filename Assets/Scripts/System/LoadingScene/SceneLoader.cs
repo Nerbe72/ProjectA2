@@ -270,7 +270,7 @@ public class SceneLoader : MonoBehaviour
         if (PhotonNetwork.InRoom)
         {
             yield return null;
-            PhotonNetwork.IsMessageQueueRunning = true;
+             PhotonNetwork.IsMessageQueueRunning = true;
             Debug.Log($"버퍼 처리");
         }
 

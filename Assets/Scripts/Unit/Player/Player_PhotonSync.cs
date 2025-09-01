@@ -30,7 +30,7 @@ public partial class Player : Character, IPunObservable
     }
 
     [PunRPC]
-    void RPCOnEquipWeapon(int _weaponID)
+    public void RPCOnEquipWeapon(int _weaponID)
     {
         var tableManager = Singleton.Get<TableDataManager>().Table;
 

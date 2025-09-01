@@ -63,7 +63,7 @@ public abstract partial class Enemy : Character, IPunObservable
     }
 
     [PunRPC]
-    void RPCOnEquipWeapon(int _weaponID)
+    public void RPCOnEquipWeapon(int _weaponID)
     {
         var tableManager = Singleton.Get<TableDataManager>().Table;
 
@@ -140,6 +140,11 @@ public abstract partial class Enemy : Character, IPunObservable
             int reward = EnemyData != null ? (int)UnityEngine.Random.Range(EnemyData.RewardCurrency * 0.85f, EnemyData.RewardCurrency) : 10;
             photonView.RPC(nameof(GiveReward), RpcTarget.AllBuffered, reward, killerActorNumber);
             Singleton.Get<EnemyManager>().SetDeadFlag(this);
+
+            if (killerActorNumber >= 0)
+            {
+                photonView.RPC(nameof(SpawnDrop), RpcTarget.All, killerActorNumber);
+            }
         }
     }
     
@@ -150,6 +155,16 @@ public abstract partial class Enemy : Character, IPunObservable
         {
             Singleton.Inventory.AddCurrency((uint)_reward);
             Singleton.Player.KillCount.AddKillCount(EnemyData.ID);
+        }
+    }
+
+    [PunRPC]
+    public void SpawnDrop(int _killerActorNumber)
+    {
+        Debug.Log(_killerActorNumber);
+        if (PhotonNetwork.LocalPlayer.ActorNumber == _killerActorNumber)
+        {
+            CreateItemDrops();
         }
     }
     

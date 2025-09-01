@@ -77,23 +77,21 @@ public class DropFactory : MonoBehaviour
             return null;
         }
         
-        // 수량 설정 (스택 가능한 아이템의 경우)
+        // 수량 설정
         int quantity = Random.Range(_dropData.MinQuantity, _dropData.MaxQuantity + 1);
         
-        // 드롭 위치 계산 (약간의 랜덤 오프셋)
+        // 랜덤 드롭 위치
         Vector3 dropPosition = _position + new Vector3(
             Random.Range(-1f, 1f),
             0f,
             Random.Range(-1f, 1f)
         );
         
-        // 드롭 아이템 오브젝트 생성
         GameObject droppedItemObj = Instantiate(droppedItemPrefab, dropPosition, Quaternion.identity);
         var droppedItem = droppedItemObj.GetComponent<DroppedItem>();
         
         if (droppedItem != null)
         {
-            // IItemContainer 인터페이스를 통해 SetItemContainer 호출
             ((IItemContainer)droppedItem).SetItemContainer(_dropData.ItemID, quantity);
         }
         

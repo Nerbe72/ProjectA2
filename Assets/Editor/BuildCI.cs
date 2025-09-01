@@ -61,12 +61,13 @@ public static class BuildCI
     {
         var linuxReport = BuildSingle(new LinuxProfile());
         LogSummary(linuxReport);
+        var linuxResult = linuxReport.summary.result;
 
         var winReport = BuildSingle(new WindowsProfile());
         LogSummary(winReport);
+        var winResult = winReport.summary.result;
 
-        // 실패 시 종료 코드 비-0로 설정
-        if (winReport.summary.result != BuildResult.Succeeded || linuxReport.summary.result != BuildResult.Succeeded)
+        if (winResult != BuildResult.Succeeded || linuxResult != BuildResult.Succeeded)
         {
             EditorApplication.Exit(1);
         }
@@ -102,6 +103,12 @@ public static class BuildCI
         try
         {
             PlayerSettings.SetScriptingBackend(_profile.TargetGroup, _profile.Backend);
+            PlayerSettings.stripEngineCode = true;
+#if UNITY_2021_2_OR_NEWER
+            PlayerSettings.SetManagedStrippingLevel(UnityEditor.Build.NamedBuildTarget.FromBuildTargetGroup(_profile.TargetGroup), ManagedStrippingLevel.High);
+#else
+            PlayerSettings.SetManagedStrippingLevel(_profile.TargetGroup, ManagedStrippingLevel.High);
+#endif
             // 플랫폼 전환 (Windows→Linux 등) 후 클린 빌드
             EditorUserBuildSettings.SwitchActiveBuildTarget(_profile.TargetGroup, _profile.Target);
 
@@ -111,16 +118,16 @@ public static class BuildCI
                 targetGroup = _profile.TargetGroup,
                 target = _profile.Target,
                 locationPathName = location,
-                options = BuildOptions.CleanBuildCache // Release + Clean
+                options = BuildOptions.CleanBuildCache | BuildOptions.CompressWithLz4HC | BuildOptions.StrictMode // Release + Clean + Compression + Headless + Strict
             };
 
             Debug.Log($"[BuildCI] Start build: {_profile.Target} -> {location}");
             var report = BuildPipeline.BuildPlayer(options);
+            CleanupDebugFolders(_profile.OutputDir);
             return report;
         }
         finally
         {
-            // 원복
             PlayerSettings.SetScriptingBackend(_profile.TargetGroup, oldBackend);
         }
     }
@@ -137,6 +144,31 @@ public static class BuildCI
                 {
                     if (msg.type == LogType.Error)
                         Debug.LogError($"[BuildCI] {msg.content}");
+                }
+            }
+        }
+    }
+    // Removes heavy debug/backup folders created by IL2CPP/Burst
+    private static void CleanupDebugFolders(string outputDir)
+    {
+        string[] junkFolders = {
+            "_BackUpThisFolder_ButDontShipItWithYourGame",
+            "_BurstDebugInformation_DoNotShipItWithYourGame",
+            "BurstDebugInformation_DoNotShipItWithYourGame"
+        };
+        foreach (var folder in junkFolders)
+        {
+            var path = Path.Combine(outputDir, folder);
+            if (Directory.Exists(path))
+            {
+                try
+                {
+                    Directory.Delete(path, true);
+                    Debug.Log($"[BuildCI] Deleted debug folder: {path}");
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning($"[BuildCI] Could not delete {path}: {ex.Message}");
                 }
             }
         }

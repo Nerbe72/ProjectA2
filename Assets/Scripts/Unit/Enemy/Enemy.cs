@@ -282,9 +282,6 @@ public abstract partial class Enemy : Character, IHurtable
 
         if (agent != null && agent.isOnNavMesh)
             agent.isStopped = true;
-
-        // 아이템 드롭
-        CreateItemDrops();
     }
 
     private async void CreateItemDrops()
