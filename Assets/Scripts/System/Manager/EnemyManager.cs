@@ -124,7 +124,7 @@ public class EnemyManager : MonoBehaviour
         Vector3 position = new Vector3(_info.SpawnPositionX, _info.SpawnPositionY, _info.SpawnPositionZ);
         Quaternion rotation = Quaternion.Euler(0f, _info.SpawnRotationY, 0f);
 
-        GameObject obj = PhotonNetwork.Instantiate(prefab.name, position, rotation);
+        GameObject obj = PhotonNetwork.Instantiate(prefab.name, position, rotation, (byte)_info.MapID);
         if (obj == null)
         {
             Debug.LogError($"오브젝트 instantiate 실패: {prefab.name}");

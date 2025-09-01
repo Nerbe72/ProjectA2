@@ -63,7 +63,7 @@ public abstract partial class Enemy : Character, IPunObservable
     }
 
     [PunRPC]
-    void RPCOnEquipWeapon(int _weaponID)
+    public void RPCOnEquipWeapon(int _weaponID)
     {
         var tableManager = Singleton.Get<TableDataManager>().Table;
 
@@ -143,11 +143,7 @@ public abstract partial class Enemy : Character, IPunObservable
 
             if (killerActorNumber >= 0)
             {
-                var killer = PhotonNetwork.CurrentRoom.GetPlayer(killerActorNumber);
-                if (killer != null)
-                {
-                    photonView.RPC(nameof(SpawnDrop), killer);
-                }
+                photonView.RPC(nameof(SpawnDrop), RpcTarget.All, killerActorNumber);
             }
         }
     }
@@ -163,9 +159,13 @@ public abstract partial class Enemy : Character, IPunObservable
     }
 
     [PunRPC]
-    private void SpawnDrop()
+    public void SpawnDrop(int _killerActorNumber)
     {
-        CreateItemDrops();
+        Debug.Log(_killerActorNumber);
+        if (PhotonNetwork.LocalPlayer.ActorNumber == _killerActorNumber)
+        {
+            CreateItemDrops();
+        }
     }
     
     [PunRPC]
