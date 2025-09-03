@@ -17,15 +17,16 @@ public class UIButtonSound : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private void Awake()
     {
         button = GetComponent<Button>();
+        button?.onClick.AddListener(OnClick);
     }
 
     private void OnEnable()
     {
         if (button == null)
+        {
             button = GetComponent<Button>();
-
-        if (button != null)
-            button.onClick.AddListener(OnClick);
+            button?.onClick.AddListener(OnClick);
+        }
     }
 
     private void OnDisable()

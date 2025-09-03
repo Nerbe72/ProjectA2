@@ -19,6 +19,8 @@ public class MinigameSuccessIndicator : MonoBehaviour
 
     public void ShowSuccess(bool _success)
     {
+        gameObject.SetActive(true);
+
         successText1.text = _success ? "SUCCESS" : "FAIL";
         successText2.text = _success ? "SUCCESS" : "";
         successText1.color = _success ? Color.green : Color.red;
@@ -33,6 +35,8 @@ public class MinigameSuccessIndicator : MonoBehaviour
     {
         animator.SetBool(successHash, false);
         animator.SetBool(failHash, false);
+
         OnAnimationFinished?.Invoke();
+        gameObject.SetActive(false);
     }
 }

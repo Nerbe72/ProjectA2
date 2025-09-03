@@ -10,10 +10,6 @@ using GameStuff;
 
 public partial class Inventory : WindowBase
 {
-    #region Inventory_Promised
-    public int InitializationPriority => 1;
-    #endregion
-
     #region Inventory_Items
     private List<ItemInstance> items;
     private uint Currency;

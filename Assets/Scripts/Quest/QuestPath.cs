@@ -17,7 +17,6 @@ public class QuestPathData
     }
 }
 
-
 public class QuestPath : MonoBehaviour
 {
     [SerializeField] private float projectileSpeed = 1f;

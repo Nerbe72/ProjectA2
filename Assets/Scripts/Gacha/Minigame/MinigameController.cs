@@ -46,22 +46,30 @@ public class MinigameController : MonoBehaviour
     {
         Singleton.Get<CameraManager>().SetCamera(CameraType.Minigame);
 
+        isTimeOut = false;
+        isGameFinished = true;
+        isGameSuccess = false;
+        timer.StopTimer();
+
         bool hasLoadedGame = false;
         int count = minigameLoaded.Count;
+
+        var notInstantiated = Singleton.Get<MinigameManager>().GetRandomMinigame();
+
         for (int i = 0; i < count; i++)
         {
-            var notInstantiated = Singleton.Get<MinigameManager>().GetRandomMinigame();
             if (minigameLoaded[i].Type == notInstantiated.GetComponent<Minigame>().Type)
             {
                 minigameLoaded[i].SetGame();
                 minigameLoaded[i].gameObject.SetActive(true);
                 hasLoadedGame = true;
+                break;
             }
         }
 
         if (!hasLoadedGame)
         {
-            GameObject obj = Instantiate(Singleton.Get<MinigameManager>().GetRandomMinigame());
+            GameObject obj = Instantiate(notInstantiated);
             obj.transform.parent = this.transform;
             obj.transform.localPosition = Vector3.zero;
             var minigame = obj.GetComponent<Minigame>();

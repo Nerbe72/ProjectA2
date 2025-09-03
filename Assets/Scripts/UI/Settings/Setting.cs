@@ -43,7 +43,7 @@ public class Setting : MonoBehaviour
         music.Name.text = table.Get(10000028, locale);
         effect.Name.text = table.Get(10000029, locale);
         language.Name.text = table.Get(10000030, locale);
-        exitButton.GetComponentInChildren<TMP_Text>().text = table.Get(1, locale);
+        // exitButton.GetComponentInChildren<TMP_Text>().text = table.Get(1, locale);
     }
 
     private void InitSetting()
