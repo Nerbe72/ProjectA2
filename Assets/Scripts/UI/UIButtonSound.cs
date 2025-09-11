@@ -29,7 +29,7 @@ public class UIButtonSound : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         if (button != null)
             button.onClick.RemoveListener(OnClick);

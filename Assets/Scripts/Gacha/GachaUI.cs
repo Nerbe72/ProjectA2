@@ -78,8 +78,7 @@ public class GachaUI : WindowBase
         uint price = (uint)(_rollCount == 1 ? _banner.SinglePrice : _banner.TenPrice);
         if (!Singleton.Inventory.IsCurrencyEnough(price))
         {
-            Debug.Log("��ȭ�� �����մϴ�.");
-            // TODO: UI �߰�
+            Debug.Log("재화 부족");
             return;
         }
         Singleton.Inventory.MinusCurrency(price);
@@ -88,13 +87,13 @@ public class GachaUI : WindowBase
 
         resultData = new GachaResultData(_banner, _rollCount);
 
-        // 30% Ȯ���� �̴ϰ��� ����
+        // 30% 확률로 미니게임 등장
         //if (_rollCount == 10 && Random.Range(0, 100) < 30)
         //    ShowMinigame();
         //else
         //    DoCalculateResult();
 
-        //����׿� �̴ϰ��� 100% �ߵ�
+        //디버그용 100% 확률
         if (_rollCount == 10)
             ShowMinigame();
     }

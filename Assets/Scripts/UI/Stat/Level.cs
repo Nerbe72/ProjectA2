@@ -28,15 +28,26 @@ public class Level : MonoBehaviour
     private void Start()
     {
         Singleton.Inventory.OnCurrencyChanged += UpdateCoin;
+        Singleton.Player.OnLevelChanged += UpdateLevel;
         Singleton.Get<GameManager>().OnLocaleChanged += SetLocale;
 
         SetLocale();
         UpdateLevel();
     }
 
+    private void OnEnable()
+    {
+        UpdateLevel();
+    }
+
     private void OnDestroy()
     {
         Singleton.Inventory.OnCurrencyChanged -= UpdateCoin;
+        Singleton.Player.OnLevelChanged -= UpdateLevel;
+        
+        var gm = Singleton.Get<GameManager>();
+        if (gm != null)
+            gm.OnLocaleChanged -= SetLocale;
     }
 
     private void SetLocale()

@@ -7,7 +7,7 @@ public static class Singleton
     // key: typeof(T), value: instance
     private static Dictionary<System.Type, (int priority, UnityEngine.MonoBehaviour data)> singletons = new Dictionary<System.Type, (int priority, UnityEngine.MonoBehaviour data)>();
     private static int lastPriority = 0;
-    public static Exit exit = null;
+    public static Exit exit;
 
     #region Player
     public static Player Player = null;
@@ -63,7 +63,6 @@ public static class Singleton
         // 딕셔너리 역순 해제
         // 플레이어 해제
         // 인벤토리 해제
-        // exit 해제
 
         List<(int priority, MonoBehaviour data)> values = (singletons.Values).ToList();
         values.OrderByDescending((v) => { return (v.priority); });
@@ -79,6 +78,12 @@ public static class Singleton
             }
         }
 
+        lastPriority = 0;
         singletons.Clear();
+
+        Object.Destroy(Player.gameObject);
+        Object.Destroy(Inventory.gameObject);
+        Player = null;
+        Inventory = null;
     }
 }

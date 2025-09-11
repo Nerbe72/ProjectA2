@@ -60,7 +60,7 @@ public class GroundShockwave : MonoBehaviour
     private IEnumerator ShockTriggerLerp()
     {
         float time = 0f;
-        while (time < endTime + 0.5f)
+        while (time < endTime)
         {
             time += Time.deltaTime;
             float progress = Mathf.Clamp01((time - startTime) / (endTime - startTime));
@@ -77,8 +77,6 @@ public class GroundShockwave : MonoBehaviour
                     {
                         isHit = true;
                         Singleton.Player.TakeDamage(attackType, damage);
-                        Debug.Log("Hit by shockwave! Apply damage here.");
-                        // TODO: Apply damage to player
                     }
                 }
             }

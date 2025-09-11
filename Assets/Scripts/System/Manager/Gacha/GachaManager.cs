@@ -8,7 +8,6 @@ using GameStuff;
 
 public class GachaManager : MonoBehaviour
 {
-    public int InitializationPriority => 1;
     public List<BannerData> BannerDatas { get; private set; }
     public List<int> RollHistory { get; private set; }
     public GameObject Self { get; set; }

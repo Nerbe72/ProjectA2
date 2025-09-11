@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Editor\Bundle.cs" />
+    <Compile Include="Assets\Editor\AutoBuild.cs" />
     <Compile Include="Assets\Editor\BuildCI.cs" />
     <Compile Include="Assets\Editor\QuestEditor.cs" />
     <Compile Include="Assets\Editor\CircuableToggleEditor.cs" />

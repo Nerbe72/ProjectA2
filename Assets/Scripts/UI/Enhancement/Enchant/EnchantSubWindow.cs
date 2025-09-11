@@ -35,7 +35,7 @@ public class EnchantSubWindow : SubWindow
         
         if (enchantButton != null)
         {
-            enchantButton.onClick.RemoveAllListeners();
+            enchantButton.onClick.RemoveListener(OnEnchantButtonClicked);
             enchantButton.onClick.AddListener(OnEnchantButtonClicked);
         }
     }

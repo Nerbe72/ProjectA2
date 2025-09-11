@@ -12,8 +12,8 @@ using CameraType = GameStuff.CameraType;
 
 public partial class Player : Character, IHurtable
 {
-    public int InitializationPriority => 2;
     [HideInInspector] public bool IsInstantiated = false;
+
     public IPlayerState CurrentState { get; private set; }
     private new Rigidbody rigidbody;
     private CapsuleCollider collider;
@@ -272,14 +272,6 @@ public partial class Player : Character, IHurtable
 
     }
 
-    public void CreateFollowedProjectile(AttackType _type, int _amount, float _damagePercent, GameObject _prefab)
-    {
-
-    }
-
-    /// <summary>
-    /// 워프시에만 사용 - 위치 정보를 포함한 전체 플레이어 데이터 저장
-    /// </summary>
     public void SavePlayerData()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
@@ -294,9 +286,6 @@ public partial class Player : Character, IHurtable
         Debug.Log("<color=green>플레이어 데이터 저장됨 (위치 포함)</color>");
     }
 
-    /// <summary>
-    /// 위치 정보 제외한 플레이어 데이터 저장
-    /// </summary>
     public void SavePlayerDataWithoutPosition()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
@@ -352,23 +341,6 @@ public partial class Player : Character, IHurtable
 
         // 퀘스트 데이터 로드
         LoadQuestData(_data.QuestData, _data.TalkCountData, _data.KillCountData);
-    }
-
-    private void SetWeapon(Guid _uniqueID)
-    {
-        if (inventory == null) inventory = Singleton.Inventory;
-        var weaponInstance = inventory.GetWeaponByInventoryID(_uniqueID);
-
-        if (weaponInstance == null) return;
-
-        weaponInstanceId = _uniqueID;
-        inventory.SetIndicatorEquipped(_uniqueID);
-    }
-
-    public override WeaponItemInstance GetCurrentWeapon()
-    {
-        if (weaponInstanceId == System.Guid.Empty) return null;
-        return Singleton.Inventory?.GetWeaponByInventoryID(weaponInstanceId);
     }
 
     public override StatData GetStats()

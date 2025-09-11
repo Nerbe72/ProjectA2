@@ -15,16 +15,6 @@ public abstract partial class Enemy : Character, IPunObservable
     public bool IsDead => isDead;
     public int CurrentHealth { get; private set; }
 
-    // 데미지 요청 추적용
-    private Dictionary<int, int> _pendingDamageRequests = new Dictionary<int, int>();
-    private int _nextRequestId = 0;
-    private const float AI_UPDATE_INTERVAL = 0.2f;
-    private float _aiUpdateTimer = 0f;
-
-    private float syncTimer;
-    private const float syncInterval = 0.1f;
-    private bool isRemotelyOwned;
-
     public void OnPhotonSerializeView(PhotonStream _stream, PhotonMessageInfo _info)
     {
         if (_stream.IsWriting)
@@ -53,7 +43,6 @@ public abstract partial class Enemy : Character, IPunObservable
     protected void InitializePhotonSync()
     {
         if (photonView == null) photonView = GetComponent<PhotonView>();
-        isRemotelyOwned = photonView != null && !photonView.IsMine;
     }
     
     protected new void OnEnable()

@@ -27,13 +27,13 @@ public class UIToggleSound : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private void OnEnable()
     {
         if (toggle == null)
+        {
             toggle = GetComponent<Toggle>();
-
-        if (toggle != null)
-            toggle.onValueChanged.AddListener(OnToggleChanged);
+            toggle?.onValueChanged.AddListener(OnToggleChanged);
+        }
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         if (toggle != null)
             toggle.onValueChanged.RemoveListener(OnToggleChanged);

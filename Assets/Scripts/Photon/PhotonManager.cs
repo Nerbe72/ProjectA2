@@ -79,15 +79,7 @@ public partial class PhotonManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        // 메시지 큐 일시정지 (씬 로드 완료까지 모든 네트워크 메시지 버퍼링)
         PhotonNetwork.IsMessageQueueRunning = false;
-        
-        if (!PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.PlayerCount == 1)
-        {
-            bool result = PhotonNetwork.SetMasterClient(PhotonNetwork.LocalPlayer);
-            Debug.Log(result ? "첫 접속 플레이어를 마스터 클라이언트로 설정 성공" : "SetMasterClient 호출 불필요 혹은 실패");
-        }
-        
         Debug.Log($"[Photon] 룸 입장 완료. 메시지 큐 일시정지. (PlayerCount: {PhotonNetwork.CurrentRoom.PlayerCount})");
     }
 

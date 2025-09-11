@@ -2840,7 +2840,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e254f927b9fb5bb4f9fb91742f717ec7, type: 3}
   - {fileID: 8300000, guid: c9514aa57215446499191defbaca7a26, type: 3}
   - {fileID: 8300000, guid: 24a5d65ba5f2e544ca5b6aad1097320a, type: 3}
-  - {fileID: 8300000, guid: b2631c517d9260d4e99b0914969f2536, type: 3}
+  - {fileID: 0}
   mapBGMClips:
   - {fileID: 8300000, guid: 77fbdc327a0c2a64aa6b58fef75100f2, type: 3}
   - {fileID: 8300000, guid: dbcdb87789fbe5d4c82404022d80a602, type: 3}

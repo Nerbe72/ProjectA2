@@ -1,9 +1,8 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using GameStuff;
-using System;
 
 public enum DataFieldType
 {
@@ -77,7 +76,7 @@ public class EnhanceSubWindow : SubWindow
         
         if (enhanceButton != null)
         {
-            enhanceButton.onClick.RemoveAllListeners();
+            enhanceButton.onClick.RemoveListener(OnEnhanceButtonClicked);
             enhanceButton.onClick.AddListener(OnEnhanceButtonClicked);
         }
     }
@@ -298,12 +297,14 @@ public class EnhanceSubWindow : SubWindow
         if (currentLevel >= maxLevel)
         {
             Debug.Log("이미 최대 강화입니다!");
+            enhanceButton.GetComponent<UIButtonAnimation>()?.PlayFailureAnimation();
             return;
         }
 
         if (playerCurrency < enhancementCost)
         {
             Debug.Log("재화가 부족합니다!");
+            enhanceButton.GetComponent<UIButtonAnimation>()?.PlayFailureAnimation();
             return;
         }
 
@@ -315,12 +316,15 @@ public class EnhanceSubWindow : SubWindow
                 Debug.Log("강화 성공!");
                 OnEnhancementSuccess?.Invoke(selectedWeapon);
                 Singleton.Inventory.SaveInventoryData();
+                enhanceButton.GetComponent<UIButtonAnimation>()?.PlaySuccessAnimation();
                 break;
             case EnhancementResult.Failure:
                 Debug.Log("강화에 실패했습니다!");
+                enhanceButton.GetComponent<UIButtonAnimation>()?.PlayFailureAnimation();
                 break;
             case EnhancementResult.MaxLevel:
                 Debug.Log("이미 최대 강화입니다!");
+                enhanceButton.GetComponent<UIButtonAnimation>()?.PlayFailureAnimation();
                 break;
         }
     }

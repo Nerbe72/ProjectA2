@@ -53,6 +53,7 @@ public partial class Player : Character
             distanceToGround + 1f, layers))
         {
             Vector3 footPos = hitL.point;
+
             footPos.y += distanceToGround;
             animator.SetIKPosition(AvatarIKGoal.LeftFoot, footPos);
             animator.SetIKRotation(AvatarIKGoal.LeftFoot, Quaternion.LookRotation(Vector3.ProjectOnPlane(transform.forward, hitL.normal), hitL.normal));

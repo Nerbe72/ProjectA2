@@ -15,14 +15,12 @@ public partial class Player : Character, IPunObservable
             _stream.SendNext(rigidbody.position);
             _stream.SendNext(rigidbody.rotation);
             _stream.SendNext(rigidbody.linearVelocity);
-            _stream.SendNext(currentHealth);
         }
         else
         {
             networkPosition = (Vector3)_stream.ReceiveNext();
             networkRotation = (Quaternion)_stream.ReceiveNext();
             rigidbody.linearVelocity = (Vector3)_stream.ReceiveNext();
-            currentHealth = (int)_stream.ReceiveNext();
 
             float lag = Mathf.Abs((float)(PhotonNetwork.Time - _info.SentServerTimestamp));
             networkPosition += (rigidbody.linearVelocity * lag);
@@ -51,6 +49,6 @@ public partial class Player : Character, IPunObservable
 
     public void ApplyEquipWeapon(int _weaponID)
     {
-        photonView.RPC(nameof(RPCOnEquipWeapon), RpcTarget.OthersBuffered, _weaponID);
+        photonView.RPC(nameof(RPCOnEquipWeapon), RpcTarget.OthersBuffered, photonView.ViewID, _weaponID);
     }
 }

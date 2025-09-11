@@ -173,6 +173,7 @@ namespace GameStuff
 
     public enum Request
     {
+        time,
         writegachalog,
         readgachalog,
         banners,

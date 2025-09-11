@@ -80,6 +80,28 @@ public class AuthManager : MonoBehaviour
         return data;
     }
 
+    public async Task<T> GetPublicDataAsync<T>(Request _type)
+    {
+        string url = URL + _type.ToString();
+        UnityWebRequest request = UnityWebRequest.Get(url);
+
+        UnityWebRequestAsyncOperation operation = request.SendWebRequest();
+        while (!operation.isDone)
+        {
+            await Task.Yield();
+        }
+
+        if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+        {
+            Debug.LogWarning($"Public GET failed: {request.error} ({url})");
+            return default;
+        }
+
+        string responseText = request.downloadHandler.text;
+        T data = JsonUtility.FromJson<T>(responseText);
+        return data;
+    }
+
     public async Task SetDataAsync<T>(Request _type, T _data)
     {
         string jsonData = JsonUtility.ToJson(_data);

@@ -28,9 +28,15 @@ public class Status : MonoBehaviour
     private void Start()
     {
         Singleton.Player.OnWeaponChanged += UpdateStatus;
+        Singleton.Player.OnLevelChanged += HandleLevelChanged;
         Singleton.Get<GameManager>().OnLocaleChanged += SetLocale;
 
         SetLocale();
+        UpdateStatus();
+    }
+
+    private void OnEnable()
+    {
         UpdateStatus();
     }
 
@@ -84,7 +90,7 @@ public class Status : MonoBehaviour
             statusList[i].Value.text = tempStatus.ToString();
         }
 
-        //°ø°Ý·Â
+        //ï¿½ï¿½ï¿½Ý·ï¿½
         int tempFinalDamage = player.GetCalculatedDamage(_tempLevels);
         if (player.GetCalculatedDamage() != tempFinalDamage)
             finalDamage.Value.color = Color.green;
@@ -93,7 +99,7 @@ public class Status : MonoBehaviour
 
         finalDamage.Value.text = tempFinalDamage.ToString();
 
-        //¹æ¾î·Â
+        //ï¿½ï¿½ï¿½ï¿½
         int tempFinalDefense = player.GetCalculatedDefense(_tempLevels);
         if (player.GetCalculatedDefense() != tempFinalDefense)
             finalDefense.Value.color = Color.green;
@@ -101,5 +107,23 @@ public class Status : MonoBehaviour
             finalDefense.Value.color = Color.white;
 
         finalDefense.Value.text = tempFinalDefense.ToString();
+    }
+
+    private void OnDestroy()
+    {
+        if (Singleton.Player != null)
+        {
+            Singleton.Player.OnLevelChanged -= HandleLevelChanged;
+            Singleton.Player.OnWeaponChanged -= UpdateStatus;
+        }
+
+        var gm = Singleton.Get<GameManager>();
+        if (gm != null)
+            gm.OnLocaleChanged -= SetLocale;
+    }
+
+    private void HandleLevelChanged()
+    {
+        UpdateStatus();
     }
 }

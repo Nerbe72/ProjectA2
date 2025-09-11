@@ -73,7 +73,6 @@ public partial class Player : Character
         if (_broadcast && photonView != null && photonView.IsMine)
             ApplyEquipWeapon(_instance.ItemID);
 
-        
         // Change Color
         var adapter = Singleton.Inventory.GetWeaponAdapter(_instance);
         if (adapter != null)
@@ -250,5 +249,24 @@ public partial class Player : Character
             _weapon.Defense +
             (int)(strGrowth * GetCurrentLevel(LevelType.Strength)) +
             (int)(dexGrowth * GetCurrentLevel(LevelType.Dexterity));
+    }
+
+    private void SetWeapon(Guid _uniqueID)
+    {
+        if (inventory == null) inventory = Singleton.Inventory;
+        var weaponInstance = inventory.GetWeaponByInventoryID(_uniqueID);
+
+        if (weaponInstance == null) return;
+
+        weaponInstanceId = _uniqueID;
+
+        EquipWeapon(weaponInstance, true);
+        inventory.SetIndicatorEquipped(_uniqueID);
+    }
+
+    public override WeaponItemInstance GetCurrentWeapon()
+    {
+        if (weaponInstanceId == System.Guid.Empty) return null;
+        return Singleton.Inventory?.GetWeaponByInventoryID(weaponInstanceId);
     }
 }
